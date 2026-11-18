@@ -11,7 +11,9 @@
     "serve": "node scripts/serve.mjs",
     "test": "playwright test --trace off",
     "captures": "CAPTURES=1 playwright test tests/captures.spec.mjs --trace off",
-    "verifier": "node scripts/lint-copy.mjs && node scripts/build.mjs --verifier-seulement"
+    "budget": "node scripts/budget.mjs",
+    "valider": "html-validate \"docs/**/*.html\" \"private/**/*.html\"",
+    "verifier": "node scripts/lint-copy.mjs && html-validate \"docs/**/*.html\" && node scripts/build.mjs --verifier-seulement"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",
