@@ -64,15 +64,18 @@ for (const { p, suivante } of arrets) {
   });
 }
 
+const CHERCHER = PROGRAMME.phases.find((x) => x.id === 'chercher');
+const FIN_CHERCHER = CHERCHER.debut + CHERCHER.duree;
+
 test('le bandeau devient plein écran à la fin du délai de grâce', async ({ page }) => {
-  await ouvrir(page, 'seance-09/2-methode.html', heure(35, 52));
+  await ouvrir(page, 'seance-09/2-methode.html', heure(FIN_CHERCHER, 52));
   await expect(page.locator('.stop-bandeau')).toBeVisible();
   await expect(page.locator('.stop-ecran')).toBeVisible({ timeout: 15000 });
   await expect(page.locator('.stop-bandeau')).toBeHidden();
 });
 
 test('pas d’écran STOP quand la page affichée est déjà la suivante', async ({ page }) => {
-  await ouvrir(page, 'seance-09/4-citer-lecture.html', heure(36));
+  await ouvrir(page, 'seance-09/4-citer-lecture.html', heure(FIN_CHERCHER + 1));
   await expect(page.locator('.stop-ecran')).toBeHidden();
   await expect(page.locator('.stop-bandeau')).toBeHidden();
 });

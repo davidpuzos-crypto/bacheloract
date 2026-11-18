@@ -1,6 +1,6 @@
 # La fabrique du social, site de séance
 
-Site du cours « La fabrique du social, introduction à la sociologie » (Bachelor ACT). Il conduit la **séance 9**, une matinée de méthode de 9 h 00 à 12 h 00 en binôme : définir, citer, lire une étude de l’Insee, prendre des notes pendant une vidéo.
+Site du cours « La fabrique du social, introduction à la sociologie » (Bachelor ACT). Il conduit la **séance 9**, une matinée de méthode de 9 h 00 à 12 h 00 en binôme : définir, citer, lire et analyser une étude de l’Insee, prendre des notes pendant une vidéo.
 
 Le site est statique (HTML, CSS, JavaScript sans framework). Il est publié par GitHub Pages depuis le dossier `docs/`. Les réponses des étudiant·es sont enregistrées dans leur navigateur et, une fois l’envoi branché, envoyées pendant la séance dans une feuille Google privée que vous lisez sur la page « Réponses des équipes ». Pas de Moodle, aucun cookie, aucune mesure d’audience, aucune police chargée depuis un autre site.
 
@@ -18,7 +18,30 @@ Le site est statique (HTML, CSS, JavaScript sans framework). Il est publié par 
 | `docs-internes/budget-temps.md` | Le calcul du temps nécessaire à chaque phase, page par page. |
 | `VERIFICATIONS.md` | Tout ce qui reste à vérifier avant la séance, et les coupes faites. |
 
-Les pages élèves sont, dans l’ordre : `index.html` (accueil de la séance), `1-cadre`, `2-methode`, `3-chercher`, `4-citer-lecture`, `5-citer-pratique`, `pause`, `6-lire` (avec le dépôt), `7-correction` (chiffrée), `8-notes`, `9-video`, `10-fin`. Côté enseignant : `prof/reponses.html` (les réponses des équipes en direct), `prof/projecteur.html` (à projeter) et `prof/deroule.html` (feuille de route).
+Les pages élèves sont, dans l’ordre : `index.html` (accueil de la séance), `1-cadre`, `2-methode`, `3-chercher`, `4-citer-lecture`, `5-citer-pratique`, `6-lire` (lecture avant la pause, analyse après, puis dépôt), `pause`, `7-correction` (chiffrée), `8-notes`, `9-video`, `10-fin`. Côté enseignant : `prof/reponses.html` (les réponses des équipes en direct), `prof/projecteur.html` (à projeter) et `prof/deroule.html` (feuille de route).
+
+## Le déroulé de la séance
+
+Pour un départ à 9 h 00. Le détail, avec ce qu’il faut dire à chaque phase, est sur la page `prof/deroule.html`.
+
+| Heure | Durée | Phase |
+|---|---|---|
+| 9 h 00 | 3 min | Cadre |
+| 9 h 03 | 5 min | Méthode |
+| 9 h 08 | 15 min | Chercher une définition du genre |
+| 9 h 23 | 7 min | Bien citer, le cours |
+| 9 h 30 | 13 min | Citer, la pratique |
+| 9 h 43 | 22 min | Lire l’étude de l’Insee, avec neuf questions qui obligent à lire |
+| 10 h 05 | 30 min | Pause |
+| 10 h 35 | 27 min | Analyser l’étude, question par question (L1 à L6) |
+| 11 h 02 | 3 min | Dépôt |
+| 11 h 05 | 10 min | Correction, en chasse aux indices dans l’étude |
+| 11 h 15 | 5 min | Conseils de prise de notes |
+| 11 h 20 | 25 min | Vidéo |
+| 11 h 45 | 5 min | Notes à froid, comparaison en binôme |
+| 11 h 50 | 10 min | Questions sur la vidéo, dépôt express |
+
+Définir et citer tiennent en 43 minutes. Le temps nécessaire à chaque phase est calculé page par page dans `docs-internes/budget-temps.md`.
 
 ## Modifier une question ou un texte
 
@@ -27,8 +50,8 @@ Les textes sont directement dans les pages HTML de `docs/seance-09/`. On peut le
 1. Ouvrez le fichier de la page sur GitHub (par exemple `docs/seance-09/3-chercher.html`), puis cliquez sur le crayon « Edit this file ».
 2. Cherchez le texte avec Ctrl+F (Cmd+F sur Mac). Une question ouverte ressemble à ceci :
    ```html
-   <label class="qlabel" for="f-a2"><span class="qid">A2</span>Les deux premiers paragraphes…</label>
-   <p class="indice" id="i-a2">Deux ou trois phrases.</p>
+   <label class="qlabel" for="f-b2"><span class="qid">B2</span>De quel type de source s’agit-il…</label>
+   <p class="indice" id="i-b2">Trois réponses courtes.</p>
    ```
    Changez le texte entre les balises, sans toucher à ce qui est entre `<` et `>`.
 3. Pour un QCM, la bonne réponse est la lettre de `data-correct="b"`, et chaque retour est dans un bloc `<div data-fb="a">…</div>`.
@@ -67,7 +90,7 @@ Il faut un ordinateur avec [Node.js](https://nodejs.org) (version 18 ou plus) et
    ```
 4. Publiez le fichier `docs/seance-09/7-correction.html` mis à jour (voir « Publier »).
 
-Un mot de passe provisoire a été utilisé pour le premier chiffrement. Choisissez le vôtre avant la séance. Le jour même, annoncez-le à 11 h 00, par exemple avec le bouton « Afficher en grand » de l’écran de projection (le mot de passe saisi là n’est enregistré nulle part).
+Un mot de passe provisoire a été utilisé pour le premier chiffrement. Choisissez le vôtre avant la séance. Le jour même, annoncez-le à 11 h 05, à la fin du dépôt, par exemple avec le bouton « Afficher en grand » de l’écran de projection (le mot de passe saisi là n’est enregistré nulle part).
 
 ## Reconstruire
 
@@ -96,7 +119,7 @@ npm run serve
 ## Publier sur GitHub Pages
 
 1. Sur GitHub, ouvrez le dépôt, puis **Settings**, puis **Pages**.
-2. Dans « Build and deployment », choisissez **Deploy from a branch**, la branche **main** et le dossier **/docs**, puis **Save**.
+2. Dans « Build and deployment », choisissez **Deploy from a branch**, la branche **main** et le dossier **/docs**, puis **Save**. Le dossier **/ (root)** marche aussi : la page d’accueil du dépôt redirige alors vers `docs/`.
 3. Une à deux minutes plus tard, l’adresse du site s’affiche en haut de la page Pages (de la forme `https://<compte>.github.io/<nom-du-depot>/`).
 
 Le travail a été préparé sur la branche `claude/elegant-planck-ir8tii`. Fusionnez-la dans `main` (par une pull request) avant l’étape 2, ou choisissez provisoirement cette branche dans l’étape 2 pour essayer le site.
@@ -160,7 +183,7 @@ Ouvrez une page de la séance, tapez un nom d’équipe, attendez quelques secon
 - **État partagé** : toutes les pages lisent et écrivent le même objet dans le navigateur (clé `fabrique:s09:v1`). Une écriture a lieu 350 ms après chaque saisie, et tout de suite quand on quitte la page. Si le navigateur refuse d’enregistrer (navigation privée stricte), un message demande de copier régulièrement le récapitulatif.
 - **Horloge** : les phases, les comptes à rebours et les écrans STOP viennent de `schedule.json`. À chaque point d’arrêt, un bandeau prévient pendant 60 secondes, puis un écran plein cadre propose un seul bouton vers la page suivante. Les réponses sont conservées, et les pages précédentes restent accessibles ensuite.
 - **Dépôt** : le bouton « Envoyer à l’enseignant » envoie le récapitulatif complet et signale que le dépôt est fait. Le récapitulatif peut aussi être téléchargé (`s09_<equipe>_parcours.txt`, et `s09_<equipe>_video.txt` pour la vidéo) ou copié, en secours.
-- **Jeu** : points d’expérience, quatre quêtes, huit badges, anneaux de compétences et phrase mystère. Les points ne sont pas une note, et il n’y a aucun classement. Le mode sobre (menu) masque les animations et les badges. Les animations sont coupées si l’appareil demande moins de mouvement.
+- **Jeu** : points d’enquête, quatre quêtes, huit badges, anneaux de compétences et phrase mystère. Pendant la correction, l’étude de l’Insee devient une chasse aux indices : pour chaque question d’analyse, l’équipe clique dans le document sur le passage qui justifie la réponse, puis découvre la réponse proposée à côté de la sienne. Les points ne sont pas une note, il n’y a ni niveau ni classement. Le mode sobre (menu) masque les animations et les badges. Les animations sont coupées si l’appareil demande moins de mouvement.
 - **Accessibilité** : navigation au clavier, retours de QCM annoncés aux lecteurs d’écran, contrastes vérifiés en mode sombre et clair. Les tests incluent un audit axe-core sur chaque page, et Lighthouse donne 100 en accessibilité sur chaque page.
 
 ## Licences
