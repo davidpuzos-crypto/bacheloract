@@ -10,14 +10,14 @@ Contrôle fait avec `npm run liens` depuis l’environnement de construction. Un
 |---|---|---|
 | Entrée « Genre » de Géoconfluences, `https://geoconfluences.ens-lyon.fr/glossaire/genre` | Chercher (A1 à A3) | 403, à vérifier |
 | Glossaire de Géoconfluences (secours), `https://geoconfluences.ens-lyon.fr/glossaire` | Chercher | 403, à vérifier |
-| Dictionnaire de sociologie clinique sur Cairn | Chercher, première porte | 403, à vérifier. **L’existence d’une entrée « Genre » n’est pas vérifiée.** La consigne prévoit le cas où il n’y en a pas. |
+| Dictionnaire de sociologie clinique sur Cairn | Chercher, première porte | 403, à vérifier. L’entrée « Genre » existe (confirmé par l’enseignant). |
 | Site SES-ENS, `https://ses.ens-lyon.fr` | Chercher, deuxième porte | 403, à vérifier |
 | Cairn et SophIA, `https://www.cairn.info` | Chercher, troisième porte | 403, à vérifier. Tester l’accès par le K-lab depuis la salle. |
 | Guide APA simplifié de l’ENS Paris (PDF) | Citer | répond (200) |
 | Insee Focus n° 377, `https://www.insee.fr/fr/statistiques/8743657` | Lire | répond (200), adresse fournie par l’enseignant |
 | Vidéo YouTube `aed8Q40M8r8` | Vidéo (G3) | répond (200) |
 | `https://tutos.bu.univ-rennes2.fr` | Conseils de notes | répond (200) |
-| Liens Moodle (dépôt du parcours, dépôt express vidéo, fiche méthode, guide de révision) | Dépôt, vidéo, conseils, bilan | **vides** dans `docs/data/config.json`. Tant qu’ils sont vides, le site affiche « Le lien du dépôt est sur Moodle ». |
+| Liens Moodle de la fiche méthode et du guide de révision | Conseils de notes, bilan | **vides** dans `docs/data/config.json`, boutons masqués. Les dépôts ne passent plus par Moodle (voir la section 2, point 9). |
 
 ## 2. Contenus à vérifier
 
@@ -29,7 +29,10 @@ Contrôle fait avec `npm run liens` depuis l’environnement de construction. Un
 6. **Vidéo.** Le PDF de la transcription n’a pas été fourni. Les QCM V4 à V8 et le bonus G2 (« un écart de 25,7 % en 2012 ») sont repris de la v2 sans nouvelle vérification. La transcription automatique déforme des passages : **revérifiez ces questions contre la vidéo, aux horodatages des chapitres.** La liste de sources de la description ne semble contenir aucune référence pour Pierre Bourdieu ni pour Catherine Vidal (à confirmer). L’attribution « artisan de sa propre domination » à Bourdieu n’est affichée nulle part sur le site.
 7. **Pourcentages de rétention** (20, 40, 60, 80 %) de la diapo 33. Sans source indiquée, ils ressemblent à la « pyramide de l’apprentissage ». Ils sont **masqués** (`afficherPourcentages: false` dans `docs/data/config.json`). La phrase « Écrire, c’est faire » n’apparaît qu’avec eux.
 8. **Intersectionnalité.** Le syllabus et la diapositive d’examen l’attendent, mais le déroulé ne lui laisse aucune place. La page Bilan contient un bloc « À compléter avec le cours », sans définition ni référence.
-9. **Collecte automatique.** Désactivée. Si vous l’activez, décidez de l’information donnée aux étudiant·es (RGPD) et de la durée de conservation des données de la feuille Google.
+9. **Envoi des réponses à l’enseignant** (à la place de Moodle). Il reste à le brancher (README, « Voir les réponses en direct »). Points à vérifier après la mise en place :
+   1. Le script n’a pas pu être essayé sur un vrai compte Google depuis l’environnement de construction. Le site a été testé avec un faux script qui suit le même protocole. **Faites l’essai complet une fois le script déployé** (une équipe de test doit apparaître sur la page « Réponses des équipes », et « Diffuser cette heure » doit être confirmé).
+   2. RGPD : les noms et les réponses arrivent dans votre compte Google, et chaque envoi passe par les serveurs de Google, qui voient l’adresse IP des appareils. Décidez de l’information donnée aux étudiant·es (un avis est affiché sur la page Cadre) et de la durée de conservation de la feuille.
+   3. La clé enseignant ne doit jamais être écrite dans le dépôt, qui est public. Le jeton de `config.json`, lui, n’est pas un secret.
 10. **Identité visuelle.** Le PDF des slides de la séance 1 n’a pas été fourni. Les couleurs (fond `#17181c`, texte crème, orange chaud) et les polices (Archivo pour les titres, Literata pour le texte, libres de droits) suivent la description du cahier des charges. Comparez avec les slides et ajustez `docs/assets/css/tokens.css` si besoin.
 11. **Syllabus** non fourni. Rien n’a été repris du syllabus en dehors de ce que le cahier des charges en dit.
 
@@ -77,10 +80,13 @@ Les huit cases à cocher portent des libellés courts tirés des conseils (« Re
 - **Libellé de la colonne de notes** : « Pour moi (questions, désaccords, mots à vérifier) », avec des parenthèses à la place des deux-points.
 - **Dépôt** : un seul champ facultatif sous la déclaration d’usage de l’IA, « Précision facultative. Quel outil, pour quoi faire, et qu’avez-vous vérifié vous-mêmes dans les sources ? ».
 - **Textes nouveaux** courts, écrits pour l’interface (accueil du site, hub, pause, bilan, feuille de route, messages des écrans). Ils suivent les règles éditoriales et sont contrôlés par `npm run lint`.
-- **Données du site** : `schedule.json` et `config.json` sont dans `docs/data/` (et non à la racine) pour être modifiables directement sur GitHub sans reconstruction.
+- **Données du site** : `schedule.json` et `config.json` sont dans `docs/data/` (et non à la racine) pour être modifiables directement sur GitHub sans reconstruction. Les pages ouvertes relisent `schedule.json` chaque minute.
+- **Pas de Moodle** (demande de l’enseignant) : les dépôts se font avec « Envoyer à l’enseignant », et les réponses arrivent aussi en continu sur la page « Réponses des équipes ». Le téléchargement et la copie du récapitulatif restent possibles en secours. Sans envoi branché, le site propose de télécharger le récapitulatif.
+- **Heure de départ** : la séance risque de commencer à 10 h 00 au lieu de 9 h 00. L’enseignant peut diffuser l’heure réelle depuis la page « Réponses des équipes ». Le déroulé reste de trois heures à partir de cette heure (fin à 13 h 00 pour un départ à 10 h 00). **Si la séance doit finir à 12 h 00 malgré tout, il faut raccourcir le déroulé : à décider.**
 
 ## 5. Publication
 
 - Le site est sur la branche `claude/elegant-planck-ir8tii`. GitHub Pages n’est pas encore activé (voir le README, section « Publier »).
 - La correction est chiffrée avec un **mot de passe provisoire**. Choisissez le vôtre et reconstruisez (README, section « Changer le mot de passe »).
+- Branchez l’envoi des réponses (README, section « Voir les réponses en direct »).
 - Après publication, vérifiez sur l’adresse publique la page chiffrée, le téléchargement du récapitulatif et l’horloge.

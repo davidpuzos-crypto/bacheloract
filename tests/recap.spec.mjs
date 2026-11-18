@@ -62,7 +62,7 @@ test('récapitulatif du parcours', async ({ page, context }) => {
 
   // Copie
   await zone.locator('[data-action="copier"]').click();
-  await expect(zone.locator('[data-recap-statut]')).toHaveText('Récapitulatif copié. Collez-le dans le dépôt Moodle.');
+  await expect(zone.locator('[data-recap-statut]')).toHaveText('Récapitulatif copié. Collez-le dans un document pour le garder.');
   const presse = await page.evaluate(() => navigator.clipboard.readText());
   expect(presse).toContain('Binôme. Camille Martin et Sacha Durand');
   await page.waitForTimeout(450);

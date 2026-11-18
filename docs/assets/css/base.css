@@ -2,6 +2,9 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* Un élément masqué reste masqué, quel que soit son style d’affichage. */
+[hidden] { display: none !important; }
+
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;

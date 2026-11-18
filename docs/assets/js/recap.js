@@ -3,10 +3,11 @@
 // la page courante directement, les autres pages par une requête vers le site.
 
 import { lire, modifier, surChangement } from './state.js';
-import { urlSeance, config, fichierCourant } from './donnees.js';
+import { urlSeance, fichierCourant } from './donnees.js';
 import { ligneQCM } from './qcm.js';
 import { calculer, equipe, BADGES, ICONES_EQUIPE } from './gamify.js';
-import { collecteActive, envoyer } from './collect.js';
+import { collecteActive, envoyerDepot } from './collect.js';
+import { formatHeure } from './clock.js';
 
 const SOURCES = {
   parcours: {
@@ -219,6 +220,57 @@ export async function construire(type) {
   return { texte: lignes.concat(corps).join('\n') + '\n', manquants, total };
 }
 
+// ---------------------------------------------------------------- catalogue des questions (page Réponses)
+
+const CATALOGUE = [
+  { fichier: '2-methode.html', titre: 'Méthode' },
+  { fichier: '3-chercher.html', titre: 'Chercher' },
+  { fichier: '5-citer-pratique.html', titre: 'Citer, pratique' },
+  { fichier: '6-lire.html', titre: 'Lire et dépôt' },
+  { fichier: '9-video.html', titre: 'Vidéo' }
+];
+
+// Liste ordonnée des questions du parcours, lue dans le HTML des pages.
+export async function catalogue() {
+  const sortie = [];
+  for (const section of CATALOGUE) {
+    const doc = await documentDe(section.fichier);
+    if (!doc) { continue; }
+    doc.querySelectorAll('.q[data-q], fieldset.qcm[data-qcm]').forEach((el) => {
+      if (el.matches('fieldset.qcm')) {
+        const leg = el.querySelector('legend');
+        const options = {};
+        el.querySelectorAll('.opt').forEach((o) => {
+          const inp = o.querySelector('input');
+          const lab = o.querySelector('label');
+          if (inp && lab) { options[inp.value] = texteSans(lab, '.ltr'); }
+        });
+        sortie.push({
+          type: 'qcm', cle: el.dataset.qcm, section: section.titre,
+          id: leg && leg.querySelector('.qid') ? leg.querySelector('.qid').textContent.trim() : el.dataset.qcm,
+          enonce: leg ? texteSans(leg, '.qid') : '', options
+        });
+        return;
+      }
+      const cle = el.dataset.q;
+      if (['equipe', 'nom1', 'nom2', 'icone'].includes(cle)) { return; }
+      const lab = el.querySelector('.qlabel');
+      const radios = [...el.querySelectorAll('input[type="radio"][data-radio]')];
+      const options = {};
+      radios.forEach((r) => { options[r.value] = r.dataset.label || r.value; });
+      sortie.push({
+        type: radios.length ? 'choix' : 'texte', cle, section: section.titre,
+        id: lab && lab.querySelector('.qid') ? lab.querySelector('.qid').textContent.trim() : (cle === 'usage' ? 'IA' : cle === 'verif' ? 'IA, précision' : cle.toUpperCase()),
+        enonce: lab ? texteSans(lab, '.qid, .tag-bonus') : '',
+        requis: el.hasAttribute('data-requis'), bonus: el.hasAttribute('data-bonus'), options,
+        precision: radios.length && el.querySelector('[data-id]') ? el.querySelector('[data-id]').dataset.id : ''
+      });
+    });
+  }
+  ['K1', 'K2'].forEach((k) => sortie.push({ type: 'qcm', cle: k, id: k, section: 'Correction', enonce: 'Question de contrôle de la correction (texte dans la page chiffrée).', options: {} }));
+  return sortie;
+}
+
 // ---------------------------------------------------------------- copie et téléchargement
 
 function copieDeSecours(ta, texte) {
@@ -267,19 +319,13 @@ async function brancherDepot(zone) {
   const statut = zone.querySelector('[data-recap-statut]');
   const progres = zone.querySelector('[data-recap-progres]');
   const bEnvoyer = zone.querySelector('[data-action="envoyer"]');
+  const bTelecharger = zone.querySelector('[data-action="telecharger"]');
   const avis = zone.querySelector('[data-avis-collecte]');
-  const c = await config();
-
-  zone.querySelectorAll('[data-lien-moodle]').forEach((a) => {
-    const lien = c.liens && c.liens[a.dataset.lienMoodle];
-    const sans = a.parentElement.querySelector('[data-sans-lien]');
-    if (lien) { a.href = lien; a.hidden = false; if (sans) { sans.hidden = true; } } else { a.hidden = true; if (sans) { sans.hidden = false; } }
-  });
-
-  if (await collecteActive()) {
-    if (bEnvoyer) { bEnvoyer.hidden = false; }
-    if (avis) { avis.hidden = false; }
-  }
+  const active = await collecteActive();
+  if (bEnvoyer) { bEnvoyer.hidden = !active; }
+  if (avis) { avis.hidden = !active; }
+  // Sans envoi à l’enseignant, le téléchargement devient l’action principale.
+  if (!active && bTelecharger) { bTelecharger.classList.remove('secondaire'); }
 
   let enCours = null;
   async function actualiser() {
@@ -303,7 +349,7 @@ async function brancherDepot(zone) {
     const ok = await copier(r.texte, ta);
     if (ok) {
       noterDepot(type, 'copie');
-      statut.textContent = 'Récapitulatif copié. Collez-le dans le dépôt Moodle.';
+      statut.textContent = 'Récapitulatif copié. Collez-le dans un document pour le garder.';
       statut.className = 'statut ok';
     } else {
       const det = zone.querySelector('details');
@@ -319,25 +365,22 @@ async function brancherDepot(zone) {
     const nom = nomFichier(type);
     telecharger(r.texte, nom);
     noterDepot(type, 'fichier');
-    statut.textContent = 'Fichier ' + nom + ' téléchargé. Déposez-le dans le dépôt Moodle.';
+    statut.textContent = 'Fichier ' + nom + ' téléchargé. Gardez-le.';
     statut.className = 'statut ok';
   });
   if (bEnvoyer) {
     bEnvoyer.addEventListener('click', async () => {
+      bEnvoyer.disabled = true;
       const r = await actualiser();
-      const e = lire();
-      const eq = equipe(e);
-      const total = Object.values(e.temps).reduce((a, b) => a + b, 0);
-      const res = await envoyer({
-        equipe: eq.nom, noms: [eq.n1, eq.n2].filter(Boolean).join(' et '), etape: type,
-        points: calculer(e).points, temps: minutes(total), recap: r.texte
-      });
+      noterDepot(type, 'envoi');
+      const res = await envoyerDepot(type, r.texte);
+      bEnvoyer.disabled = false;
       if (res.ok) {
-        noterDepot(type, 'envoi');
-        statut.textContent = 'Envoi parti vers le tableau de l’enseignant. Gardez aussi une copie ou le fichier, par sécurité.';
+        statut.textContent = 'Récapitulatif envoyé à l’enseignant à ' + formatHeure(Date.now()) + '. Vous pouvez aussi télécharger une copie.';
         statut.className = 'statut ok';
       } else {
-        statut.textContent = 'L’envoi n’a pas abouti. Copiez ou téléchargez le récapitulatif, puis déposez-le sur Moodle.';
+        modifier((e) => { delete e.depots[type]; }, { source: 'depot', id: type });
+        statut.textContent = 'L’envoi n’a pas abouti. Téléchargez le récapitulatif et gardez le fichier, puis prévenez l’enseignant.';
         statut.className = 'statut alerte';
       }
     });

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Réponses des équipes · Séance 9 · La fabrique du social</title>
+<meta name="description" content="Espace enseignant. Réponses des équipes en direct, protégées par une clé.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/prof.css">
+<script src="../assets/js/theme.js"></script>
+<script type="module" src="../assets/js/app.js"></script>
+<script type="module" src="../assets/js/reponses.js"></script>
+</head>
+<body data-page="reponses" data-espace="prof">
+<a class="evitement" href="#contenu">Aller au contenu</a>
+<main id="contenu" class="page page-large">
+  <div class="tete-page">
+    <p class="etiquette">Espace enseignant · Séance 9</p>
+    <h1>Réponses des équipes</h1>
+    <p class="chapeau">Les réponses arrivent au fil de la séance, depuis le navigateur de chaque binôme. Rien ne s’affiche sans votre clé.</p>
+    <p class="rangee-boutons">
+      <a class="btn secondaire" href="projecteur.html">Écran de projection</a>
+      <a class="btn secondaire" href="deroule.html">Feuille de route</a>
+    </p>
+  </div>
+
+  <div class="encadre" data-sans-collecte>
+    <h2>L’envoi des réponses n’est pas encore branché</h2>
+    <p>Pour voir les réponses ici, il faut une feuille Google à vous et un petit script, à installer une seule fois. Le mode d’emploi est dans le README du dépôt, section « Voir les réponses en direct ». Une fois l’adresse du script ajoutée à <code>docs/data/config.json</code>, cette page fonctionne.</p>
+  </div>
+
+  <form class="connexion encadre" data-connexion data-si-collecte hidden>
+    <h2>Votre clé</h2>
+    <p>C’est la clé choisie dans le script Google (<code>CLE_ENSEIGNANT</code>).</p>
+    <label for="cle-enseignant">Clé enseignant</label>
+    <input type="password" id="cle-enseignant" autocomplete="current-password" required>
+    <label class="souvenir"><input type="checkbox" id="cle-souvenir"> Se souvenir de la clé sur cet ordinateur</label>
+    <p class="erreur" data-erreur-cle role="alert"></p>
+    <p><button type="submit" class="btn">Afficher les réponses</button></p>
+  </form>
+
+  <section data-tableau hidden aria-labelledby="titre-suivi">
+    <h2 id="titre-suivi" class="visuellement-cache">Suivi des équipes</h2>
+    <div class="resume" data-resume aria-live="polite"></div>
+    <div class="barre-suivi">
+      <p class="statut" data-maj role="status"></p>
+      <label class="souvenir"><input type="checkbox" id="auto-maj" checked> Actualisation automatique</label>
+      <button type="button" class="btn discret petit" data-actualiser>Actualiser maintenant</button>
+    </div>
+
+    <details class="encadre horloge-classe">
+      <summary>Heure de départ pour toute la classe</summary>
+      <p data-depart-actuel></p>
+      <div class="ligne-horloge">
+        <label for="depart-classe">Nouvelle heure de départ</label>
+        <input type="time" id="depart-classe" value="10:00">
+        <button type="button" class="btn petit" data-diffuser>Diffuser cette heure</button>
+        <button type="button" class="btn secondaire petit" data-demarrer>Démarrer maintenant</button>
+        <button type="button" class="btn discret petit" data-annuler-depart>Revenir à l’horaire du fichier</button>
+      </div>
+      <p class="statut" data-statut-horloge role="status"></p>
+      <p class="meta">Les appareils des binômes et l’écran de projection reçoivent l’heure en moins d’une minute.</p>
+    </details>
+
+    <div class="onglets" role="tablist" aria-label="Vues">
+      <button type="button" role="tab" id="onglet-ensemble" aria-controls="vue-ensemble" aria-selected="true" data-vue="ensemble">Vue d’ensemble</button>
+      <button type="button" role="tab" id="onglet-question" aria-controls="vue-question" aria-selected="false" tabindex="-1" data-vue="question">Par question</button>
+      <button type="button" role="tab" id="onglet-equipe" aria-controls="vue-equipe" aria-selected="false" tabindex="-1" data-vue="equipe">Par équipe</button>
+    </div>
+
+    <div role="tabpanel" id="vue-ensemble" aria-labelledby="onglet-ensemble" data-panneau="ensemble"></div>
+    <div role="tabpanel" id="vue-question" aria-labelledby="onglet-question" data-panneau="question" hidden>
+      <label for="choix-question">Question</label>
+      <select id="choix-question" data-choix-question></select>
+      <div data-contenu-question></div>
+    </div>
+    <div role="tabpanel" id="vue-equipe" aria-labelledby="onglet-equipe" data-panneau="equipe" hidden>
+      <label for="choix-equipe">Équipe</label>
+      <select id="choix-equipe" data-choix-equipe></select>
+      <div data-contenu-equipe></div>
+    </div>
+
+    <p class="rangee-boutons pied-suivi">
+      <button type="button" class="btn discret petit" data-exporter>Télécharger toutes les réponses (JSON)</button>
+      <button type="button" class="btn discret petit" data-oublier>Oublier la clé sur cet ordinateur</button>
+    </p>
+  </section>
+</main>
+<footer class="pied"><p>La fabrique du social · Bachelor ACT · Séance 9 · Espace enseignant</p></footer>
+</body>
+</html>

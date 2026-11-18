@@ -23,7 +23,8 @@ export const PAGES = [
   'seance-09/9-video.html',
   'seance-09/10-fin.html',
   'prof/projecteur.html',
-  'prof/deroule.html'
+  'prof/deroule.html',
+  'prof/reponses.html'
 ];
 
 export function motDePasse() {

@@ -12,7 +12,7 @@ Hypothèses de calcul : lecture à 200 mots par minute ; 30 secondes par QCM ; c
 | Citer, lecture | 10 min | 841 | aucun | 0 |  | 4,2 min | 5,8 min | tient |
 | Citer, pratique | 20 min | 112 | c1 (2.5 min), c2 (3 min), c3 (3 min) | 4 | Consultation du guide APA et de vos deux sources (3 min) | 14,1 min | 5,9 min | tient |
 | Lire | 22 min | 193 + extrait 987 | l1 (2.5 min), l2 (1 min), l3 (1 min), l4 (1.5 min), l5 (2.5 min), l6 (2.5 min) | 5 |  | 19,4 min | 2,6 min | tient |
-| Dépôt | 3 min | 49 | usage (0.3 min) | 0 | Copier ou télécharger le récapitulatif, puis le déposer sur Moodle (1,5 min) | 2 min | 1 min | tient |
+| Dépôt | 3 min | 31 | usage (0.3 min) | 0 | Copier ou télécharger le récapitulatif, puis le déposer sur Moodle (1,5 min) | 2 min | 1 min | tient |
 | Correction | 10 min | 182 | aucun | 2 |  | 1,9 min | 8,1 min | tient |
 | Conseils de prise de notes | 10 min | 119 | aucun | 0 | Choix de trois conseils parmi les huit (1 min) | 1,6 min | 8,4 min | tient |
 | Vidéo, pendant | 25 min | 43 | aucun | 0 | Projection de la vidéo, prise de notes en même temps (25 min) | 25 min | 0 min | tient |

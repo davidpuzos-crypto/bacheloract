@@ -2,7 +2,7 @@
 // Chaque page indique son identifiant dans <body data-page="…"> et son
 // espace dans <body data-espace="seance|prof|site">.
 
-import { charger } from './state.js';
+import { charger, surChangement } from './state.js';
 import { initHorloge } from './clock.js';
 import { initNav, appliquerOptions } from './nav.js';
 import { typographier } from './typo.js';
@@ -11,6 +11,7 @@ import { initQCM } from './qcm.js';
 import { initJeu } from './gamify.js';
 import { initRecap } from './recap.js';
 import { initWidgets } from './widgets.js';
+import { initCollecte } from './collect.js';
 
 async function demarrer() {
   const corps = document.body;
@@ -28,6 +29,7 @@ async function demarrer() {
   initNav(page, { espace });
   initWidgets();
   initRecap();
+  await initCollecte(espace, surChangement);
   document.documentElement.classList.add('js-pret');
   window.dispatchEvent(new CustomEvent('fabrique:pret'));
 }

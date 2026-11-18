@@ -8,6 +8,7 @@ import { statut, surTic, surPhase, phases, formatCompte, formatHeure, heureMinut
 import { icone, urlSeance, url, fichierCourant } from './donnees.js';
 import { htmlCarnet, calculer, equipe, echapper, surMiseAJourJeu } from './gamify.js';
 import { typographier } from './typo.js';
+import { surCollecte } from './collect.js';
 
 let idPage = '';
 let espace = 'seance'; // seance, prof ou site
@@ -79,7 +80,7 @@ function construireEntete() {
         <button type="button" class="interrupteur" data-theme-bouton><span>Thème</span><span class="etat"></span></button>
         <button type="button" class="interrupteur" data-sobre-bouton aria-pressed="false"><span>Mode sobre (sans animations ni badges)</span><span class="etat"></span></button>
         <h3>Vos données</h3>
-        <p class="statut">Vos réponses restent dans ce navigateur.</p>
+        <p class="statut" data-texte-donnees>Vos réponses restent dans ce navigateur.</p>
         <button type="button" class="btn discret petit" data-export>Télécharger une sauvegarde (JSON)</button>
         <button type="button" class="btn danger petit" data-effacer>Effacer nos réponses</button>
         <p class="statut" data-statut-reglages role="status" aria-live="polite"></p>
@@ -464,6 +465,14 @@ export function initNav(page, options = {}) {
     }
   });
   window.addEventListener('hashchange', () => { const st = statut(); majHorloge(st); gererArret(st); });
+  surCollecte(({ actif, dernierEnvoi }) => {
+    const p = refs.tiroirMenu.querySelector('[data-texte-donnees]');
+    if (!p) { return; }
+    p.textContent = actif
+      ? 'Vos réponses sont enregistrées dans ce navigateur et envoyées à l’enseignant, dans un tableau privé.' + (dernierEnvoi ? ' Dernier envoi à ' + formatHeure(dernierEnvoi).replace(/\u00a0/g, ' ') + '.' : '')
+      : 'Vos réponses restent dans ce navigateur.';
+    typographier(p);
+  });
   const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)');
   if (mq && mq.addEventListener) { mq.addEventListener('change', majReglages); }
 }

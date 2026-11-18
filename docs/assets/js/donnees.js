@@ -58,6 +58,13 @@ export function programme() {
   return promesseProgramme;
 }
 
+// Relit le déroulé sans cache (null en cas d’échec : on garde l’ancien).
+export async function rechargerProgramme() {
+  const p = await lireJSON('data/schedule.json', null);
+  if (p && Array.isArray(p.phases)) { promesseProgramme = Promise.resolve(p); return p; }
+  return null;
+}
+
 export function config() {
   if (!promesseConfig) { promesseConfig = lireJSON('data/config.json', CONFIG_SECOURS); }
   return promesseConfig;

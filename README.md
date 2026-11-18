@@ -2,7 +2,7 @@
 
 Site du cours « La fabrique du social, introduction à la sociologie » (Bachelor ACT). Il conduit la **séance 9**, une matinée de méthode de 9 h 00 à 12 h 00 en binôme : définir, citer, lire une étude de l’Insee, prendre des notes pendant une vidéo.
 
-Le site est statique (HTML, CSS, JavaScript sans framework). Il est publié par GitHub Pages depuis le dossier `docs/`. Les réponses des étudiant·es restent dans leur navigateur. Aucun cookie, aucune mesure d’audience, aucune police chargée depuis un autre site.
+Le site est statique (HTML, CSS, JavaScript sans framework). Il est publié par GitHub Pages depuis le dossier `docs/`. Les réponses des étudiant·es sont enregistrées dans leur navigateur et, une fois l’envoi branché, envoyées pendant la séance dans une feuille Google privée que vous lisez sur la page « Réponses des équipes ». Pas de Moodle, aucun cookie, aucune mesure d’audience, aucune police chargée depuis un autre site.
 
 ## Ce qu’il y a dans le dépôt
 
@@ -10,14 +10,15 @@ Le site est statique (HTML, CSS, JavaScript sans framework). Il est publié par 
 |---|---|
 | `docs/` | Le site publié. Accueil du cours (`index.html`), pages de la séance 9 (`seance-09/`), pages de l’enseignant (`prof/`), styles, scripts, polices et icônes (`assets/`). |
 | `docs/data/schedule.json` | Le déroulé chronométré : heure de départ, phases, textes des écrans STOP. |
-| `docs/data/config.json` | Les liens (Moodle, Insee, vidéo…), la collecte optionnelle et les options d’affichage. |
+| `docs/data/config.json` | Les liens (Insee, vidéo, ressources…), l’envoi des réponses à l’enseignant et les options d’affichage. |
 | `private/` | **Jamais publié.** La correction en clair, avant chiffrement. Ignoré par Git. |
 | `scripts/` | Le build (chiffrement), le contrôle éditorial, le calcul des budgets de temps, le contrôle des liens, un petit serveur local. |
+| `scripts/apps-script/Code.gs` | Le script Google à coller une fois pour recevoir les réponses (voir « Voir les réponses en direct »). |
 | `tests/` | Les tests automatiques (Playwright). |
 | `docs-internes/budget-temps.md` | Le calcul du temps nécessaire à chaque phase, page par page. |
 | `VERIFICATIONS.md` | Tout ce qui reste à vérifier avant la séance, et les coupes faites. |
 
-Les pages élèves sont, dans l’ordre : `index.html` (accueil de la séance), `1-cadre`, `2-methode`, `3-chercher`, `4-citer-lecture`, `5-citer-pratique`, `pause`, `6-lire` (avec le dépôt), `7-correction` (chiffrée), `8-notes`, `9-video`, `10-fin`. Côté enseignant : `prof/projecteur.html` (à projeter) et `prof/deroule.html` (feuille de route).
+Les pages élèves sont, dans l’ordre : `index.html` (accueil de la séance), `1-cadre`, `2-methode`, `3-chercher`, `4-citer-lecture`, `5-citer-pratique`, `pause`, `6-lire` (avec le dépôt), `7-correction` (chiffrée), `8-notes`, `9-video`, `10-fin`. Côté enseignant : `prof/reponses.html` (les réponses des équipes en direct), `prof/projecteur.html` (à projeter) et `prof/deroule.html` (feuille de route).
 
 ## Modifier une question ou un texte
 
@@ -41,7 +42,8 @@ Les règles d’écriture (pas de tiret long, peu de deux-points, apostrophes ty
 
 L’horloge suit l’heure de chaque appareil. Toutes les phases se calculent à partir de l’heure de départ.
 
-- **Pour toute la classe** : sur GitHub, ouvrez `docs/data/schedule.json` et changez `"departParDefaut": "09:00"` (par exemple `"09:15"`). Validez. C’est à faire avant la séance.
+- **Pour toute la classe, pendant la séance** : sur la page « Réponses des équipes », ouvrez « Heure de départ pour toute la classe ». Diffusez une heure (par exemple 10 h 00), ou cliquez « Démarrer maintenant » au vrai début. Les appareils des binômes et l’écran de projection la reçoivent en moins d’une minute. « Revenir à l’horaire du fichier » annule ce réglage. Il faut que l’envoi des réponses soit branché.
+- **Pour toute la classe, par le fichier** : sur GitHub, ouvrez `docs/data/schedule.json` et changez `"departParDefaut": "09:00"` (par exemple `"10:00"`). Validez. Les pages ouvertes relisent ce fichier chaque minute.
 - **Sur un seul appareil** : ajoutez à l’adresse de n’importe quelle page `?depart=09:15`, ou `?decalage=5` pour décaler de 5 minutes (ou `?decalage=-5`). Le réglage reste mémorisé sur cet appareil. Pour l’annuler : `?depart=defaut` ou `?decalage=0`.
 - **Pour une démonstration** : `?now=10:30` simule l’heure (ici 10 h 30). Pour revenir à l’heure réelle : `?now=reel`.
 - Si la séance démarre en retard, l’adresse affichée sous le code QR de l’écran de projection reprend le réglage de l’appareil de l’enseignant. Donnez-la aux binômes.
@@ -99,7 +101,7 @@ npm run serve
 
 Le travail a été préparé sur la branche `claude/elegant-planck-ir8tii`. Fusionnez-la dans `main` (par une pull request) avant l’étape 2, ou choisissez provisoirement cette branche dans l’étape 2 pour essayer le site.
 
-Après publication, vérifiez sur l’adresse publique : la page de la correction demande le mot de passe, le bouton « Télécharger le récapitulatif » produit bien un fichier, et l’horloge affiche la bonne phase.
+Après publication, vérifiez sur l’adresse publique : la page de la correction demande le mot de passe, le bouton « Télécharger le récapitulatif » produit bien un fichier, l’horloge affiche la bonne phase, et une équipe de test apparaît sur la page « Réponses des équipes ».
 
 ## Sauvegarder le dossier `private/`
 
@@ -111,44 +113,53 @@ La correction publiée est chiffrée (AES, côté navigateur). Sans le mot de pa
 
 L’option « se souvenir » évite de redemander le mot de passe à chaque rechargement, sur le même ordinateur, pendant 30 jours.
 
-## Collecte automatique vers une feuille Google (facultatif)
+## Voir les réponses en direct
 
-Désactivée par défaut. Activée, elle envoie en plus chaque dépôt (équipe, noms, étape, points, temps, récapitulatif) vers une feuille Google privée, pour voir les dépôts arriver en direct. Avant de l’activer, décidez de l’information donnée aux étudiant·es et de la durée de conservation des données.
+Le site n’a pas de serveur. Pour que vous voyiez les réponses des binômes, elles sont envoyées dans une **feuille Google privée**, dans votre compte, par un petit script. Vous les lisez ensuite sur la page « Réponses des équipes » (`prof/reponses.html`), avec une clé que vous seul·e connaissez. Comptez une dizaine de minutes, une seule fois. Il faut un compte Google (un compte personnel suffit).
 
-1. Créez une feuille Google, puis **Extensions**, **Apps Script**. Collez ce script en remplaçant le jeton :
-   ```javascript
-   const JETON = 'REMPLACER_PAR_UN_JETON';
+**1. Créer la feuille et le script**
 
-   function doPost(e) {
-     try {
-       const d = JSON.parse(e.postData.contents);
-       if (d.jeton !== JETON) {
-         return sortie({ ok: false, erreur: 'jeton' });
-       }
-       const feuille = SpreadsheetApp.getActive().getSheetByName('Depots')
-         || SpreadsheetApp.getActive().insertSheet('Depots');
-       feuille.appendRow([new Date(), d.equipe, d.noms, d.etape, d.points, d.temps, d.recap]);
-       return sortie({ ok: true });
-     } catch (err) {
-       return sortie({ ok: false, erreur: String(err) });
-     }
-   }
+1. Sur [Google Sheets](https://sheets.google.com), créez une feuille vierge, par exemple « Séance 9, réponses ».
+2. Dans cette feuille, menu **Extensions**, puis **Apps Script**.
+3. Effacez le contenu de l’éditeur, puis collez tout le fichier `scripts/apps-script/Code.gs` du dépôt.
+4. En haut du script, remplacez `CHOISISSEZ_UNE_CLE` par une clé de votre choix, longue et difficile à deviner. Ne la mettez jamais dans le dépôt GitHub : vous la taperez seulement sur la page « Réponses des équipes ». Ne changez pas la ligne `JETON`, elle doit rester identique à celle de `docs/data/config.json`.
+5. Enregistrez (icône disquette).
 
-   function sortie(obj) {
-     return ContentService.createTextOutput(JSON.stringify(obj))
-       .setMimeType(ContentService.MimeType.JSON);
-   }
-   ```
-2. **Déployer**, **Nouveau déploiement**, type **Application Web**, exécuter en tant que vous-même, accès « Tout le monde ». Copiez l’adresse obtenue.
-3. Dans `docs/data/config.json`, mettez `"actif": true`, l’adresse dans `"endpoint"` et le même jeton dans `"jeton"`.
+**2. Publier le script**
 
-Le jeton n’est pas un secret : il est lisible dans le code du site. Il évite seulement les envois par erreur. Le site affiche un avis avant l’envoi, et propose toujours la copie et le téléchargement en plus.
+1. Bouton **Déployer**, puis **Nouveau déploiement**.
+2. Roue dentée, type **Application Web**.
+3. « Exécuter en tant que » : **Moi**. « Qui a accès » : **Tout le monde**.
+4. **Déployer**, puis autorisez l’accès à votre compte quand Google le demande (l’écran « application non validée » est normal pour un script personnel : « Paramètres avancés », puis « Accéder au projet »).
+5. Copiez l’**URL de l’application Web** (elle se termine par `/exec`).
+
+**3. Brancher le site**
+
+1. Sur GitHub, ouvrez `docs/data/config.json`, crayon « Edit this file ».
+2. Dans `"collecte"`, mettez `"actif": true` et collez l’adresse dans `"endpoint"`.
+3. Validez. Une à deux minutes plus tard, le site envoie les réponses.
+
+**4. Vérifier**
+
+Ouvrez une page de la séance, tapez un nom d’équipe, attendez quelques secondes, puis ouvrez `prof/reponses.html` et tapez votre clé. L’équipe de test doit apparaître. Vous pouvez ensuite supprimer sa ligne dans la feuille Google.
+
+**Ce que vous voyez sur la page « Réponses des équipes »**
+
+- La vue d’ensemble : pour chaque équipe, le drapeau d’aide, la page en cours, la dernière activité, les points, l’avancement des quêtes, les champs requis remplis et l’heure des dépôts. Les équipes qui demandent de l’aide sont en tête.
+- Par question : toutes les réponses des équipes à une question, et pour un QCM la répartition des réponses et le nombre de bonnes réponses du premier coup.
+- Par équipe : toutes les réponses d’une équipe, et ses récapitulatifs envoyés.
+- L’heure de départ pour toute la classe (voir plus haut).
+- La page s’actualise toute seule toutes les 20 secondes.
+
+**Ce qui est envoyé, et quand.** Le nom d’équipe, les deux noms, l’icône, la page en cours, les points, l’avancement des quêtes, le drapeau d’aide, les réponses et les dépôts. L’envoi a lieu peu après l’arrivée sur une page, puis toutes les 45 secondes s’il y a du nouveau, quand on quitte la page, quand le drapeau change, à chaque point d’arrêt, et au dépôt. Les étudiant·es en sont informé·es sur la page Cadre, au moment de saisir leurs noms. Avant la séance, décidez de l’information à leur donner et de la durée de conservation de la feuille (RGPD).
+
+**À savoir.** Le jeton de `config.json` n’est pas un secret : il est lisible dans le code du site et évite seulement les envois par erreur. La clé enseignant, elle, reste dans votre script Google et dans votre tête. Si l’envoi échoue (réseau), les binômes peuvent toujours télécharger leur récapitulatif.
 
 ## Comment le site fonctionne
 
 - **État partagé** : toutes les pages lisent et écrivent le même objet dans le navigateur (clé `fabrique:s09:v1`). Une écriture a lieu 350 ms après chaque saisie, et tout de suite quand on quitte la page. Si le navigateur refuse d’enregistrer (navigation privée stricte), un message demande de copier régulièrement le récapitulatif.
 - **Horloge** : les phases, les comptes à rebours et les écrans STOP viennent de `schedule.json`. À chaque point d’arrêt, un bandeau prévient pendant 60 secondes, puis un écran plein cadre propose un seul bouton vers la page suivante. Les réponses sont conservées, et les pages précédentes restent accessibles ensuite.
-- **Récapitulatif** : texte brut à copier ou à télécharger (`s09_<equipe>_parcours.txt`, et `s09_<equipe>_video.txt` pour le dépôt express), à déposer sur Moodle.
+- **Dépôt** : le bouton « Envoyer à l’enseignant » envoie le récapitulatif complet et signale que le dépôt est fait. Le récapitulatif peut aussi être téléchargé (`s09_<equipe>_parcours.txt`, et `s09_<equipe>_video.txt` pour la vidéo) ou copié, en secours.
 - **Jeu** : points d’expérience, quatre quêtes, huit badges, anneaux de compétences et phrase mystère. Les points ne sont pas une note, et il n’y a aucun classement. Le mode sobre (menu) masque les animations et les badges. Les animations sont coupées si l’appareil demande moins de mouvement.
 - **Accessibilité** : navigation au clavier, retours de QCM annoncés aux lecteurs d’écran, contrastes vérifiés en mode sombre et clair. Les tests incluent un audit axe-core sur chaque page, et Lighthouse donne 100 en accessibilité sur chaque page.
 

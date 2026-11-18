@@ -164,8 +164,10 @@ export function exporterJSON() {
 // Remise à zéro des réponses. Les réglages d’affichage et d’horloge sont gardés.
 export function effacer() {
   const options = etat.options;
+  const id = etat.id;
   etat = etatVide();
   etat.options = options;
+  if (id) { etat.id = id; }
   enregistrerMaintenant(true);
   bus.dispatchEvent(new CustomEvent('change', { detail: { efface: true } }));
 }

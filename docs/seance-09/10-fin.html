@@ -75,16 +75,16 @@ Un exemple tiré d’un document
 
   <section class="depot" data-depot="video" aria-labelledby="titre-express-fin">
     <h2 id="titre-express-fin">Dépôt express, si besoin</h2>
-    <p class="prose">Si vous n’avez pas encore déposé la partie vidéo, copiez ou téléchargez son récapitulatif ici. Collez ou déposez le fichier dans le dépôt Moodle prévu pour cette partie de la séance.</p>
+    <p class="prose" data-si-collecte hidden>Si vous n’avez pas encore envoyé la partie vidéo, faites-le ici.</p>
+    <p class="prose" data-sans-collecte>Si vous n’avez pas encore gardé le récapitulatif de la partie vidéo, téléchargez-le ici.</p>
     <p class="statut" data-recap-progres aria-live="polite"></p>
     <div class="rangee-boutons">
-      <button type="button" class="btn" data-action="copier">Copier le récapitulatif</button>
+      <button type="button" class="btn" data-action="envoyer" hidden>Envoyer à l’enseignant</button>
       <button type="button" class="btn secondaire" data-action="telecharger">Télécharger le récapitulatif</button>
-      <button type="button" class="btn secondaire" data-action="envoyer" hidden>Envoyer à l’enseignant</button>
+      <button type="button" class="btn discret" data-action="copier">Copier le récapitulatif</button>
     </div>
     <p class="avis-collecte" data-avis-collecte hidden>Vos réponses et vos noms sont envoyés à l’enseignant, dans un tableau privé.</p>
     <p class="statut" data-recap-statut role="status" aria-live="polite"></p>
-    <p class="meta"><a data-lien-moodle="moodleDepotVideo" href="#" target="_blank" rel="noopener" hidden>Ouvrir le dépôt Moodle de la partie vidéo</a><span data-sans-lien>Le lien du dépôt est sur Moodle.</span></p>
     <details>
       <summary>Voir le texte du récapitulatif</summary>
       <textarea class="recap" readonly data-recap-texte aria-label="Texte du récapitulatif de la partie vidéo"></textarea>

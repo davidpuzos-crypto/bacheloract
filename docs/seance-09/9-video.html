@@ -232,16 +232,16 @@
 
     <section class="depot" data-depot="video" aria-labelledby="titre-express">
       <h3 id="titre-express">Dépôt express</h3>
-      <p class="prose">Copiez ou téléchargez le récapitulatif de la partie vidéo. Collez ou déposez le fichier dans le dépôt Moodle prévu pour cette partie de la séance.</p>
+      <p class="prose" data-si-collecte hidden>Envoyez le récapitulatif de la partie vidéo à l’enseignant.</p>
+      <p class="prose" data-sans-collecte>Téléchargez le récapitulatif de la partie vidéo et gardez le fichier.</p>
       <p class="statut" data-recap-progres aria-live="polite"></p>
       <div class="rangee-boutons">
-        <button type="button" class="btn" data-action="copier">Copier le récapitulatif</button>
+        <button type="button" class="btn" data-action="envoyer" hidden>Envoyer à l’enseignant</button>
         <button type="button" class="btn secondaire" data-action="telecharger">Télécharger le récapitulatif</button>
-        <button type="button" class="btn secondaire" data-action="envoyer" hidden>Envoyer à l’enseignant</button>
+        <button type="button" class="btn discret" data-action="copier">Copier le récapitulatif</button>
       </div>
       <p class="avis-collecte" data-avis-collecte hidden>Vos réponses et vos noms sont envoyés à l’enseignant, dans un tableau privé.</p>
       <p class="statut" data-recap-statut role="status" aria-live="polite"></p>
-      <p class="meta"><a data-lien-moodle="moodleDepotVideo" href="#" target="_blank" rel="noopener" hidden>Ouvrir le dépôt Moodle de la partie vidéo</a><span data-sans-lien>Le lien du dépôt est sur Moodle.</span></p>
       <details>
         <summary>Voir le texte du récapitulatif</summary>
         <textarea class="recap" readonly data-recap-texte aria-label="Texte du récapitulatif de la partie vidéo"></textarea>
