@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bilan · Séance 9 · La fabrique du social</title>
+<meta name="description" content="Bilan de l’enquête, phrase mystère et préparation de l’examen.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/game.css">
+<script src="../assets/js/theme.js"></script>
+<script type="module" src="../assets/js/app.js"></script>
+</head>
+<body data-page="fin" data-espace="seance">
+<a class="evitement" href="#contenu">Aller au contenu</a>
+<header class="entete-statique"><a href="index.html">La fabrique du social, séance 9</a></header>
+<main id="contenu" class="page">
+  <div class="tete-page">
+    <p class="etiquette">Fin de séance · <span data-heure-phase="fin:debut">12 h 00</span></p>
+    <h1>Le bilan de votre enquête</h1>
+    <p class="chapeau">Vos points, vos badges et la phrase mystère. Les points ne sont pas une note.</p>
+  </div>
+
+  <div class="phrase-finale" data-phrase aria-live="polite">
+    <p>La phrase mystère s’affiche ici quand la page est ouverte dans un navigateur récent.</p>
+  </div>
+
+  <h2>Votre carnet d’enquête</h2>
+  <div class="carnet-page carnet" data-carnet>
+    <p>Le carnet s’affiche ici quand la page est ouverte dans un navigateur récent.</p>
+  </div>
+
+  <div class="prose">
+    <h2>Pour l’examen</h2>
+    <p>Pour l’examen, il faut savoir relier chaque notion à son auteur·e et à un texte. Une fiche par séance sert à cela. Copiez le modèle vide ci-dessous et remplissez-le pour chaque notion.</p>
+    <p>Le guide de révision sera déposé sur Moodle après la séance 9. <a data-lien="moodleGuideRevision" href="#" target="_blank" rel="noopener" hidden>Ouvrir le guide de révision</a></p>
+  </div>
+
+  <div class="q">
+    <label class="qlabel" for="modele-fiche">Modèle de fiche, à copier</label>
+    <textarea id="modele-fiche" class="recap" readonly rows="16">Fiche notion
+
+Notion
+
+Séance
+
+Auteur·e qui a forgé la notion (année, titre du texte)
+
+Texte que j’ai lu et son auteur·e (année, titre, pages ou adresse)
+
+Définition citée, entre guillemets, avec la page
+
+Définition avec mes mots
+
+Critères pour reconnaître un cas
+
+Un exemple tiré d’un document
+
+À savoir sans regarder (auteur·e, année, idée en une phrase)
+</textarea>
+    <p class="rangee-boutons"><button type="button" class="btn" data-copier-modele="modele-fiche">Copier le modèle</button></p>
+    <p class="statut" data-statut-modele role="status" aria-live="polite"></p>
+  </div>
+
+  <div class="prose">
+    <h3>Les notions de la séance 9 à mettre en fiche</h3>
+  </div>
+  <ul class="grille-cartes notions">
+    <li class="carte"><span class="num">Genre</span>Votre définition de travail, vos deux sources et l’étude de l’Insee vous donnent de quoi commencer la fiche.</li>
+    <li class="carte a-completer"><span class="num">Intersectionnalité</span><span class="etiquette">À compléter avec le cours</span></li>
+  </ul>
+
+  <section class="depot" data-depot="video" aria-labelledby="titre-express-fin">
+    <h2 id="titre-express-fin">Dépôt express, si besoin</h2>
+    <p class="prose">Si vous n’avez pas encore déposé la partie vidéo, copiez ou téléchargez son récapitulatif ici. Collez ou déposez le fichier dans le dépôt Moodle prévu pour cette partie de la séance.</p>
+    <p class="statut" data-recap-progres aria-live="polite"></p>
+    <div class="rangee-boutons">
+      <button type="button" class="btn" data-action="copier">Copier le récapitulatif</button>
+      <button type="button" class="btn secondaire" data-action="telecharger">Télécharger le récapitulatif</button>
+      <button type="button" class="btn secondaire" data-action="envoyer" hidden>Envoyer à l’enseignant</button>
+    </div>
+    <p class="avis-collecte" data-avis-collecte hidden>Vos réponses et vos noms sont envoyés à l’enseignant, dans un tableau privé.</p>
+    <p class="statut" data-recap-statut role="status" aria-live="polite"></p>
+    <p class="meta"><a data-lien-moodle="moodleDepotVideo" href="#" target="_blank" rel="noopener" hidden>Ouvrir le dépôt Moodle de la partie vidéo</a><span data-sans-lien>Le lien du dépôt est sur Moodle.</span></p>
+    <details>
+      <summary>Voir le texte du récapitulatif</summary>
+      <textarea class="recap" readonly data-recap-texte aria-label="Texte du récapitulatif de la partie vidéo"></textarea>
+    </details>
+  </section>
+
+  <nav class="pager" aria-label="Pages voisines">
+    <a href="9-video.html#questions">Revenir aux questions</a>
+    <a class="btn" href="index.html">Revenir à l’accueil de la séance</a>
+  </nav>
+</main>
+<footer class="pied"><p>La fabrique du social · Bachelor ACT · Séance 9</p></footer>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feuille de route · Séance 9 · La fabrique du social</title>
+<meta name="description" content="Feuille de route de l’enseignant pour la séance 9. Aucun corrigé.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/prof.css">
+<script src="../assets/js/theme.js"></script>
+<script type="module" src="../assets/js/app.js"></script>
+</head>
+<body data-page="deroule" data-espace="prof">
+<a class="evitement" href="#contenu">Aller au contenu</a>
+<main id="contenu" class="page">
+  <div class="tete-page">
+    <p class="etiquette">Espace enseignant · Séance 9</p>
+    <h1>Feuille de route</h1>
+    <p class="chapeau">Le déroulé, ce que vous pouvez dire en passant dans les groupes, le plan B et les vérifications à faire avant la séance. Cette page ne contient aucun corrigé.</p>
+    <p class="rangee-boutons">
+      <a class="btn" href="projecteur.html">Ouvrir l’écran de projection</a>
+      <a class="btn secondaire" href="../seance-09/index.html">Accueil de la séance</a>
+    </p>
+  </div>
+
+  <h2>Le déroulé</h2>
+  <p class="prose">Temps de travail effectif de 2 h 30, pause avancée à 10 h 05. Aucune marge. Les écrans STOP s’affichent d’abord en bandeau pendant 60 secondes, puis en plein écran, avec un seul bouton vers la page suivante.</p>
+  <div class="table-defile">
+    <table class="deroule" data-deroule>
+      <caption class="visuellement-cache">Phases de la séance avec leur heure de début et leur durée</caption>
+      <thead><tr><th scope="col" class="heure">Heure</th><th scope="col">Durée</th><th scope="col">Phase</th></tr></thead>
+      <tbody>
+        <tr><th scope="row" class="heure">9 h 00</th><td>3 min</td><td>Cadre</td></tr>
+        <tr><th scope="row" class="heure">9 h 03</th><td>7 min</td><td>Méthode</td></tr>
+        <tr><th scope="row" class="heure">9 h 10</th><td>25 min</td><td>Chercher, stop à 9 h 35</td></tr>
+        <tr><th scope="row" class="heure">9 h 35</th><td>10 min</td><td>Lecture, bien citer</td></tr>
+        <tr><th scope="row" class="heure">9 h 45</th><td>20 min</td><td>Citer, pratique, stop à 10 h 05</td></tr>
+        <tr><th scope="row" class="heure">10 h 05</th><td>30 min</td><td>Pause</td></tr>
+        <tr><th scope="row" class="heure">10 h 35</th><td>22 min</td><td>Lire</td></tr>
+        <tr><th scope="row" class="heure">10 h 57</th><td>3 min</td><td>Dépôt, stop à 11 h 00</td></tr>
+        <tr><th scope="row" class="heure">11 h 00</th><td>10 min</td><td>Correction</td></tr>
+        <tr><th scope="row" class="heure">11 h 10</th><td>10 min</td><td>Conseils de prise de notes, stop à 11 h 20</td></tr>
+        <tr><th scope="row" class="heure">11 h 20</th><td>25 min</td><td>Vidéo, stop à 11 h 45</td></tr>
+        <tr><th scope="row" class="heure">11 h 45</th><td>5 min</td><td>À froid et comparer, stop à 11 h 50</td></tr>
+        <tr><th scope="row" class="heure">11 h 50</th><td>10 min</td><td>Questions, stop à 12 h 00</td></tr>
+        <tr><th scope="row" class="heure">12 h 00</th><td></td><td>Fin</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Régler l’horloge</h2>
+  <div class="prose">
+    <p>Les pages suivent l’heure de chaque appareil. L’heure de départ par défaut est dans <code>docs/data/schedule.json</code>, champ <code>departParDefaut</code>. Modifiez-la sur GitHub la veille si la séance ne commence pas à 9 h 00.</p>
+    <p>Sur un appareil, vous pouvez aussi ajouter à l’adresse <code>?depart=09:10</code> pour changer l’heure de départ, <code>?decalage=5</code> pour décaler de quelques minutes (ou <code>?decalage=-5</code>), et <code>?now=10:30</code> pour simuler une heure pendant une démonstration. Ces réglages restent mémorisés sur l’appareil. Pour les annuler, ouvrez l’adresse avec <code>?depart=defaut</code>, <code>?decalage=0</code> ou <code>?now=reel</code>.</p>
+    <p>Si la séance démarre en retard, l’adresse affichée sous le code QR de l’écran de projection reprend le réglage de votre appareil. Donnez-la aux binômes pour qu’ils suivent le même horaire.</p>
+  </div>
+
+  <h2>Phase par phase, ce que vous pouvez dire</h2>
+  <div class="fiche-phase">
+    <h3>Chercher, de 9 h 10 à 9 h 35</h3>
+    <p>Une équipe choisit le Larousse ou une IA. Renvoyez-la au tableau « Où la chercher » de la méthode.</p>
+    <p>Le dictionnaire n’a pas d’entrée « Genre ». C’est une réponse valable, la consigne le dit.</p>
+    <p>SophIA renvoie des extraits hors sujet. Demandez d’ouvrir l’article et d’y retrouver la phrase. L’accès à Cairn demande le K-lab.</p>
+  </div>
+  <div class="fiche-phase">
+    <h3>Citer, pratique, de 9 h 45 à 10 h 05</h3>
+    <p>Confusion entre l’auteur·e à qui l’entrée attribue la définition et l’entrée elle-même. Faites relire l’exemple annoté de la méthode.</p>
+    <p>Guillemets oubliés. Mots de deux auteur·es fusionnés dans une même paire de guillemets.</p>
+  </div>
+  <div class="fiche-phase">
+    <h3>Lire, de 10 h 35 à 11 h 00</h3>
+    <p>« Champ » compris comme « domaine d’études ». Renvoyez à l’encadré sur les légendes.</p>
+    <p>Confusion entre 13,0 % (figure 2, autre champ) et 14,0 % (figure 1).</p>
+    <p>EQTP non compris. Montrez le mini-glossaire « Mots utiles », en tête du document.</p>
+  </div>
+  <div class="fiche-phase">
+    <h3>Correction, à 11 h 00</h3>
+    <p>Annoncez le mot de passe quand les dépôts sont faits. Sur l’écran de projection, le bouton « Afficher en grand » l’affiche pour toute la salle, sans l’enregistrer.</p>
+  </div>
+  <div class="fiche-phase">
+    <h3>Prise de notes, de 11 h 10 à 12 h 00</h3>
+    <p>Rappelez que ce ne sont pas les notes qui sont évaluées mais les façons de faire.</p>
+  </div>
+
+  <h2>Plan B en cas de retard</h2>
+  <div class="prose">
+    <p>Côté Lire, sacrifiez dans cet ordre L3 (variables), L2 (thèse), les QCM sur les légendes, puis le bonus. L6 (genre) est le cœur de la partie Lire, gardez-la.</p>
+    <p>Côté vidéo, sacrifiez G1 avant S1.</p>
+  </div>
+
+  <h2>Avant la séance, à vérifier</h2>
+  <p class="prose">Le détail de chaque point est dans le fichier <code>VERIFICATIONS.md</code> du dépôt. Les cases ne sont pas enregistrées.</p>
+  <ul class="liste-verif">
+    <li><input type="checkbox" id="v1"><label for="v1">Le mot de passe de la correction est choisi et la correction reconstruite avec <code>npm run build</code>.</label></li>
+    <li><input type="checkbox" id="v2"><label for="v2">Les liens Moodle (dépôt du parcours, dépôt express, fiche méthode, guide de révision) sont renseignés dans <code>docs/data/config.json</code>.</label></li>
+    <li><input type="checkbox" id="v3"><label for="v3">L’entrée « Genre » de Géoconfluences s’ouvre, ainsi que le glossaire de secours.</label></li>
+    <li><input type="checkbox" id="v4"><label for="v4">Le Dictionnaire de sociologie clinique sur Cairn contient, ou non, une entrée « Genre ».</label></li>
+    <li><input type="checkbox" id="v5"><label for="v5">L’accès à Cairn par le K-lab et SophIA fonctionnent depuis la salle.</label></li>
+    <li><input type="checkbox" id="v6"><label for="v6">Le site SES-ENS et le guide APA de l’ENS Paris s’ouvrent, et les modèles APA de la page Citer leur sont conformes.</label></li>
+    <li><input type="checkbox" id="v7"><label for="v7">Les QCM V4 à V8 et la question G2 sont revérifiés contre la vidéo, aux horodatages des chapitres.</label></li>
+    <li><input type="checkbox" id="v8"><label for="v8">La vidéo se lance sur le poste de projection, avec le son.</label></li>
+    <li><input type="checkbox" id="v9"><label for="v9">Les pourcentages de rétention restent masqués, sauf source fournie.</label></li>
+    <li><input type="checkbox" id="v10"><label for="v10">L’intersectionnalité a sa place dans le cours (bloc « À compléter avec le cours » de la page Bilan).</label></li>
+    <li><input type="checkbox" id="v11"><label for="v11">Si la collecte est activée, l’information des étudiant·es et la durée de conservation des données sont décidées.</label></li>
+    <li><input type="checkbox" id="v12"><label for="v12">L’écran de projection affiche la bonne heure et la bonne phase.</label></li>
+  </ul>
+</main>
+<footer class="pied"><p>La fabrique du social · Bachelor ACT · Séance 9 · <a href="../index.html">Toutes les séances</a></p></footer>
+</body>
+</html>
