@@ -15,7 +15,7 @@ Hypothèses de calcul : lecture à 200 mots par minute ; 30 secondes par QCM ; c
 | Dépôt | 3 min | 49 | usage (0.3 min) | 0 | Copier ou télécharger le récapitulatif, puis le déposer sur Moodle (1,5 min) | 2 min | 1 min | tient |
 | Correction | 10 min | 182 | aucun | 2 |  | 1,9 min | 8,1 min | tient |
 | Conseils de prise de notes | 10 min | 119 | aucun | 0 | Choix de trois conseils parmi les huit (1 min) | 1,6 min | 8,4 min | tient |
-| Vidéo, pendant | 25 min | 40 | aucun | 0 | Projection de la vidéo, prise de notes en même temps (25 min) | 25 min | 0 min | tient |
+| Vidéo, pendant | 25 min | 43 | aucun | 0 | Projection de la vidéo, prise de notes en même temps (25 min) | 25 min | 0 min | tient |
 | Vidéo, à froid et comparer | 5 min | 64 | bp (2 min), n3 (2 min) | 0 | 8 cases (0,7 min) | 5 min | 0 min | tient |
 | Vidéo, questions | 10 min | 21 | s1 (2.5 min), g1 (3 min) | 5 | Dépôt express (copier ou télécharger, déposer) (1 min) | 9,1 min | 0,9 min | tient |
 
