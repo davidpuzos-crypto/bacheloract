@@ -1,12 +1,15 @@
 // Horloge de séance. Les phases suivent l’heure réelle de l’appareil, pour que
 // toute la classe soit synchronisée sans serveur.
+// Heure de départ, par ordre de priorité : réglage local (?depart=), heure
+// diffusée par l’enseignant (page Réponses, si la collecte est active),
+// puis departParDefaut de data/schedule.json, relu chaque minute.
 // Paramètres d’URL (mémorisés dans l’état) :
 //   ?depart=HH:MM    heure de départ du planning (?depart=defaut pour revenir à data/schedule.json)
 //   ?decalage=±N     décalage fin en minutes (?decalage=0 pour l’annuler)
 //   ?now=HH:MM       heure simulée, pour les tests et les démonstrations (?now=reel pour l’annuler)
 
 import { lire, modifierSansSignal, enregistrerMaintenant } from './state.js';
-import { programme as chargerProgramme } from './donnees.js';
+import { programme as chargerProgramme, rechargerProgramme } from './donnees.js';
 
 let P = null;
 const bus = new EventTarget();
@@ -53,7 +56,18 @@ export function maintenant() {
 
 export function heureDepartTexte() {
   const h = lire().options.horloge || {};
-  return h.depart || (P && P.departParDefaut) || '09:00';
+  return h.depart || h.diffuse || (P && P.departParDefaut) || '09:00';
+}
+
+// Heure de départ diffusée par l’enseignant pour toute la classe ('' pour l’annuler).
+export function appliquerDepartDiffuse(v) {
+  const h = lire().options.horloge;
+  const valeur = RE_HEURE.test(String(v || '')) ? String(v).padStart(5, '0') : '';
+  if ((h.diffuse || '') === valeur) { return false; }
+  if (valeur) { h.diffuse = valeur; } else { delete h.diffuse; }
+  modifierSansSignal(() => {});
+  tic();
+  return true;
 }
 
 export function departMs(t = maintenant()) {
@@ -174,5 +188,11 @@ export async function initHorloge(idPage) {
   document.addEventListener('visibilitychange', fermer);
   tic();
   setInterval(tic, 1000);
+  // L’enseignant peut changer l’heure de départ sur GitHub pendant la séance :
+  // le déroulé est relu chaque minute, sans recharger la page.
+  setInterval(async () => {
+    const neuf = await rechargerProgramme();
+    if (neuf && JSON.stringify(neuf) !== JSON.stringify(P)) { P = neuf; tic(); }
+  }, 60000);
   return P;
 }

@@ -22,7 +22,8 @@
     <h1>Feuille de route</h1>
     <p class="chapeau">Le déroulé, ce que vous pouvez dire en passant dans les groupes, le plan B et les vérifications à faire avant la séance. Cette page ne contient aucun corrigé.</p>
     <p class="rangee-boutons">
-      <a class="btn" href="projecteur.html">Ouvrir l’écran de projection</a>
+      <a class="btn" href="reponses.html">Voir les réponses des équipes</a>
+      <a class="btn secondaire" href="projecteur.html">Ouvrir l’écran de projection</a>
       <a class="btn secondaire" href="../seance-09/index.html">Accueil de la séance</a>
     </p>
   </div>
@@ -54,7 +55,8 @@
 
   <h2>Régler l’horloge</h2>
   <div class="prose">
-    <p>Les pages suivent l’heure de chaque appareil. L’heure de départ par défaut est dans <code>docs/data/schedule.json</code>, champ <code>departParDefaut</code>. Modifiez-la sur GitHub la veille si la séance ne commence pas à 9 h 00.</p>
+    <p>Les pages suivent l’heure de chaque appareil. Le plus simple, si la séance ne commence pas à 9 h 00, est d’ouvrir la page « Réponses des équipes » et de diffuser l’heure de départ réelle, ou de cliquer « Démarrer maintenant » au vrai début. Tous les appareils la reçoivent en moins d’une minute.</p>
+    <p>Sans l’envoi des réponses, modifiez l’heure de départ par défaut sur GitHub, dans <code>docs/data/schedule.json</code>, champ <code>departParDefaut</code>. Les pages ouvertes relisent ce fichier chaque minute.</p>
     <p>Sur un appareil, vous pouvez aussi ajouter à l’adresse <code>?depart=09:10</code> pour changer l’heure de départ, <code>?decalage=5</code> pour décaler de quelques minutes (ou <code>?decalage=-5</code>), et <code>?now=10:30</code> pour simuler une heure pendant une démonstration. Ces réglages restent mémorisés sur l’appareil. Pour les annuler, ouvrez l’adresse avec <code>?depart=defaut</code>, <code>?decalage=0</code> ou <code>?now=reel</code>.</p>
     <p>Si la séance démarre en retard, l’adresse affichée sous le code QR de l’écran de projection reprend le réglage de votre appareil. Donnez-la aux binômes pour qu’ils suivent le même horaire.</p>
   </div>
@@ -63,7 +65,7 @@
   <div class="fiche-phase">
     <h3>Chercher, de 9 h 10 à 9 h 35</h3>
     <p>Une équipe choisit le Larousse ou une IA. Renvoyez-la au tableau « Où la chercher » de la méthode.</p>
-    <p>Le dictionnaire n’a pas d’entrée « Genre ». C’est une réponse valable, la consigne le dit.</p>
+    <p>Une équipe ne trouve pas l’entrée « Genre » du dictionnaire. Elle existe. Montrez la recherche dans le livre, sur Cairn, avec l’accès K-lab.</p>
     <p>SophIA renvoie des extraits hors sujet. Demandez d’ouvrir l’article et d’y retrouver la phrase. L’accès à Cairn demande le K-lab.</p>
   </div>
   <div class="fiche-phase">
@@ -79,7 +81,7 @@
   </div>
   <div class="fiche-phase">
     <h3>Correction, à 11 h 00</h3>
-    <p>Annoncez le mot de passe quand les dépôts sont faits. Sur l’écran de projection, le bouton « Afficher en grand » l’affiche pour toute la salle, sans l’enregistrer.</p>
+    <p>Annoncez le mot de passe quand les dépôts sont faits. La page « Réponses des équipes » compte les dépôts reçus. Sur l’écran de projection, le bouton « Afficher en grand » affiche le mot de passe pour toute la salle, sans l’enregistrer.</p>
   </div>
   <div class="fiche-phase">
     <h3>Prise de notes, de 11 h 10 à 12 h 00</h3>
@@ -96,16 +98,16 @@
   <p class="prose">Le détail de chaque point est dans le fichier <code>VERIFICATIONS.md</code> du dépôt. Les cases ne sont pas enregistrées.</p>
   <ul class="liste-verif">
     <li><input type="checkbox" id="v1"><label for="v1">Le mot de passe de la correction est choisi et la correction reconstruite avec <code>npm run build</code>.</label></li>
-    <li><input type="checkbox" id="v2"><label for="v2">Les liens Moodle (dépôt du parcours, dépôt express, fiche méthode, guide de révision) sont renseignés dans <code>docs/data/config.json</code>.</label></li>
+    <li><input type="checkbox" id="v2"><label for="v2">L’envoi des réponses est branché (script Google, clé enseignant) et la page « Réponses des équipes » affiche une équipe de test.</label></li>
     <li><input type="checkbox" id="v3"><label for="v3">L’entrée « Genre » de Géoconfluences s’ouvre, ainsi que le glossaire de secours.</label></li>
-    <li><input type="checkbox" id="v4"><label for="v4">Le Dictionnaire de sociologie clinique sur Cairn contient, ou non, une entrée « Genre ».</label></li>
+    <li><input type="checkbox" id="v4"><label for="v4">Les liens Moodle de la fiche méthode et du guide de révision sont renseignés dans <code>docs/data/config.json</code>, s’ils existent.</label></li>
     <li><input type="checkbox" id="v5"><label for="v5">L’accès à Cairn par le K-lab et SophIA fonctionnent depuis la salle.</label></li>
     <li><input type="checkbox" id="v6"><label for="v6">Le site SES-ENS et le guide APA de l’ENS Paris s’ouvrent, et les modèles APA de la page Citer leur sont conformes.</label></li>
     <li><input type="checkbox" id="v7"><label for="v7">Les QCM V4 à V8 et la question G2 sont revérifiés contre la vidéo, aux horodatages des chapitres.</label></li>
     <li><input type="checkbox" id="v8"><label for="v8">La vidéo se lance sur le poste de projection, avec le son.</label></li>
     <li><input type="checkbox" id="v9"><label for="v9">Les pourcentages de rétention restent masqués, sauf source fournie.</label></li>
     <li><input type="checkbox" id="v10"><label for="v10">L’intersectionnalité a sa place dans le cours (bloc « À compléter avec le cours » de la page Bilan).</label></li>
-    <li><input type="checkbox" id="v11"><label for="v11">Si la collecte est activée, l’information des étudiant·es et la durée de conservation des données sont décidées.</label></li>
+    <li><input type="checkbox" id="v11"><label for="v11">L’information des étudiant·es sur l’envoi des réponses et la durée de conservation de la feuille Google sont décidées.</label></li>
     <li><input type="checkbox" id="v12"><label for="v12">L’écran de projection affiche la bonne heure et la bonne phase.</label></li>
   </ul>
 </main>

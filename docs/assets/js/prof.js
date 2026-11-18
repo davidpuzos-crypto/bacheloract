@@ -85,9 +85,15 @@ async function demarrer() {
     typographier(suivante);
     typographier(texteStop);
   }
-  if (depart) { depart.textContent = heureDepartTexte().replace(':', ' h ') + (lire().options.horloge.decalage ? ', décalage de ' + lire().options.horloge.decalage + ' min' : ''); typographier(depart); }
+  let texteDepart = '';
+  const majDepart = () => {
+    if (!depart) { return; }
+    const t = heureDepartTexte().replace(':', ' h ') + (lire().options.horloge.decalage ? ', décalage de ' + lire().options.horloge.decalage + ' min' : '');
+    if (t !== texteDepart) { texteDepart = t; depart.textContent = t; typographier(depart); }
+  };
+  majDepart();
   rendre(statut());
-  surTic(rendre);
+  surTic((s) => { rendre(s); majDepart(); });
 
   // Mot de passe affiché en grand : jamais enregistré
   const champ = document.getElementById('mdp-correction');

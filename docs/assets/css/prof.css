@@ -65,3 +65,53 @@
 .fiche-phase h3 { margin: 0 0 6px; }
 .fiche-phase p { margin: 0.4em 0 0; }
 code { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 0.92em; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+
+/* Page « Réponses des équipes » */
+.page-large { max-width: 1400px; }
+.connexion { display: grid; gap: 10px; max-width: 32rem; }
+.connexion label { font-family: var(--police-ui); font-weight: 700; }
+.connexion .souvenir { font-weight: 600; display: flex; gap: 8px; align-items: center; }
+.connexion .erreur { color: var(--erreur); font-family: var(--police-ui); font-weight: 700; min-height: 1.3em; margin: 0; }
+.resume { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 14px; }
+.puce { margin: 0; padding: 8px 14px; border: 1px solid var(--trait); border-radius: 999px; background: var(--surface); font-family: var(--police-ui); font-size: 0.95rem; display: inline-flex; gap: 6px; align-items: center; }
+.puce b { font-size: 1.15rem; font-variant-numeric: tabular-nums; }
+.puce svg { width: 18px; height: 18px; }
+.puce-aide { border: 2px solid var(--aide); color: var(--aide); font-weight: 700; }
+.barre-suivi { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; margin-bottom: 12px; font-family: var(--police-ui); }
+.barre-suivi .statut { margin: 0; }
+.souvenir { display: inline-flex; gap: 8px; align-items: center; font-family: var(--police-ui); }
+.souvenir input { width: 1.05rem; height: 1.05rem; accent-color: var(--accent); }
+.horloge-classe summary { cursor: pointer; font-family: var(--police-ui); font-weight: 800; }
+.ligne-horloge { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin: 10px 0; font-family: var(--police-ui); }
+.ligne-horloge input[type="time"] { font: inherit; padding: 0.4rem 0.6rem; color: var(--texte); background: var(--surface); border: 1px solid var(--trait-fort); border-radius: var(--rayon); }
+.onglets { display: flex; flex-wrap: wrap; gap: 4px; margin: 22px 0 14px; border-bottom: 1px solid var(--trait); }
+.onglets [role="tab"] { font-family: var(--police-ui); font-weight: 700; font-size: 1rem; background: none; border: 0; border-bottom: 3px solid transparent; color: var(--texte-doux); padding: 10px 14px 8px; cursor: pointer; }
+.onglets [role="tab"][aria-selected="true"] { color: var(--texte); border-bottom-color: var(--accent); }
+[data-panneau] select { font: inherit; font-family: var(--police-ui); padding: 0.5rem 0.6rem; max-width: 100%; color: var(--texte); background: var(--surface); border: 1px solid var(--trait-fort); border-radius: var(--rayon); margin: 4px 0 14px; display: block; }
+[data-panneau] label { font-family: var(--police-ui); font-weight: 700; }
+.tableau-equipes td, .tableau-equipes th { vertical-align: middle; }
+.tableau-equipes .noms { display: block; font-size: 0.82rem; color: var(--texte-doux); font-weight: 500; }
+.tableau-equipes .ligne-aide th, .tableau-equipes .ligne-aide td { background: var(--alerte-fond); }
+.tableau-equipes .inactive th, .tableau-equipes .inactive td { opacity: 0.72; }
+.tableau-equipes td.vide { color: var(--texte-doux); }
+.nom-equipe { display: inline-flex; align-items: center; gap: 6px; }
+.icone-mini { width: 18px; height: 18px; color: var(--accent); vertical-align: -3px; margin-right: 4px; }
+.lien-equipe { font: inherit; font-weight: 700; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 0.18em; }
+.badge-aide, .badge-ok { display: inline-flex; gap: 6px; align-items: center; font-weight: 800; white-space: nowrap; }
+.badge-aide { color: var(--aide); }
+.badge-ok { color: var(--ok); font-weight: 600; }
+.badge-aide svg, .badge-ok svg { width: 18px; height: 18px; }
+.pastilles-quetes { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+.pq { font-size: 0.78rem; font-weight: 700; padding: 2px 7px; border-radius: 999px; border: 1px solid var(--trait-fort); white-space: nowrap; }
+.pq.fini { background: var(--accent-doux); border-color: var(--accent); }
+.enonce { max-width: 60rem; font-family: var(--police-texte); }
+.liste-reponses { list-style: none; margin: 10px 0; padding: 0; display: grid; gap: 10px; max-width: 60rem; }
+.reponse-carte { padding: 12px 14px; border: 1px solid var(--trait); border-radius: var(--rayon); background: var(--surface); font-family: var(--police-ui); margin: 8px 0; max-width: 60rem; }
+.reponse-carte .qui { margin: 0 0 6px; }
+.texte-reponse { margin: 0; white-space: pre-wrap; font-family: var(--police-texte); }
+.texte-reponse.vide { color: var(--texte-doux); font-style: italic; }
+.ligne-qcm { font-family: var(--police-ui); margin: 4px 0; }
+.fiche-equipe { padding: 12px 16px; border-left: 4px solid var(--accent); background: var(--surface); border-radius: 0 var(--rayon) var(--rayon) 0; max-width: 60rem; }
+.fiche-equipe p { margin: 4px 0; }
+.recap-recu { white-space: pre-wrap; font-size: 0.85rem; max-height: 30rem; overflow: auto; }
+.pied-suivi { margin-top: 28px; }
