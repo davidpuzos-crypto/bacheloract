@@ -73,6 +73,8 @@ async function demarrer() {
     if (recent) {
       const pause = phases().find((p) => p.id === 'pause');
       texteStop.textContent = String(s.arret.phase.stopTexte || 'Stop.').replace('{reprise}', pause ? heureMinute(pause.debut + pause.duree) : '');
+      const mot = boiteStop.querySelector('.stop-mot');
+      if (mot) { mot.textContent = s.arret.phase.stopMot || 'Stop'; }
       boiteStop.hidden = false;
     } else {
       boiteStop.hidden = true;

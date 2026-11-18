@@ -92,7 +92,6 @@ function normaliser(r) {
     icone: ICONES_EQUIPE[r.icone] ? String(r.icone) : 'loupe',
     page: String(r.page || ''),
     points: Number(r.points) || 0,
-    niveau: String(r.niveau || ''),
     drapeau: r.drapeau === 'aide' ? 'aide' : 'ok',
     quetes: json(r.quetes, {}),
     reponses: json(r.reponses, {}),
@@ -102,6 +101,10 @@ function normaliser(r) {
   };
 }
 function nomEquipe(e) { return e.equipe || 'Équipe sans nom'; }
+function indicesTrouves(e) {
+  const ind = (e.reponses && e.reponses.indices) || {};
+  return Object.values(ind).filter((r) => r && r.trouve && !r.montre).length;
+}
 function lieu(e) {
   const [p, ancre] = [e.page.split('#')[0], e.page.includes('#') ? '#' + e.page.split('#')[1] : ''];
   const base = PAGES[p] || p || 'inconnu';
@@ -299,7 +302,7 @@ function rendreEquipe() {
   const blocs = [
     h('div', { class: 'fiche-equipe' },
       h('p', {}, svg(e.icone, 'icone-mini'), h('b', { text: nomEquipe(e) }), e.noms ? ' (' + e.noms + ')' : ''),
-      h('p', { class: 'statut', text: lieu(e) + ', ' + ilYA(e.maj) + '. ' + e.points + ' points, niveau ' + (e.niveau || 'Stagiaire') + '.' + (e.drapeau === 'aide' ? ' Demande de l’aide.' : '') }))
+      h('p', { class: 'statut', text: lieu(e) + ', ' + ilYA(e.maj) + '. ' + e.points + ' points d’enquête. Indices retrouvés dans la correction, ' + indicesTrouves(e) + ' sur 6.' + (e.drapeau === 'aide' ? ' Demande de l’aide.' : '') }))
   ];
   let section = '';
   questions.forEach((q) => {

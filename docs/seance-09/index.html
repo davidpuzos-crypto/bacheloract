@@ -29,7 +29,7 @@
   <div class="phase-actuelle" data-phase-actuelle>
     <span class="etiquette">Horaires</span>
     <span class="grand">De 9 h 00 à 12 h 00</span>
-    Pause de 10 h 05 à 10 h 35.
+    Pause de 10 h 05 à 10 h 35, entre la lecture et l’analyse de l’étude.
   </div>
 
   <h2>Carte des quêtes</h2>
@@ -37,7 +37,7 @@
     <ol class="quetes">
       <li class="quete" data-c="definir"><span class="numero" aria-hidden="true">1</span><b>Quête 1 · Définir</b><span class="etat-quete"><a href="2-methode.html">Méthode</a> et <a href="3-chercher.html">Chercher</a></span></li>
       <li class="quete" data-c="citer"><span class="numero" aria-hidden="true">2</span><b>Quête 2 · Citer</b><span class="etat-quete"><a href="4-citer-lecture.html">Lecture</a> et <a href="5-citer-pratique.html">Pratique</a></span></li>
-      <li class="quete" data-c="lire"><span class="numero" aria-hidden="true">3</span><b>Quête 3 · Lire</b><span class="etat-quete"><a href="6-lire.html">Lire</a>, dépôt et correction</span></li>
+      <li class="quete" data-c="lire"><span class="numero" aria-hidden="true">3</span><b>Quête 3 · Lire</b><span class="etat-quete"><a href="6-lire.html">Lire</a>, <a href="6-lire.html#analyser">analyser</a>, dépôt et correction</span></li>
       <li class="quete" data-c="noter"><span class="numero" aria-hidden="true">4</span><b>Quête 4 · Noter</b><span class="etat-quete"><a href="8-notes.html">Conseils</a> et <a href="9-video.html">Vidéo</a></span></li>
     </ol>
   </div>
@@ -49,18 +49,21 @@
       <thead><tr><th scope="col" class="heure">Heure</th><th scope="col">Durée</th><th scope="col">Phase</th></tr></thead>
       <tbody>
         <tr><th scope="row" class="heure">9 h 00</th><td>3 min</td><td><a href="1-cadre.html">Cadre</a></td></tr>
-        <tr><th scope="row" class="heure">9 h 03</th><td>7 min</td><td><a href="2-methode.html">Méthode</a></td></tr>
-        <tr><th scope="row" class="heure">9 h 10</th><td>25 min</td><td><a href="3-chercher.html">Chercher</a></td></tr>
-        <tr class="arret"><th scope="row" class="heure">9 h 35</th><td></td><td>Stop. Fin de la phase Chercher</td></tr>
-        <tr><th scope="row" class="heure">9 h 35</th><td>10 min</td><td><a href="4-citer-lecture.html">Lecture, bien citer</a></td></tr>
-        <tr><th scope="row" class="heure">9 h 45</th><td>20 min</td><td><a href="5-citer-pratique.html">Citer, pratique</a></td></tr>
-        <tr class="arret"><th scope="row" class="heure">10 h 05</th><td></td><td>Stop. Fin de la phase Citer, pratique</td></tr>
+        <tr><th scope="row" class="heure">9 h 03</th><td>5 min</td><td><a href="2-methode.html">Méthode</a></td></tr>
+        <tr><th scope="row" class="heure">9 h 08</th><td>15 min</td><td><a href="3-chercher.html">Chercher</a></td></tr>
+        <tr class="arret"><th scope="row" class="heure">9 h 23</th><td></td><td>Stop. Fin de la phase Chercher</td></tr>
+        <tr><th scope="row" class="heure">9 h 23</th><td>7 min</td><td><a href="4-citer-lecture.html">Lecture, bien citer</a></td></tr>
+        <tr><th scope="row" class="heure">9 h 30</th><td>13 min</td><td><a href="5-citer-pratique.html">Citer, pratique</a></td></tr>
+        <tr class="arret"><th scope="row" class="heure">9 h 43</th><td></td><td>Stop. Fin de la phase Citer, pratique</td></tr>
+        <tr><th scope="row" class="heure">9 h 43</th><td>22 min</td><td><a href="6-lire.html">Lire l’étude</a></td></tr>
+        <tr class="arret"><th scope="row" class="heure">10 h 05</th><td></td><td>Stop. Fin de la phase Lire l’étude</td></tr>
         <tr><th scope="row" class="heure">10 h 05</th><td>30 min</td><td><a href="pause.html">Pause</a></td></tr>
-        <tr><th scope="row" class="heure">10 h 35</th><td>22 min</td><td><a href="6-lire.html">Lire</a></td></tr>
-        <tr><th scope="row" class="heure">10 h 57</th><td>3 min</td><td><a href="6-lire.html#depot">Dépôt</a></td></tr>
-        <tr class="arret"><th scope="row" class="heure">11 h 00</th><td></td><td>Stop. Fin de la phase Dépôt</td></tr>
-        <tr><th scope="row" class="heure">11 h 00</th><td>10 min</td><td><a href="7-correction.html">Correction</a></td></tr>
-        <tr><th scope="row" class="heure">11 h 10</th><td>10 min</td><td><a href="8-notes.html">Conseils de prise de notes</a></td></tr>
+        <tr class="arret"><th scope="row" class="heure">10 h 35</th><td></td><td>Stop. Fin de la phase Pause</td></tr>
+        <tr><th scope="row" class="heure">10 h 35</th><td>27 min</td><td><a href="6-lire.html#analyser">Analyser l’étude</a></td></tr>
+        <tr><th scope="row" class="heure">11 h 02</th><td>3 min</td><td><a href="6-lire.html#depot">Dépôt</a></td></tr>
+        <tr class="arret"><th scope="row" class="heure">11 h 05</th><td></td><td>Stop. Fin de la phase Dépôt</td></tr>
+        <tr><th scope="row" class="heure">11 h 05</th><td>10 min</td><td><a href="7-correction.html">Correction</a></td></tr>
+        <tr><th scope="row" class="heure">11 h 15</th><td>5 min</td><td><a href="8-notes.html">Conseils de prise de notes</a></td></tr>
         <tr class="arret"><th scope="row" class="heure">11 h 20</th><td></td><td>Stop. Fin de la phase Conseils de prise de notes</td></tr>
         <tr><th scope="row" class="heure">11 h 20</th><td>25 min</td><td><a href="9-video.html#pendant">Vidéo</a></td></tr>
         <tr class="arret"><th scope="row" class="heure">11 h 45</th><td></td><td>Stop. Fin de la phase Vidéo</td></tr>

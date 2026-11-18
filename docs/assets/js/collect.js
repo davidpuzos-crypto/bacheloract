@@ -76,10 +76,9 @@ function charge(type, supplement) {
     page: (document.body.dataset.page || fichierCourant()) + (window.location.hash || ''),
     phase: s.avant ? 'avant' : s.apres ? 'apres' : (s.phase ? s.phase.id : ''),
     points: res.points,
-    niveau: res.niveau.nom,
     drapeau: e.drapeau === 'aide' ? 'aide' : 'ok',
     quetes,
-    reponses: { champs, radios: e.radios || {}, qcm, conseils: e.conseils || [], cases: e.cases || {}, lu: e.lu || {} },
+    reponses: { champs, radios: e.radios || {}, qcm, conseils: e.conseils || [], cases: e.cases || {}, lu: e.lu || {}, indices: e.indices || {} },
     depots: e.depots || {}
   }, supplement || {});
 }

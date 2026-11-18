@@ -97,7 +97,7 @@ function construireEntete() {
   const ecran = el(`
     <div class="stop-ecran" role="dialog" aria-modal="true" aria-labelledby="stop-texte" hidden>
       <div class="stop-carte">
-        <span class="stop-mot" aria-hidden="true">STOP</span>
+        <span class="stop-mot" aria-hidden="true">Stop</span>
         <p class="stop-texte" id="stop-texte"></p>
         <span class="stop-heure"></span>
         <a class="btn" data-stop-lien href="#"></a>
@@ -206,7 +206,7 @@ function majPastille() {
   const res = calculer();
   refs.pastille.innerHTML = svg(eq.icone) + '<span class="libelle-long">' + (eq.defini ? echapper(eq.nom) : 'Carnet d’enquête') + '</span>'
     + '<span class="points">' + res.points + ' pts</span>';
-  refs.pastille.setAttribute('aria-label', 'Ouvrir le carnet d’enquête. ' + (eq.defini ? 'Équipe ' + eq.nom + '. ' : '') + res.points + ' points, niveau ' + res.niveau.nom + '.');
+  refs.pastille.setAttribute('aria-label', 'Ouvrir le carnet d’enquête. ' + (eq.defini ? 'Équipe ' + eq.nom + '. ' : '') + res.points + ' points d’enquête.');
 }
 
 function majCarnet(options = {}) {
@@ -394,6 +394,9 @@ function cacherArret() {
 function montrerEcran(s) {
   const a = s.arret;
   const lien = refs.ecran.querySelector('[data-stop-lien]');
+  const mot = refs.ecran.querySelector('.stop-mot');
+  mot.textContent = a.phase.stopMot || 'Stop';
+  mot.classList.toggle('long', mot.textContent.length > 4);
   refs.ecran.querySelector('.stop-texte').textContent = texteArret(a);
   refs.ecran.querySelector('.stop-heure').textContent = 'Il est ' + formatHeure(s.t) + '.';
   lien.textContent = a.phase.stopBouton || 'Continuer';

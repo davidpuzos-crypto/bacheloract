@@ -14,6 +14,7 @@ function etatVide() {
     qcm: {},          // { M1: { premier, dernier, essais, juste } }
     temps: {},        // secondes passées par page
     lu: {},           // { citer: horodatage, correction: horodatage }
+    indices: {},      // chasse aux indices de la correction : { L1: { trouve, montre, essais, trouves } }
     conseils: [],     // conseils choisis (tips_choisis)
     quetes: {},       // { definir: { fin: minute de séance } }
     etapes: {},       // étapes d’écriture terminées (badge « Dans les temps »)
@@ -46,7 +47,7 @@ let minuteur = null;
 const bus = new EventTarget();
 
 // Clés dont les entrées sont fusionnées une à une.
-const DICTIONNAIRES = new Set(['champs', 'radios', 'cases', 'qcm', 'temps', 'lu', 'quetes', 'etapes', 'badges', 'arrets', 'depots', 'options']);
+const DICTIONNAIRES = new Set(['champs', 'radios', 'cases', 'qcm', 'temps', 'lu', 'indices', 'quetes', 'etapes', 'badges', 'arrets', 'depots', 'options']);
 
 function json(v) { return JSON.stringify(v === undefined ? null : v); }
 

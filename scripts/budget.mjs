@@ -13,29 +13,39 @@ const MOTS_MINUTE = 200;
 const QCM_MIN = 0.5;
 
 // Durées des champs, en minutes. À défaut, la durée dépend de la taille du champ.
+// Les questions d’analyse de l’étude (l1 à l6) demandent plusieurs phrases
+// appuyées sur le document : elles sont comptées large.
 const DUREES = {
   equipe: 0.3, icone: 0.2, nom1: 0.3, nom2: 0.3,
-  a1: 1, a2: 2, a3: 3, b0: 0.3, b1: 2, b2: 2, b4: 2,
-  c1: 2.5, c2: 3, c3: 3,
-  l1: 2.5, l2: 1, l3: 1, l4: 1.5, l5: 2.5, l6: 2.5,
+  a1: 1, a3: 3, b0: 0.3, b1: 2, b2: 2, b4: 2,
+  c1: 2.5, c2: 3.5, c3: 3,
+  l1: 5, l2: 2, l3: 2, l4: 3, l5: 5, l6: 5,
   usage: 0.3,
   n3: 2, bp: 2, s1: 2.5, g1: 3
 };
 
+// L’étude de l’Insee se lit lentement : texte dense, chiffres, tableau.
+const MOTS_MINUTE_ETUDE = 130;
+
 const PHASES = [
   { id: 'cadre', titre: 'Cadre', fichier: 'docs/seance-09/1-cadre.html', minutes: 3, maxMots: 250 },
-  { id: 'methode', titre: 'Méthode', fichier: 'docs/seance-09/2-methode.html', minutes: 7, maxMots: 650, notes: true },
-  { id: 'chercher', titre: 'Chercher', fichier: 'docs/seance-09/3-chercher.html', minutes: 25, maxMots: 350,
-    extras: [['Lecture des sources sur les sites externes (entrée de Géoconfluences, seconde source)', 9]] },
-  { id: 'citer-lecture', titre: 'Citer, lecture', fichier: 'docs/seance-09/4-citer-lecture.html', minutes: 10, maxMots: 900 },
-  { id: 'citer-pratique', titre: 'Citer, pratique', fichier: 'docs/seance-09/5-citer-pratique.html', minutes: 20, maxMots: 120,
-    extras: [['Consultation du guide APA et de vos deux sources', 3]] },
-  { id: 'lire', titre: 'Lire', fichier: 'docs/seance-09/6-lire.html', exclure: '#depot', minutes: 22, maxMots: 260,
-    extrait: '.citation-insee', maxExtrait: 1000 },
+  { id: 'methode', titre: 'Méthode', fichier: 'docs/seance-09/2-methode.html', minutes: 5, maxMots: 650, notes: true },
+  { id: 'chercher', titre: 'Chercher', fichier: 'docs/seance-09/3-chercher.html', minutes: 15, maxMots: 350,
+    extras: [['Lecture des sources sur les sites externes (page de Géoconfluences, seconde source)', 6]] },
+  { id: 'citer-lecture', titre: 'Citer, lecture', fichier: 'docs/seance-09/4-citer-lecture.html', minutes: 7, maxMots: 900 },
+  { id: 'citer-pratique', titre: 'Citer, pratique', fichier: 'docs/seance-09/5-citer-pratique.html', minutes: 13, maxMots: 120,
+    extras: [['Ouverture du guide APA de l’ENS', 1]] },
+  { id: 'lire', titre: 'Lire l’étude', fichier: 'docs/seance-09/6-lire.html', exclure: '#depot, #analyser', minutes: 22, maxMots: 260,
+    extrait: '.citation-insee', maxExtrait: 1400, motsMinuteExtrait: MOTS_MINUTE_ETUDE,
+    extras: [['Lecture du tableau de la figure 2', 3]] },
+  { id: 'analyser', titre: 'Analyser l’étude', fichier: 'docs/seance-09/6-lire.html', section: '#analyser', minutes: 27, maxMots: 120,
+    extras: [['Retours au document pour appuyer les réponses', 2]] },
   { id: 'depot', titre: 'Dépôt', fichier: 'docs/seance-09/6-lire.html', section: '#depot', minutes: 3,
-    extras: [['Copier ou télécharger le récapitulatif, puis le déposer sur Moodle', 1.5]] },
-  { id: 'correction', titre: 'Correction', fichier: 'private/seance-09/7-correction.html', minutes: 10, maxMots: 900 },
-  { id: 'notes', titre: 'Conseils de prise de notes', fichier: 'docs/seance-09/8-notes.html', minutes: 10, maxMots: 500,
+    extras: [['Envoyer le récapitulatif à l’enseignant, ou le télécharger', 1.5]] },
+  { id: 'correction', titre: 'Correction', fichier: 'private/seance-09/7-correction.html', minutes: 10, maxMots: 400,
+    retirer: '.citation-insee', aussi: '.corrige .modele',
+    extras: [['Chasse aux six indices dans le document, déjà lu', 4.5]] },
+  { id: 'notes', titre: 'Conseils de prise de notes', fichier: 'docs/seance-09/8-notes.html', minutes: 5, maxMots: 500,
     extras: [['Choix de trois conseils parmi les huit', 1]] },
   { id: 'video', titre: 'Vidéo, pendant', fichier: 'docs/seance-09/9-video.html', section: '#pendant', minutes: 25,
     extras: [['Projection de la vidéo, prise de notes en même temps', 25]], horsBudgetLecture: true },
@@ -75,7 +85,11 @@ export function calculerBudgets() {
     // Lecture : texte visible par défaut, hors QCM, champs et extrait.
     const retirer = [];
     if (ph.extrait) { retirer.push(ph.extrait); }
+    if (ph.retirer) { retirer.push(ph.retirer); }
     const motsLecture = mots(texteDeLecture(clone, { retirer }));
+    // Textes masqués au départ mais révélés pendant la phase (réponses proposées).
+    let motsAussi = 0;
+    if (ph.aussi) { clone.querySelectorAll(ph.aussi).forEach((n) => { motsAussi += mots(texte(n)); }); }
     let motsExtrait = 0;
     if (ph.extrait) {
       const ex = clone.querySelector(ph.extrait).cloneNode(true);
@@ -97,7 +111,8 @@ export function calculerBudgets() {
 
     const champsListe = (ph.id === 'cadre' ? identite : requis).concat(ph.id === 'froid' ? facultatifs.filter((b) => b.getAttribute('data-q') === 'n3') : []);
     const minutesChamps = champsListe.reduce((s, b) => s + dureeChamp(b), 0);
-    const minutesLecture = ph.horsBudgetLecture ? 0 : (motsLecture + motsExtrait + motsNotes) / MOTS_MINUTE;
+    const minutesLecture = ph.horsBudgetLecture ? 0
+      : (motsLecture + motsNotes + motsAussi) / MOTS_MINUTE + motsExtrait / (ph.motsMinuteExtrait || MOTS_MINUTE);
     const minutesQCM = qcm.length * QCM_MIN;
     const minutesCases = (ph.cases || 0) * (5 / 60);
     const minutesExtras = (ph.extras || []).reduce((s, e) => s + e[1], 0);
@@ -110,7 +125,7 @@ export function calculerBudgets() {
     if (total > ph.minutes + 1e-9) { alertes.push('durée estimée ' + arrondi(total) + ' min pour ' + ph.minutes + ' min'); }
 
     resultats.push({
-      ph, motsLecture, motsExtrait, motsNotes,
+      ph, motsLecture, motsExtrait, motsNotes, motsAussi,
       champs: champsListe.map((b) => b.getAttribute('data-q') + ' (' + dureeChamp(b) + ' min)'),
       conditionnels: conditionnels.map((b) => b.getAttribute('data-q')),
       bonus: bonus.map((b) => b.getAttribute('data-q')),
@@ -130,7 +145,7 @@ export function ecrireMarkdown(resultats) {
   l.push('');
   l.push('Document produit par `node scripts/budget.mjs` à partir du HTML des pages. Ne pas le modifier à la main.');
   l.push('');
-  l.push('Hypothèses de calcul : lecture à 200 mots par minute ; 30 secondes par QCM ; champ court 1 minute, champ de rédaction 2 à 3 minutes (durées par champ dans `scripts/budget.mjs`) ; nom d’équipe et noms 20 secondes chacun ; case à cocher 5 secondes. Les questions bonus et les champs facultatifs ne sont pas comptés. Le texte compté est celui qui est visible par défaut : les aides repliées, les retours de QCM et les blocs fermés de la correction n’entrent pas dans la lecture.');
+  l.push('Hypothèses de calcul : lecture à 200 mots par minute, 130 pour l’extrait de l’Insee, plus dense ; 30 secondes par QCM ; champ court 1 minute, champ de rédaction 2 à 3 minutes (durées par champ dans `scripts/budget.mjs`) ; nom d’équipe et noms 20 secondes chacun ; case à cocher 5 secondes. Les questions bonus et les champs facultatifs ne sont pas comptés. Le texte compté est celui qui est visible par défaut : les aides repliées, les retours de QCM et les blocs fermés de la correction n’entrent pas dans la lecture.');
   l.push('');
   l.push('| Phase | Durée | Mots lus | Champs requis | QCM | Autres activités | Estimation | Marge | État |');
   l.push('|---|---|---|---|---|---|---|---|---|');
@@ -138,11 +153,11 @@ export function ecrireMarkdown(resultats) {
   let apres = 0;
   for (const r of resultats) {
     if (r.absent) { l.push('| ' + r.ph.titre + ' | ' + r.ph.minutes + ' min | fichier absent | | | | | | à vérifier |'); continue; }
-    const motsTxt = r.motsLecture + (r.motsExtrait ? ' + extrait ' + r.motsExtrait : '') + (r.motsNotes ? ' + notes ' + r.motsNotes : '');
+    const motsTxt = r.motsLecture + (r.motsExtrait ? ' + extrait ' + r.motsExtrait : '') + (r.motsNotes ? ' + notes ' + r.motsNotes : '') + (r.motsAussi ? ' + réponses révélées ' + r.motsAussi : '');
     const autres = (r.ph.extras || []).map((e) => e[0] + ' (' + f(e[1]) + ' min)').concat(r.ph.cases ? [r.ph.cases + ' cases (' + f(r.minutesCases) + ' min)'] : []).join(' ; ');
     l.push('| ' + r.ph.titre + ' | ' + r.ph.minutes + ' min | ' + motsTxt + ' | ' + (r.champs.length ? r.champs.join(', ') : 'aucun') + ' | ' + r.qcm.length
       + ' | ' + (autres || '') + ' | ' + f(r.total) + ' min | ' + f(r.ph.minutes - r.total) + ' min | ' + (r.alertes.length ? 'DÉPASSÉ' : 'tient') + ' |');
-    if (['cadre', 'methode', 'chercher', 'citer-lecture', 'citer-pratique'].includes(r.ph.id)) { avant += r.total; } else { apres += r.total; }
+    if (['cadre', 'methode', 'chercher', 'citer-lecture', 'citer-pratique', 'lire'].includes(r.ph.id)) { avant += r.total; } else { apres += r.total; }
   }
   l.push('');
   l.push('Total estimé avant la pause : ' + f(avant) + ' minutes pour 65. Après la pause : ' + f(apres) + ' minutes pour 85.');
@@ -155,7 +170,7 @@ export function ecrireMarkdown(resultats) {
     l.push('');
     l.push('Lecture ' + f(r.minutesLecture) + ' min, champs ' + f(r.minutesChamps) + ' min, QCM ' + f(r.minutesQCM) + ' min, autres ' + f(r.minutesExtras + r.minutesCases) + ' min.');
     if (r.ph.maxMots !== undefined) { l.push('Budget de lecture : ' + r.motsLecture + ' mots pour ' + r.ph.maxMots + ' au plus.'); }
-    if (r.ph.maxExtrait !== undefined) { l.push('Extrait de l’Insee : ' + r.motsExtrait + ' mots hors tableau, pour 1 000 au plus, et 1 tableau.'); }
+    if (r.ph.maxExtrait !== undefined) { l.push('Extrait de l’Insee : ' + r.motsExtrait + ' mots hors tableau, pour ' + r.ph.maxExtrait.toLocaleString('fr-FR') + ' au plus, et 1 tableau.'); }
     if (r.qcm.length) { l.push('QCM : ' + r.qcm.join(', ') + '.'); }
     if (r.conditionnels.length) { l.push('Champ conditionnel (seulement si SophIA est choisi) : ' + r.conditionnels.join(', ') + '. Estimation dans ce cas : ' + f(r.pireCas) + ' min.'); }
     if (r.bonus.length) { l.push('Bonus facultatifs, non comptés : ' + r.bonus.join(', ') + '.'); }
