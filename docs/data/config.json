@@ -11,15 +11,15 @@
     "cairn": "https://www.cairn.info",
     "guideApaEns": "https://www.ensparis.fr/wp-content/uploads/2023/09/La-bibliographie-aux-normes-APA-Simplifiee.pdf",
     "tutosBu": "https://tutos.bu.univ-rennes2.fr",
-    "moodleDepotParcours": "",
-    "moodleDepotVideo": "",
     "moodleFicheMethodeNotes": "",
     "moodleGuideRevision": ""
   },
   "collecte": {
     "actif": false,
     "endpoint": "",
-    "jeton": ""
+    "jeton": "s09-124a1f0a2443c7c8",
+    "synchroSecondes": 45,
+    "horlogeSecondes": 60
   },
   "options": {
     "afficherPourcentages": false,
@@ -29,8 +29,8 @@
   },
   "_commentaires": {
     "dateSeance": "Date affichée sur l’accueil de la séance, au format AAAA-MM-JJ. Laisser vide pour ne rien afficher.",
-    "liens": "Les liens Moodle vides masquent les boutons correspondants. Le site affiche alors « Le lien est sur Moodle ».",
-    "collecte": "Désactivée par défaut. Voir le README, section « Collecte automatique ». Le jeton n’est pas un secret, il est lisible dans le code du site.",
+    "liens": "Liens utiles du cours. Un lien Moodle vide masque le bouton correspondant (fiche méthode, guide de révision).",
+    "collecte": "Envoi des réponses à l’enseignant, vers une feuille Google privée (voir le README, section « Voir les réponses en direct »). Mettre actif à true et coller l’adresse du script dans endpoint. Le jeton n’est pas un secret : il est lisible dans le code du site et doit être identique dans le script Google. synchroSecondes : fréquence d’envoi automatique. horlogeSecondes : fréquence de lecture de l’heure de départ diffusée par l’enseignant.",
     "afficherPourcentages": "Pourcentages de rétention de la diapo 33 (20, 40, 60, 80 %). Sans source indiquée, ils ressemblent à la « pyramide de l’apprentissage », dont les chiffres sont critiqués faute de base empirique. À n’activer que si une source est fournie ou si l’enseignant confirme qu’il les garde.",
     "chiffrerCorrection": "Si false, la correction est copiée en clair dans docs/. À réserver à un dépôt privé avec Pages activé.",
     "adresseSite": "Adresse publique du site, utilisée pour le code QR du projecteur. Vide : l’adresse de la page ouverte est utilisée."

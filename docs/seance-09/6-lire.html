@@ -250,7 +250,8 @@
   <section id="depot" class="depot" data-depot="parcours" aria-labelledby="titre-depot">
     <p class="etiquette">Dépôt · <span data-heure-phase="depot:debut">10 h 57</span> · 3 minutes</p>
     <h2 id="titre-depot">Déposer le récapitulatif</h2>
-    <p class="prose">Déclarez d’abord l’usage que vous avez fait de l’IA. Copiez ou téléchargez ensuite le récapitulatif. Collez ou déposez le fichier dans le dépôt Moodle prévu pour cette séance.</p>
+    <p class="prose" data-si-collecte hidden>Déclarez d’abord l’usage que vous avez fait de l’IA, puis envoyez le récapitulatif à l’enseignant. Vos réponses lui parviennent déjà au fil de la séance, et l’envoi signale que votre dépôt est terminé.</p>
+    <p class="prose" data-sans-collecte>Déclarez d’abord l’usage que vous avez fait de l’IA, puis téléchargez le récapitulatif et gardez le fichier.</p>
 
     <fieldset class="q" data-q="usage" data-requis data-hors-compteur>
       <legend class="qlabel">Déclaration d’usage de l’IA</legend>
@@ -265,13 +266,12 @@
 
     <p class="statut" data-recap-progres aria-live="polite"></p>
     <div class="rangee-boutons">
-      <button type="button" class="btn" data-action="copier">Copier le récapitulatif</button>
+      <button type="button" class="btn" data-action="envoyer" hidden>Envoyer à l’enseignant</button>
       <button type="button" class="btn secondaire" data-action="telecharger">Télécharger le récapitulatif</button>
-      <button type="button" class="btn secondaire" data-action="envoyer" hidden>Envoyer à l’enseignant</button>
+      <button type="button" class="btn discret" data-action="copier">Copier le récapitulatif</button>
     </div>
     <p class="avis-collecte" data-avis-collecte hidden>Vos réponses et vos noms sont envoyés à l’enseignant, dans un tableau privé.</p>
     <p class="statut" data-recap-statut role="status" aria-live="polite"></p>
-    <p class="meta"><a data-lien-moodle="moodleDepotParcours" href="#" target="_blank" rel="noopener" hidden>Ouvrir le dépôt Moodle de la séance</a><span data-sans-lien>Le lien du dépôt est sur Moodle.</span></p>
     <details>
       <summary>Voir le texte du récapitulatif</summary>
       <textarea class="recap" readonly data-recap-texte aria-label="Texte du récapitulatif"></textarea>
