@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projecteur · Séance 9 · La fabrique du social</title>
+<meta name="description" content="Écran de séance à projeter, avec l’horloge et les phases de la matinée.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/prof.css">
+<script src="../assets/js/theme.js"></script>
+<script type="module" src="../assets/js/app.js"></script>
+<script type="module" src="../assets/js/prof.js"></script>
+</head>
+<body data-page="projecteur" data-espace="prof">
+<main id="contenu" class="projecteur">
+  <div class="proj-haut">
+    <p class="etiquette">Séance 9 · La fabrique du social</p>
+    <p class="proj-horloge" data-proj-horloge aria-label="Heure actuelle">9:00:00</p>
+  </div>
+
+  <div class="proj-principal" aria-live="polite">
+    <div class="proj-stop" data-proj-stop hidden>
+      <span class="stop-mot" aria-hidden="true">STOP</span>
+      <p data-proj-stop-texte></p>
+    </div>
+    <p class="etiquette">Phase en cours</p>
+    <h1 data-proj-phase>La séance commence à 9 h 00</h1>
+    <p class="proj-reste" data-proj-reste></p>
+    <p class="proj-suivante" data-proj-suivante></p>
+    <div class="progres-seance proj-progres" data-proj-progres aria-hidden="true"><span></span></div>
+  </div>
+
+  <aside class="proj-cote" aria-label="Déroulé et outils">
+    <ol class="proj-phases" data-proj-liste>
+      <li><span class="h">9 h 00</span><span>Cadre</span><span class="arret"></span></li>
+    </ol>
+
+    <div class="proj-boite">
+      <h2>Mot de passe de la correction</h2>
+      <label class="visuellement-cache" for="mdp-correction">Mot de passe de la correction</label>
+      <input type="text" id="mdp-correction" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <p class="rangee-boutons"><button type="button" class="btn" data-afficher-mdp>Afficher en grand</button></p>
+      <p class="meta">Saisi ici, il n’est enregistré nulle part.</p>
+    </div>
+
+    <div class="proj-boite proj-qr">
+      <h2>Adresse pour les étudiant·es</h2>
+      <div data-qr></div>
+      <p class="adresse" data-adresse></p>
+    </div>
+
+    <p class="meta">Départ du planning à <span data-proj-depart>9 h 00</span>. <a href="deroule.html">Feuille de route</a></p>
+  </aside>
+</main>
+
+<div class="mdp-geant" data-mdp-geant role="dialog" aria-modal="true" aria-label="Mot de passe de la correction" hidden>
+  <p class="etiquette">Mot de passe de la correction</p>
+  <output></output>
+  <button type="button" class="btn discret">Masquer</button>
+</div>
+</body>
+</html>
