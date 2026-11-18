@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La fabrique du social · Bachelor ACT</title>
+<meta name="robots" content="noindex">
+<script>
+  // Quand GitHub Pages publie la racine du dépôt, le site est dans docs/.
+  // Une adresse courte comme /bacheloract/seance-09/ est renvoyée vers
+  // /bacheloract/docs/seance-09/, avec ses paramètres.
+  (function () {
+    var morceaux = location.pathname.split('/');
+    var surGithub = /\.github\.io$/.test(location.hostname);
+    var base = surGithub && morceaux.length > 2 ? '/' + morceaux[1] + '/' : '/';
+    var reste = location.pathname.slice(base.length);
+    if (reste === '404.html' || reste === 'docs' || reste.indexOf('docs/') === 0) { return; }
+    location.replace(base + 'docs/' + reste + location.search + location.hash);
+  })();
+</script>
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #17181c; color: #f2eadb; font-family: system-ui, sans-serif; text-align: center; padding: 24px; }
+  a { color: #f08a3c; font-weight: 700; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Page introuvable</h1>
+  <p>Cette adresse ne correspond à aucune page. <a href="/bacheloract/docs/">Ouvrir l’accueil du cours</a></p>
+</main>
+</body>
+</html>
