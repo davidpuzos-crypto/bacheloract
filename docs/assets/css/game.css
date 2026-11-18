@@ -1,0 +1,174 @@
+/* Carnet d’enquête : le seul endroit où le site se permet de l’audace.
+   Tout ce qui est décoratif porte la classe .deco et disparaît en mode sobre. */
+
+.carnet {
+  font-family: var(--police-ui);
+  background-color: var(--fond-2);
+  background-image: radial-gradient(color-mix(in srgb, var(--texte) 9%, transparent) 1px, transparent 1.2px);
+  background-size: 18px 18px;
+}
+.carnet-bloc { margin: 0 0 22px; }
+.carnet-bloc h3 { margin: 0 0 8px; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--texte-doux); }
+
+.equipe-carte { display: flex; align-items: center; gap: 14px; }
+.equipe-carte .icone-equipe { width: 56px; height: 56px; flex: none; border-radius: 50%; border: 2px solid var(--accent); padding: 9px; background: var(--surface); color: var(--accent); }
+.equipe-carte b { display: block; font-size: 1.15rem; font-weight: 800; }
+.equipe-carte span { color: var(--texte-doux); font-size: 0.9rem; }
+
+.score { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.score .valeur { font-family: var(--police-titre); font-weight: 800; font-size: 2.6rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.score .niveau { font-weight: 800; color: var(--accent); }
+.score .prochain { flex-basis: 100%; color: var(--texte-doux); font-size: 0.88rem; }
+.barre-niveau { height: 8px; border-radius: 999px; background: var(--surface-2); overflow: hidden; margin-top: 8px; }
+.barre-niveau span { display: block; height: 100%; background: var(--accent); width: 0; transition: width 0.6s ease; }
+.mention-note { font-size: 0.85rem; color: var(--texte-doux); margin: 8px 0 0; }
+
+/* Anneaux de compétences */
+.anneaux { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.anneau { text-align: center; font-size: 0.85rem; font-weight: 700; }
+.anneau svg { width: 100%; max-width: 92px; display: block; margin: 0 auto 4px; transform: rotate(-90deg); }
+.anneau .fond-anneau { fill: none; stroke: var(--surface-2); stroke-width: 9; }
+.anneau .trace { fill: none; stroke-width: 9; stroke-linecap: round; transition: stroke-dashoffset 0.9s cubic-bezier(.2,.8,.2,1); }
+.anneau .pc { display: block; font-variant-numeric: tabular-nums; color: var(--texte-doux); font-weight: 600; }
+.anneau[data-c="definir"] .trace { stroke: var(--c-definir); }
+.anneau[data-c="citer"] .trace { stroke: var(--c-citer); }
+.anneau[data-c="lire"] .trace { stroke: var(--c-lire); }
+.anneau[data-c="noter"] .trace { stroke: var(--c-noter); }
+
+/* Quêtes et tampons */
+.quetes { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.quete {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid var(--trait);
+  border-left: 4px solid var(--trait-fort);
+  border-radius: var(--rayon);
+  background: var(--surface);
+  min-height: 64px;
+  overflow: hidden;
+}
+.quete .numero { grid-row: span 2; font-family: var(--police-titre); font-weight: 800; font-size: 1.6rem; color: var(--texte-doux); width: 1.4em; text-align: center; }
+.quete b { font-size: 1rem; }
+.quete .etat-quete { font-size: 0.84rem; color: var(--texte-doux); font-weight: 600; }
+.quete[data-c="definir"] { border-left-color: var(--c-definir); }
+.quete[data-c="citer"] { border-left-color: var(--c-citer); }
+.quete[data-c="lire"] { border-left-color: var(--c-lire); }
+.quete[data-c="noter"] { border-left-color: var(--c-noter); }
+.quete[data-etat="terminee"] .etat-quete { color: var(--texte); }
+
+.tampon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  translate: 0 -50%;
+  rotate: -9deg;
+  padding: 4px 10px 3px;
+  border: 3px double currentColor;
+  border-radius: 6px;
+  font-family: var(--police-titre);
+  font-weight: 800;
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  text-align: center;
+  opacity: 0.92;
+  mix-blend-mode: normal;
+}
+.quete[data-c="definir"] .tampon { color: var(--c-definir); }
+.quete[data-c="citer"] .tampon { color: var(--c-citer); }
+.quete[data-c="lire"] .tampon { color: var(--c-lire); }
+.quete[data-c="noter"] .tampon { color: var(--c-noter); }
+.tampon.nouveau { animation: tampon 0.55s cubic-bezier(.2,1.4,.4,1) both; }
+@keyframes tampon {
+  0% { opacity: 0; scale: 2.2; rotate: -22deg; }
+  60% { opacity: 1; scale: 0.92; rotate: -7deg; }
+  100% { opacity: 0.92; scale: 1; rotate: -9deg; }
+}
+
+/* Badges */
+.badges { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.badge { text-align: center; font-size: 0.76rem; font-weight: 700; line-height: 1.25; color: var(--texte-doux); }
+.badge .medaille {
+  width: 58px; height: 58px;
+  margin: 0 auto 6px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 2px dashed var(--trait-fort);
+  color: var(--trait-fort);
+}
+.badge .medaille svg { width: 30px; height: 30px; }
+.badge[data-obtenu="1"] { color: var(--texte); }
+.badge[data-obtenu="1"] .medaille { border: 2px solid var(--accent); color: var(--accent); background: var(--accent-doux); }
+.badge.nouveau .medaille { animation: medaille 0.7s cubic-bezier(.2,1.4,.4,1) both; }
+@keyframes medaille { 0% { scale: 0.2; rotate: -40deg; } 100% { scale: 1; rotate: 0deg; } }
+
+/* Phrase mystère */
+.phrase-mystere {
+  font-family: var(--police-titre);
+  font-weight: 800;
+  font-size: 1.35rem;
+  line-height: 1.6;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+.phrase-mystere .morceau { white-space: nowrap; }
+.phrase-mystere .cache {
+  display: inline-block;
+  vertical-align: -0.12em;
+  height: 1em;
+  border-radius: 3px;
+  background: repeating-linear-gradient(-45deg, var(--texte-doux) 0 6px, var(--trait-fort) 6px 12px);
+  opacity: 0.55;
+}
+.phrase-mystere .revele { background: var(--surligneur); padding: 0 0.12em; border-radius: 2px; }
+.phrase-mystere .revele.nouveau { animation: revele 0.8s ease-out both; }
+@keyframes revele { from { background-size: 0 100%; } to { background-size: 100% 100%; } }
+.phrase-mystere.complete { font-size: clamp(1.6rem, 3.6vw, 2.6rem); line-height: 1.25; }
+
+/* Gains de points */
+.gain {
+  position: fixed;
+  z-index: 80;
+  pointer-events: none;
+  font-family: var(--police-titre);
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--accent);
+  animation: gain 0.9s ease-out forwards;
+}
+@keyframes gain { from { opacity: 0; translate: 0 6px; } 20% { opacity: 1; } to { opacity: 0; translate: 0 -34px; } }
+
+canvas.confettis { position: fixed; inset: 0; z-index: 85; pointer-events: none; }
+
+/* Bloc carnet dans les pages (hub, pause, fin) */
+.carnet-page {
+  max-width: 60rem;
+  margin: 1.4rem 0;
+  padding: 22px 22px 8px;
+  border: 1px solid var(--trait);
+  border-radius: var(--rayon-grand);
+}
+.carnet-page .grille-carnet { display: grid; gap: 18px 28px; }
+@media (min-width: 900px) { .carnet-page .grille-carnet { grid-template-columns: 1fr 1fr; } }
+
+/* Mode sobre et mouvement réduit */
+html[data-sobre="1"] .deco { display: none !important; }
+html[data-sobre="1"] .tampon,
+html[data-sobre="1"] .badge .medaille,
+html[data-sobre="1"] .phrase-mystere .revele,
+html[data-sobre="1"] .anneau .trace,
+html[data-sobre="1"] .barre-niveau span { animation: none !important; transition: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .tampon.nouveau, .badge.nouveau .medaille, .phrase-mystere .revele.nouveau, .gain { animation: none !important; }
+  canvas.confettis { display: none; }
+}
+@media (max-width: 420px) {
+  .badges { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .anneaux { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

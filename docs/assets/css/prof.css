@@ -1,0 +1,67 @@
+/* Pages de l’enseignant : projecteur et feuille de route */
+
+.projecteur {
+  min-height: 100vh;
+  align-content: start;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 28px 40px;
+  padding: 28px 40px 40px;
+  max-width: none;
+  font-family: var(--police-ui);
+}
+.proj-haut { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: baseline; gap: 20px; flex-wrap: wrap; }
+.proj-horloge { font-family: var(--police-titre); font-weight: 800; font-size: clamp(2.6rem, 6vw, 5rem); line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.proj-principal { display: flex; flex-direction: column; justify-content: flex-start; min-width: 0; padding-top: 2vh; }
+.proj-principal h1 { font-size: clamp(2.8rem, 6.4vw, 6.2rem); max-width: none; margin: 0.1em 0 0.15em; line-height: 1; }
+.proj-reste { font-family: var(--police-titre); font-weight: 800; font-size: clamp(2.2rem, 5.5vw, 5rem); color: var(--accent); margin: 0; font-variant-numeric: tabular-nums; }
+.proj-suivante { font-size: clamp(1.1rem, 2vw, 1.6rem); color: var(--texte-doux); margin: 0.6em 0 0; }
+.proj-progres { height: 12px; border-radius: 999px; overflow: hidden; margin-top: 28px; }
+.proj-stop { margin: 0 0 28px; padding: 18px 24px; border: 3px solid var(--accent); border-radius: var(--rayon-grand); }
+.proj-stop[hidden] { display: none; }
+.proj-stop .stop-mot { font-size: clamp(3rem, 7vw, 6rem); margin: 0; }
+.proj-stop p { font-size: clamp(1.3rem, 2.4vw, 2rem); font-weight: 700; margin: 0.3em 0 0; }
+
+.proj-cote { display: grid; gap: 22px; align-content: start; }
+.proj-phases { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--trait); }
+.proj-phases li { display: grid; grid-template-columns: 4.8em 1fr auto; gap: 10px; padding: 5px 4px; border-bottom: 1px solid var(--trait); font-size: 1rem; }
+.proj-phases .h { font-variant-numeric: tabular-nums; color: var(--texte-doux); }
+.proj-phases .en-cours { background: var(--accent-doux); font-weight: 800; box-shadow: inset 4px 0 0 var(--accent); }
+.proj-phases .passee { color: var(--texte-doux); }
+.proj-phases .arret { color: var(--accent); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; }
+
+.proj-boite { padding: 16px 18px; border: 1px solid var(--trait); border-radius: var(--rayon); background: var(--surface); }
+.proj-boite h2 { font-size: 1rem; margin: 0 0 10px; letter-spacing: 0.04em; }
+.proj-boite .rangee-boutons { margin: 10px 0 0; }
+.proj-qr svg { width: 100%; max-width: 220px; height: auto; display: block; background: #ffffff; padding: 10px; border-radius: var(--rayon); }
+.proj-qr .adresse { font-size: 0.95rem; word-break: break-all; margin: 10px 0 0; }
+
+.mdp-geant {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  background: var(--fond);
+  padding: 30px;
+  text-align: center;
+}
+.mdp-geant[hidden] { display: none; }
+.mdp-geant .etiquette { font-size: 1.4rem; }
+.mdp-geant output { font-family: var(--police-titre); font-weight: 800; font-size: clamp(3rem, 12vw, 10rem); line-height: 1.05; letter-spacing: 0.02em; word-break: break-all; color: var(--texte); }
+
+@media (max-width: 1000px) {
+  .projecteur { grid-template-columns: 1fr; padding: 20px 16px 40px; }
+}
+
+/* Feuille de route */
+.liste-verif { list-style: none; margin: 1rem 0; padding: 0; display: grid; gap: 8px; max-width: 60rem; }
+.liste-verif li { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--trait); border-radius: var(--rayon); background: var(--surface); font-family: var(--police-ui); font-size: 0.97rem; line-height: 1.5; }
+.liste-verif input { margin-top: 0.25rem; width: 1.1rem; height: 1.1rem; flex: none; accent-color: var(--accent); }
+.fiche-phase { max-width: 60rem; padding: 16px 20px; margin: 14px 0; border: 1px solid var(--trait); border-left: 4px solid var(--accent); border-radius: var(--rayon); background: var(--surface); }
+.fiche-phase h3 { margin: 0 0 6px; }
+.fiche-phase p { margin: 0.4em 0 0; }
+code { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 0.92em; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }

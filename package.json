@@ -1,0 +1,26 @@
+{
+  "name": "fabrique-du-social",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site de séance du cours « La fabrique du social, introduction à la sociologie » (Bachelor ACT).",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "lint": "node scripts/lint-copy.mjs",
+    "liens": "node scripts/check-links.mjs",
+    "serve": "node scripts/serve.mjs",
+    "test": "playwright test --trace off",
+    "captures": "CAPTURES=1 playwright test tests/captures.spec.mjs --trace off",
+    "verifier": "node scripts/lint-copy.mjs && node scripts/build.mjs --verifier-seulement"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.10.2",
+    "@playwright/test": "1.63.0",
+    "html-validate": "9.5.5",
+    "linkedom": "0.18.12",
+    "staticrypt": "3.5.4"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

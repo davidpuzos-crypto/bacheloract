@@ -1,0 +1,114 @@
+/* Jetons visuels du site « La fabrique du social ».
+   Identité reprise du cours : fond sombre, texte crème, accent orange chaud,
+   titres en grotesque grasse (Archivo), corps en serif (Literata).
+   Les couleurs exactes des slides sont à vérifier (VERIFICATIONS.md). */
+
+@font-face { font-family: "Archivo"; font-style: normal; font-weight: 500; font-display: swap; src: url("../fonts/archivo-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Archivo"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/archivo-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Archivo"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/archivo-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Archivo"; font-style: normal; font-weight: 800; font-display: swap; src: url("../fonts/archivo-latin-800-normal.woff2") format("woff2"); }
+@font-face { font-family: "Literata"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/literata-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Literata"; font-style: italic; font-weight: 400; font-display: swap; src: url("../fonts/literata-latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Literata"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/literata-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Literata"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/literata-latin-700-normal.woff2") format("woff2"); }
+
+:root {
+  --police-titre: "Archivo", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --police-ui: "Archivo", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --police-texte: "Literata", Georgia, "Times New Roman", serif;
+
+  /* Mode sombre, identité du cours */
+  --fond: #17181c;
+  --fond-2: #1d1e23;
+  --surface: #212228;
+  --surface-2: #2a2c33;
+  --trait: #3b3d46;
+  --trait-fort: #575a66;
+  --texte: #f2eadb;
+  --texte-doux: #bfb7a8;
+  --accent: #f08a3c;
+  --accent-vif: #ffa35c;
+  --accent-texte: #17181c;
+  --accent-doux: rgba(240, 138, 60, 0.14);
+  --surligneur: rgba(255, 196, 46, 0.34);
+  --ok: #7bd49f;
+  --ok-fond: rgba(123, 212, 159, 0.12);
+  --alerte: #ffb169;
+  --alerte-fond: rgba(255, 177, 105, 0.14);
+  --erreur: #ff9b91;
+  --erreur-fond: rgba(255, 155, 145, 0.12);
+  --aide: #f7a250;
+  --ombre: 0 1px 0 rgba(0, 0, 0, 0.35), 0 10px 30px rgba(0, 0, 0, 0.28);
+
+  /* Une couleur par compétence */
+  --c-definir: #f08a3c;
+  --c-citer: #e8c35a;
+  --c-lire: #5fc6b8;
+  --c-noter: #b9a3e8;
+
+  --rayon: 6px;
+  --rayon-grand: 12px;
+  --mesure: 68ch;
+  --entete-h: 64px;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --fond: #f6f1e7;
+    --fond-2: #efe8da;
+    --surface: #fffcf6;
+    --surface-2: #efe8da;
+    --trait: #d8cfbe;
+    --trait-fort: #9a9180;
+    --texte: #17181c;
+    --texte-doux: #514b43;
+    --accent: #a8480a;
+    --accent-vif: #c2560f;
+    --accent-texte: #ffffff;
+    --accent-doux: rgba(168, 72, 10, 0.09);
+    --surligneur: #ffe27a;
+    --ok: #1c6e40;
+    --ok-fond: rgba(28, 110, 64, 0.09);
+    --alerte: #8f3d00;
+    --alerte-fond: rgba(196, 92, 0, 0.11);
+    --erreur: #a3271b;
+    --erreur-fond: rgba(163, 39, 27, 0.08);
+    --aide: #a8480a;
+    --ombre: 0 1px 0 rgba(23, 24, 28, 0.06), 0 10px 26px rgba(23, 24, 28, 0.1);
+    --c-definir: #a8480a;
+    --c-citer: #7d5a00;
+    --c-lire: #0b6a62;
+    --c-noter: #5f43a8;
+    color-scheme: light;
+  }
+}
+
+:root[data-theme="light"] {
+  --fond: #f6f1e7;
+  --fond-2: #efe8da;
+  --surface: #fffcf6;
+  --surface-2: #efe8da;
+  --trait: #d8cfbe;
+  --trait-fort: #9a9180;
+  --texte: #17181c;
+  --texte-doux: #514b43;
+  --accent: #a8480a;
+  --accent-vif: #c2560f;
+  --accent-texte: #ffffff;
+  --accent-doux: rgba(168, 72, 10, 0.09);
+  --surligneur: #ffe27a;
+  --ok: #1c6e40;
+  --ok-fond: rgba(28, 110, 64, 0.09);
+  --alerte: #8f3d00;
+  --alerte-fond: rgba(196, 92, 0, 0.11);
+  --erreur: #a3271b;
+  --erreur-fond: rgba(163, 39, 27, 0.08);
+  --aide: #a8480a;
+  --ombre: 0 1px 0 rgba(23, 24, 28, 0.06), 0 10px 26px rgba(23, 24, 28, 0.1);
+  --c-definir: #a8480a;
+  --c-citer: #7d5a00;
+  --c-lire: #0b6a62;
+  --c-noter: #5f43a8;
+  color-scheme: light;
+}

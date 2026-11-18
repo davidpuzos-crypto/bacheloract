@@ -1,0 +1,38 @@
+{
+  "seance": 9,
+  "dateSeance": "",
+  "liens": {
+    "insee": "https://www.insee.fr/fr/statistiques/8743657",
+    "video": "https://www.youtube.com/watch?v=aed8Q40M8r8",
+    "geoconfluencesGenre": "https://geoconfluences.ens-lyon.fr/glossaire/genre",
+    "geoconfluencesGlossaire": "https://geoconfluences.ens-lyon.fr/glossaire",
+    "dictionnaireSociologieClinique": "https://shs.cairn.info/dictionnaire-de-sociologie-clinique--9782749257648?lang=fr",
+    "sesEns": "https://ses.ens-lyon.fr",
+    "cairn": "https://www.cairn.info",
+    "guideApaEns": "https://www.ensparis.fr/wp-content/uploads/2023/09/La-bibliographie-aux-normes-APA-Simplifiee.pdf",
+    "tutosBu": "https://tutos.bu.univ-rennes2.fr",
+    "moodleDepotParcours": "",
+    "moodleDepotVideo": "",
+    "moodleFicheMethodeNotes": "",
+    "moodleGuideRevision": ""
+  },
+  "collecte": {
+    "actif": false,
+    "endpoint": "",
+    "jeton": ""
+  },
+  "options": {
+    "afficherPourcentages": false,
+    "chiffrerCorrection": true,
+    "codeQR": true,
+    "adresseSite": ""
+  },
+  "_commentaires": {
+    "dateSeance": "Date affichée sur l’accueil de la séance, au format AAAA-MM-JJ. Laisser vide pour ne rien afficher.",
+    "liens": "Les liens Moodle vides masquent les boutons correspondants. Le site affiche alors « Le lien est sur Moodle ».",
+    "collecte": "Désactivée par défaut. Voir le README, section « Collecte automatique ». Le jeton n’est pas un secret, il est lisible dans le code du site.",
+    "afficherPourcentages": "Pourcentages de rétention de la diapo 33 (20, 40, 60, 80 %). Sans source indiquée, ils ressemblent à la « pyramide de l’apprentissage », dont les chiffres sont critiqués faute de base empirique. À n’activer que si une source est fournie ou si l’enseignant confirme qu’il les garde.",
+    "chiffrerCorrection": "Si false, la correction est copiée en clair dans docs/. À réserver à un dépôt privé avec Pages activé.",
+    "adresseSite": "Adresse publique du site, utilisée pour le code QR du projecteur. Vide : l’adresse de la page ouverte est utilisée."
+  }
+}

@@ -1,0 +1,14 @@
+# Sources en clair de la correction : ne jamais les publier
+private/
+
+# Mot de passe et variables locales
+.env
+.env.*
+!.env.exemple
+
+# Outils
+node_modules/
+test-results/
+playwright-report/
+tests/captures/
+.DS_Store

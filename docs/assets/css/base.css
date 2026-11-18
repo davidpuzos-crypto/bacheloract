@@ -1,0 +1,164 @@
+/* Base : mise en page, typographie, éléments HTML */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--entete-h) + 24px);
+  background: var(--fond);
+}
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font-family: var(--police-texte);
+  font-size: 1.0625rem;
+  line-height: 1.72;
+  font-kerning: normal;
+  font-variant-numeric: proportional-nums;
+  overflow-wrap: break-word;
+}
+
+img, svg { max-width: 100%; height: auto; }
+
+a { color: var(--accent); text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
+a:hover { color: var(--accent-vif); text-decoration-thickness: 2px; }
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.evitement {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 100;
+  background: var(--accent);
+  color: var(--accent-texte);
+  font-family: var(--police-ui);
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: var(--rayon);
+  text-decoration: none;
+}
+.evitement:focus { top: 12px; color: var(--accent-texte); }
+
+.visuellement-cache {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Conteneurs */
+.page { max-width: 1180px; margin: 0 auto; padding: 0 24px 96px; }
+.prose { max-width: var(--mesure); }
+.prose p, .prose li { margin: 0 0 1em; }
+.prose p:last-child { margin-bottom: 0; }
+
+/* Titres : grotesque grasse */
+h1, h2, h3, h4 {
+  font-family: var(--police-titre);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.012em;
+  color: var(--texte);
+  text-wrap: balance;
+}
+h1 { font-size: clamp(2.1rem, 4.6vw, 3.4rem); margin: 0.2em 0 0.45em; max-width: 22ch; }
+h2 { font-size: clamp(1.45rem, 2.6vw, 1.9rem); margin: 2.4em 0 0.65em; }
+h3 { font-size: 1.2rem; font-weight: 700; margin: 1.9em 0 0.5em; letter-spacing: 0; }
+h1:focus, h2:focus { outline: none; }
+
+/* Étiquette de séquence, du type « QUÊTE 2 · CITER » */
+.etiquette {
+  display: inline-block;
+  font-family: var(--police-ui);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+.chapeau {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--texte-doux);
+  max-width: 58ch;
+  margin: 0 0 1.6em;
+}
+
+.meta {
+  font-family: var(--police-ui);
+  font-size: 0.92rem;
+  color: var(--texte-doux);
+}
+
+strong { font-weight: 700; }
+em, i { font-style: italic; }
+
+/* Surligneur, comme dans la v2 */
+mark {
+  background: linear-gradient(transparent 10%, var(--surligneur) 10%, var(--surligneur) 92%, transparent 92%);
+  color: inherit;
+  padding: 0 0.12em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+abbr[title] {
+  text-decoration: underline dotted;
+  text-underline-offset: 0.2em;
+  cursor: help;
+}
+
+hr { border: 0; border-top: 1px solid var(--trait); margin: 2.5em 0; }
+
+/* Tableaux */
+.table-defile { overflow-x: auto; max-width: 100%; margin: 1.1rem 0 1.4rem; border: 1px solid var(--trait); border-radius: var(--rayon); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-family: var(--police-ui); font-size: 0.93rem; line-height: 1.5; }
+caption { text-align: left; font-weight: 700; padding: 10px 14px 0; }
+th, td { padding: 0.62rem 0.8rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--trait); }
+thead th { font-weight: 700; border-bottom: 2px solid var(--trait-fort); background: var(--surface-2); }
+tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+tbody th[scope="row"] { font-weight: 500; }
+td.num, th.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+tr.groupe th { background: var(--accent-doux); font-weight: 700; font-size: 0.86rem; letter-spacing: 0.02em; }
+
+/* Listes de cartes, menus : composants d’interface */
+ul.liste-nue, ol.liste-nue { list-style: none; margin: 0; padding: 0; }
+
+/* Pied de page */
+.pied {
+  border-top: 1px solid var(--trait);
+  padding: 28px 24px 40px;
+  font-family: var(--police-ui);
+  font-size: 0.88rem;
+  color: var(--texte-doux);
+  text-align: center;
+}
+.pied a { color: var(--texte-doux); }
+
+@media (max-width: 640px) {
+  body { font-size: 1.02rem; line-height: 1.68; }
+  .page { padding: 0 16px 72px; }
+  h1 { font-size: clamp(1.9rem, 8.4vw, 2.4rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
