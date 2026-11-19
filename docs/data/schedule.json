@@ -27,7 +27,7 @@
      "stopMot": "Vidéo", "stopTexte": "La vidéo commence. Notez à votre façon, avec les conseils que vous avez choisis.",
      "stopBouton": "Ouvrir la feuille de notes"},
     {"id": "video",          "label": "Vidéo",                          "debut": 140, "duree": 25, "page": "9-video.html#pendant", "stop": true,
-     "stopTexte": "La vidéo est terminée. Complétez vos notes à froid, puis comparez-les avec votre binôme.",
+     "stopTexte": "La vidéo est terminée. Complétez vos notes à froid, puis comparez-les en équipe.",
      "stopBouton": "Passer à la comparaison"},
     {"id": "froid",          "label": "À froid et comparer",            "debut": 165, "duree": 5,  "page": "9-video.html#comparer", "stop": true,
      "stopTexte": "Il reste dix minutes. Passez aux questions.",

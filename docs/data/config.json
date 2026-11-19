@@ -15,11 +15,23 @@
     "moodleGuideRevision": ""
   },
   "collecte": {
-    "actif": false,
-    "endpoint": "",
-    "jeton": "s09-124a1f0a2443c7c8",
-    "synchroSecondes": 45,
-    "horlogeSecondes": 60
+    "actif": true,
+    "relais": "https://ntfy.sh",
+    "sujet": "fabrique-s09-m8w3at9tak35fv",
+    "sujetHorloge": "fabrique-s09-m8w3at9tak35fv-horloge",
+    "clePublique": "BAIBpePlyWeqrl6Fp6B2DrApEG92gkJ0w3NkKik_0wig3h8aIBOdTWaxYj38R9XoG_fs-wSXCfV1ezJcZ6zVtEg",
+    "cleSignature": "BECFOdevcgf5d3OSDElnQww3CTRNmVkI9hakVqtXW-mNAsXKzcAczW1Zlxvpp1UXLw7N_gxvfUjvAI4nVdZvcyE",
+    "coffre": {
+      "sel": "g5sUrEHKlUKZZUZ1a_-toA",
+      "iv": "iy-knp5vsArfzFRk",
+      "iterations": 600000,
+      "donnees": "uEjSzUgHBrBT3i2oI74A_hqaOWFV1AG9950I3cnefJnZwEvWn6fJnKZeYvCakc4AFAdPWVHP0Opc27r_PWeIrr6kpp5-GqEQVBUZ5W5Ug_Hzf5HTOL6SquCh8rhw35s-k0pvIrb-B0QBo_oDJmW-Q-0SbicEuGJEpdk_ThZzaofEdSUIdTAHLSNcVJ8hU0Nojc0_TVyXDULC2Yl6LcBEn1GlMiif-axv_-DSWXKHuAFpjcM_WoDY9U7-ugu0LPI8No2LWioCMiZWS3UrofbAr1HFwYh9XWJG1Rmwwsy6TmD5PgeSTsoHJmshtfwctMZuKd5wdSh178_BSmzBH4mvPe4IkkBQmW3kDhNtshJV80Xfm26zJAhXZUvguGoJ7ZCnG9YbcFHmlEAZ489Y7ADFHDbU4sXrE6z73Zoa5k_ERtX3pZafMrF6XwgrCR7yV_wKveAR5aJhM1HXigQ5nxNuyuuSxM7oaPWd6lWO0qE4YXQft93_aGiExyI0nm-gvGOHj5XD2f7IwLtB99n_uPOkVOA1-Us-Mw"
+    },
+    "premierEnvoiSecondes": 20,
+    "relanceMinutes": 15,
+    "etalementSecondes": 20,
+    "horlogeMinutes": 6,
+    "lectureSecondes": 40
   },
   "options": {
     "afficherPourcentages": false,
@@ -30,7 +42,7 @@
   "_commentaires": {
     "dateSeance": "Date affichée sur l’accueil de la séance, au format AAAA-MM-JJ. Laisser vide pour ne rien afficher.",
     "liens": "Liens utiles du cours. Un lien Moodle vide masque le bouton correspondant (fiche méthode, guide de révision).",
-    "collecte": "Envoi des réponses à l’enseignant, vers une feuille Google privée (voir le README, section « Voir les réponses en direct »). Mettre actif à true et coller l’adresse du script dans endpoint. Le jeton n’est pas un secret : il est lisible dans le code du site et doit être identique dans le script Google. synchroSecondes : fréquence d’envoi automatique. horlogeSecondes : fréquence de lecture de l’heure de départ diffusée par l’enseignant.",
+    "collecte": "Envoi des réponses à l’enseignant, sans compte à créer. Les réponses partent chiffrées vers le relais public ntfy.sh (sujets « sujet » et « sujetHorloge »), et seule la page « Réponses des équipes », ouverte avec le code enseignant, peut les lire. Le relais garde les messages 12 heures et accepte 250 messages par jour depuis un même réseau. clePublique, cleSignature et coffre sont créés par « node scripts/code-enseignant.mjs » : ne pas les modifier à la main. Mettre actif à false pour couper l’envoi. premierEnvoiSecondes : délai avant le premier envoi après la saisie des noms. relanceMinutes : délai au bout duquel une modification restée sans envoi part quand même. etalementSecondes : étalement des envois au moment des points d’arrêt. horlogeMinutes : délai entre deux lectures de l’heure diffusée. lectureSecondes : actualisation de la page enseignant.",
     "afficherPourcentages": "Pourcentages de rétention de la diapo 33 (20, 40, 60, 80 %). Sans source indiquée, ils ressemblent à la « pyramide de l’apprentissage », dont les chiffres sont critiqués faute de base empirique. À n’activer que si une source est fournie ou si l’enseignant confirme qu’il les garde.",
     "chiffrerCorrection": "Si false, la correction est copiée en clair dans docs/. À réserver à un dépôt privé avec Pages activé.",
     "adresseSite": "Adresse publique du site, utilisée pour le code QR du projecteur. Vide : l’adresse de la page ouverte est utilisée."

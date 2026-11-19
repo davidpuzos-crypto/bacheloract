@@ -23,7 +23,8 @@ async function liensConfig() {
     const v = c.options ? c.options[el.dataset.option] : false;
     el.hidden = !v;
   });
-  const collecte = !!(c.collecte && c.collecte.actif && c.collecte.endpoint);
+  const k = c.collecte || {};
+  const collecte = !!(k.actif && k.relais && k.sujet && k.clePublique);
   document.querySelectorAll('[data-si-collecte]').forEach((el) => { el.hidden = !collecte; });
   document.querySelectorAll('[data-sans-collecte]').forEach((el) => { el.hidden = collecte; });
   document.querySelectorAll('[data-date-seance]').forEach((el) => {

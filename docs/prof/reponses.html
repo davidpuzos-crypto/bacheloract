@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Réponses des équipes · Séance 9 · La fabrique du social</title>
-<meta name="description" content="Espace enseignant. Réponses des équipes en direct, protégées par une clé.">
+<meta name="description" content="Espace enseignant. Réponses des équipes en direct, chiffrées, lisibles avec le code de l’enseignant.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../assets/css/tokens.css">
@@ -21,7 +21,7 @@
   <div class="tete-page">
     <p class="etiquette">Espace enseignant · Séance 9</p>
     <h1>Réponses des équipes</h1>
-    <p class="chapeau">Les réponses arrivent au fil de la séance, depuis le navigateur de chaque binôme. Rien ne s’affiche sans votre clé.</p>
+    <p class="chapeau">Les réponses arrivent au fil de la séance, chiffrées, depuis le navigateur de chaque équipe. Rien ne s’affiche sans votre code.</p>
     <p class="rangee-boutons">
       <a class="btn secondaire" href="projecteur.html">Écran de projection</a>
       <a class="btn secondaire" href="deroule.html">Feuille de route</a>
@@ -29,16 +29,16 @@
   </div>
 
   <div class="encadre" data-sans-collecte>
-    <h2>L’envoi des réponses n’est pas encore branché</h2>
-    <p>Pour voir les réponses ici, il faut une feuille Google à vous et un petit script, à installer une seule fois. Le mode d’emploi est dans le README du dépôt, section « Voir les réponses en direct ». Une fois l’adresse du script ajoutée à <code>docs/data/config.json</code>, cette page fonctionne.</p>
+    <h2>L’envoi des réponses est désactivé</h2>
+    <p>Dans <code>docs/data/config.json</code>, la ligne <code>"actif"</code> de la partie <code>"collecte"</code> est à <code>false</code>. Remettez-la à <code>true</code> pour recevoir les réponses ici.</p>
   </div>
 
   <form class="connexion encadre" data-connexion data-si-collecte hidden>
-    <h2>Votre clé</h2>
-    <p>C’est la clé choisie dans le script Google (<code>CLE_ENSEIGNANT</code>).</p>
-    <label for="cle-enseignant">Clé enseignant</label>
-    <input type="password" id="cle-enseignant" autocomplete="current-password" required>
-    <label class="souvenir"><input type="checkbox" id="cle-souvenir"> Se souvenir de la clé sur cet ordinateur</label>
+    <h2>Votre code</h2>
+    <p>Le code enseignant ouvre les réponses, chiffrées pour vous seul·e. Majuscules, espaces et tirets ne comptent pas.</p>
+    <label for="code-enseignant">Code enseignant</label>
+    <input type="password" id="code-enseignant" autocomplete="current-password" spellcheck="false" required>
+    <label class="souvenir"><input type="checkbox" id="code-souvenir"> Se souvenir du code sur cet ordinateur</label>
     <p class="erreur" data-erreur-cle role="alert"></p>
     <p><button type="submit" class="btn">Afficher les réponses</button></p>
   </form>
@@ -63,7 +63,7 @@
         <button type="button" class="btn discret petit" data-annuler-depart>Revenir à l’horaire du fichier</button>
       </div>
       <p class="statut" data-statut-horloge role="status"></p>
-      <p class="meta">Les appareils des binômes et l’écran de projection reçoivent l’heure en moins d’une minute.</p>
+      <p class="meta">Les appareils des équipes et l’écran de projection relisent l’heure toutes les six minutes au plus. Le plus simple est de la diffuser avant l’arrivée des étudiant·es.</p>
     </details>
 
     <div class="onglets" role="tablist" aria-label="Vues">
@@ -84,10 +84,22 @@
       <div data-contenu-equipe></div>
     </div>
 
+    <details class="encadre infos-relais">
+      <summary>Où passent les réponses, et combien de temps elles restent</summary>
+      <div class="prose">
+        <p>Chaque navigateur chiffre les réponses de son équipe avant de les envoyer à un relais public gratuit, ntfy.sh, qui ne demande aucun compte. Le relais ne voit que des données illisibles. Seul votre code permet de les lire, sur cette page.</p>
+        <p>Le relais garde les messages 12 heures. Cette page en garde une copie dans ce navigateur à chaque actualisation. Après la séance, téléchargez les réponses pour les conserver.</p>
+        <p>Le relais accepte 250 messages par jour depuis un même réseau, et toute la classe partage souvent le même. Les équipes envoient donc aux moments clés (fin de chaque étape, demande d’aide, dépôt), et seulement ce qui a changé.</p>
+      </div>
+    </details>
+
     <p class="rangee-boutons pied-suivi">
-      <button type="button" class="btn discret petit" data-exporter>Télécharger toutes les réponses (JSON)</button>
-      <button type="button" class="btn discret petit" data-oublier>Oublier la clé sur cet ordinateur</button>
+      <button type="button" class="btn secondaire petit" data-exporter-texte>Télécharger les réponses (texte)</button>
+      <button type="button" class="btn discret petit" data-exporter>Télécharger les réponses (JSON)</button>
+      <button type="button" class="btn discret petit" data-effacer-local>Effacer les réponses gardées dans ce navigateur</button>
+      <button type="button" class="btn discret petit" data-oublier>Oublier le code sur cet ordinateur</button>
     </p>
+    <p class="statut" data-statut-local role="status"></p>
   </section>
 </main>
 <footer class="pied"><p>La fabrique du social · Bachelor ACT · Séance 9 · Espace enseignant</p></footer>

@@ -115,3 +115,6 @@ code { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; 
 .fiche-equipe p { margin: 4px 0; }
 .recap-recu { white-space: pre-wrap; font-size: 0.85rem; max-height: 30rem; overflow: auto; }
 .pied-suivi { margin-top: 28px; }
+
+.infos-relais { margin-top: 1.6rem; }
+.infos-relais .prose p { margin: 0.6rem 0; }

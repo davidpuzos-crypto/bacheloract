@@ -177,7 +177,14 @@ export function equipe(e = lire()) {
   const ic = e.radios.icone && ICONES_EQUIPE[e.radios.icone] ? e.radios.icone : 'loupe';
   const n1 = (e.champs.nom1 || '').trim();
   const n2 = (e.champs.nom2 || '').trim();
-  return { nom, icone: ic, n1, n2, defini: !!nom };
+  const n3 = (e.champs.nom3 || '').trim();
+  return { nom, icone: ic, n1, n2, n3, defini: !!nom };
+}
+
+// « A et B », ou « A, B et C » pour une équipe de trois.
+export function listeNoms(noms) {
+  const l = noms.filter(Boolean);
+  return l.length < 2 ? l.join('') : l.slice(0, -1).join(', ') + ' et ' + l[l.length - 1];
 }
 
 function svg(id, classe = '') {
@@ -241,7 +248,7 @@ export function htmlCarnet(options = {}) {
   const eq = equipe(e);
   const nq = options.nouvellesQuetes || [];
   const nb = options.nouveauxBadges || [];
-  const noms = [eq.n1, eq.n2].filter(Boolean).map(echapper).join(' et ');
+  const noms = listeNoms([eq.n1, eq.n2, eq.n3].map(echapper));
   const resolues = res.quetes.filter((q) => q.terminee).length;
   return ''
     + '<div class="carnet-bloc equipe-carte">' + svg(eq.icone, 'icone-equipe')

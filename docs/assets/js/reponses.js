@@ -1,7 +1,10 @@
 // Page « Réponses des équipes » (espace enseignant).
-// Lit les réponses envoyées par les binômes dans la feuille Google privée,
-// via le script Apps Script, avec la clé de l’enseignant. La clé n’est
-// jamais dans le code du site : on la tape sur cette page.
+// Lit les réponses envoyées par les équipes sur le relais public (ntfy.sh),
+// où elles circulent chiffrées. Le code de l’enseignant ouvre le coffre de
+// data/config.json, qui contient la clé privée de déchiffrement. Le code
+// n’est jamais dans le site : on le tape sur cette page.
+// Le relais garde les messages 12 heures. Cette page en garde une copie dans
+// le navigateur, et permet de tout télécharger.
 // Tout texte venu des étudiant·es est affiché comme du texte (textContent),
 // jamais comme du HTML.
 
@@ -10,24 +13,32 @@ import { catalogue } from './recap.js';
 import { formatHeure } from './clock.js';
 import { QUETES, champsRequis, SEUIL_CHAMP, ICONES_EQUIPE } from './gamify.js';
 import { typographier } from './typo.js';
+import { ouvrirCoffre, dechiffrer, signer, verifier } from './chiffre.js';
+import { relireHorloge } from './collect.js';
 
-const CLE_STOCKAGE = 'fabrique:s09:cle-enseignant';
+const CLE_CODE = 'fabrique:s09:code-enseignant';
+const CLE_MESSAGES = 'fabrique:s09:prof:messages';
 const ACTIF_MS = 5 * 60000;
+const LIMITE_JOUR = 250;
 const PAGES = {
   hub: 'Accueil', cadre: 'Cadre', methode: 'Méthode', chercher: 'Chercher', 'citer-lecture': 'Bien citer',
   'citer-pratique': 'Citer, pratique', pause: 'Pause', lire: 'Lire', correction: 'Correction', notes: 'Conseils de notes',
   video: 'Vidéo', fin: 'Bilan', accueil: 'Accueil du cours'
 };
-const SECTIONS = { '#depot': 'Dépôt', '#pendant': 'pendant', '#comparer': 'à froid et comparer', '#questions': 'questions' };
+const SECTIONS = { '#lire': 'lecture', '#analyser': 'analyse', '#depot': 'Dépôt', '#pendant': 'pendant', '#comparer': 'à froid et comparer', '#questions': 'questions' };
+const INTERDITES = new Set(['__proto__', 'constructor', 'prototype']);
 
 let cfg = null;
-let cle = '';
+let cles = null;
 let equipes = [];
 let questions = [];
-let departDiffuse = '';
+let departDiffuse = null;
 let vue = 'ensemble';
 let minuteur = null;
 let enChargement = false;
+// Messages du relais gardés dans ce navigateur, et messages déjà déchiffrés.
+let local = { depuis: 0, messages: [] };
+const dechiffres = new Map();
 
 const $ = (s) => document.querySelector(s);
 
@@ -51,10 +62,6 @@ function svg(id, classe = '') {
   s.append(u);
   return s;
 }
-function json(v, defaut) {
-  if (v && typeof v === 'object') { return v; }
-  try { return v ? JSON.parse(v) : defaut; } catch (e) { return defaut; }
-}
 function heure(ms) { return ms ? formatHeure(ms) : ''; }
 function nb(n, singulier, pluriel) { return n + ' ' + (n > 1 ? pluriel : singulier); }
 function ilYA(date) {
@@ -65,39 +72,74 @@ function ilYA(date) {
   if (m < 60) { return 'il y a ' + m + ' min'; }
   return 'à ' + heure(date.getTime());
 }
-function adresse(parametres) {
-  const base = cfg.collecte.endpoint;
-  return base + (base.includes('?') ? '&' : '?') + parametres;
+function lireCode() {
+  try { return sessionStorage.getItem(CLE_CODE) || localStorage.getItem(CLE_CODE) || ''; } catch (e) { return ''; }
 }
-function lireCle() {
-  try { return sessionStorage.getItem(CLE_STOCKAGE) || localStorage.getItem(CLE_STOCKAGE) || ''; } catch (e) { return ''; }
-}
-function garderCle(v, souvenir) {
+function garderCode(v, souvenir) {
   try {
-    sessionStorage.setItem(CLE_STOCKAGE, v);
-    if (souvenir) { localStorage.setItem(CLE_STOCKAGE, v); } else { localStorage.removeItem(CLE_STOCKAGE); }
-  } catch (e) { /* stockage indisponible : la clé reste en mémoire */ }
+    sessionStorage.setItem(CLE_CODE, v);
+    if (souvenir) { localStorage.setItem(CLE_CODE, v); } else { localStorage.removeItem(CLE_CODE); }
+  } catch (e) { /* stockage indisponible : le code reste en mémoire */ }
 }
-function oublierCle() {
-  try { sessionStorage.removeItem(CLE_STOCKAGE); localStorage.removeItem(CLE_STOCKAGE); } catch (e) { /* rien à faire */ }
+function oublierCode() {
+  try { sessionStorage.removeItem(CLE_CODE); localStorage.removeItem(CLE_CODE); } catch (e) { /* rien à faire */ }
+}
+function cleSure(k) { return /^[A-Za-z0-9_-]{1,40}$/.test(k) && !INTERDITES.has(k); }
+function texteSur(v, max = 20000) { return typeof v === 'string' ? v.slice(0, max) : (typeof v === 'number' ? String(v) : ''); }
+function listeNoms(noms) {
+  const l = (Array.isArray(noms) ? noms : []).map((n) => texteSur(n, 120).trim()).filter(Boolean).slice(0, 3);
+  if (l.length < 2) { return l.join(''); }
+  return l.slice(0, -1).join(', ') + ' et ' + l[l.length - 1];
 }
 
-function normaliser(r) {
-  const maj = r.maj ? new Date(r.maj) : null;
+// État d’une équipe reconstitué à partir de ses messages (clés à plat).
+function deplier(id, st) {
+  const p = st.plat;
+  const champs = Object.create(null);
+  const radios = Object.create(null);
+  const qcm = Object.create(null);
+  const cases = Object.create(null);
+  const indices = Object.create(null);
+  const depots = Object.create(null);
+  Object.keys(p).forEach((k) => {
+    const [genre, cle] = [k.slice(0, 1), k.slice(2)];
+    if (k.charAt(1) !== '.' || !cleSure(cle)) { return; }
+    const v = p[k];
+    if (genre === 'c') { champs[cle] = texteSur(v); }
+    if (genre === 'r') { radios[cle] = texteSur(v, 40); }
+    if (genre === 'q' && Array.isArray(v)) {
+      qcm[cle] = { premier: texteSur(v[0], 4), dernier: texteSur(v[1], 4), essais: Number(v[2]) || 1, premierJuste: !!v[3], juste: !!v[4] };
+    }
+    if (genre === 'k' && Array.isArray(v)) { cases[cle] = v.map((x) => texteSur(x, 20)).slice(0, 40); }
+    if (genre === 'i' && Array.isArray(v)) { indices[cle] = { trouve: !!v[0], montre: !!v[1], essais: Number(v[2]) || 0 }; }
+    if (genre === 'd' && Array.isArray(v)) { depots[cle] = { le: Number(v[0]) || 0, via: texteSur(v[1], 20) }; }
+  });
+  const quetes = Object.create(null);
+  const q = p['m.quetes'];
+  if (q && typeof q === 'object') {
+    QUETES.forEach((d) => {
+      const v = q[d.id];
+      if (Array.isArray(v)) { quetes[d.id] = { faits: Number(v[0]) || 0, total: Number(v[1]) || 0, terminee: !!v[2] }; }
+    });
+  }
+  const icone = texteSur(p['m.icone'], 20);
   return {
-    id: String(r.id || ''),
-    maj: maj && !isNaN(maj.getTime()) ? maj : null,
-    equipe: String(r.equipe || '').trim(),
-    noms: String(r.noms || '').trim(),
-    icone: ICONES_EQUIPE[r.icone] ? String(r.icone) : 'loupe',
-    page: String(r.page || ''),
-    points: Number(r.points) || 0,
-    drapeau: r.drapeau === 'aide' ? 'aide' : 'ok',
-    quetes: json(r.quetes, {}),
-    reponses: json(r.reponses, {}),
-    depots: json(r.depots, {}),
-    depot_parcours: String(r.depot_parcours || ''),
-    depot_video: String(r.depot_video || '')
+    id,
+    maj: st.maj ? new Date(st.maj) : null,
+    messages: st.messages,
+    equipe: texteSur(p['m.equipe'], 80).trim(),
+    noms: listeNoms(p['m.noms']),
+    icone: ICONES_EQUIPE[icone] ? icone : 'loupe',
+    page: texteSur(p['m.page'], 80),
+    points: Number(p['m.points']) || 0,
+    drapeau: p['m.drapeau'] === 'aide' ? 'aide' : 'ok',
+    quetes,
+    reponses: {
+      champs, radios, qcm, cases, indices,
+      conseils: Array.isArray(p['s.conseils']) ? p['s.conseils'].map((x) => Number(x)).filter(Number.isFinite).slice(0, 8) : [],
+      lu: Array.isArray(p['u.lu']) ? p['u.lu'].map((x) => texteSur(x, 20)) : []
+    },
+    depots
   };
 }
 function nomEquipe(e) { return e.equipe || 'Équipe sans nom'; }
@@ -122,23 +164,114 @@ function requisRemplis(e) {
   return { faits, total: ids.length };
 }
 
+// ---------------------------------------------------------------- relais
+
+function relais() { return String(cfg.collecte.relais).replace(/\/+$/, ''); }
+
+async function lireSujet(sujet, depuis) {
+  const r = await fetch(relais() + '/' + encodeURIComponent(sujet) + '/json?poll=1&since=' + encodeURIComponent(depuis), { cache: 'no-store' });
+  if (r.status === 429) { throw new Error('le relais demande de patienter'); }
+  if (!r.ok) { throw new Error('relais, erreur ' + r.status); }
+  const lignes = [];
+  (await r.text()).split('\n').forEach((l) => {
+    try {
+      const m = JSON.parse(l);
+      if (m && m.event === 'message' && typeof m.message === 'string' && typeof m.id === 'string') { lignes.push({ id: m.id, time: Number(m.time) || 0, message: m.message }); }
+    } catch (e) { /* ligne vide ou illisible */ }
+  });
+  return lignes;
+}
+
+function chargerLocal() {
+  try {
+    const v = JSON.parse(localStorage.getItem(CLE_MESSAGES) || 'null');
+    if (v && Array.isArray(v.messages)) { local = { depuis: Number(v.depuis) || 0, messages: v.messages }; }
+  } catch (e) { /* rien de gardé */ }
+}
+function garderLocal() {
+  try {
+    localStorage.setItem(CLE_MESSAGES, JSON.stringify(local));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+// Regroupe les morceaux d’un même message, déchiffre ce qui est complet, puis
+// rejoue les messages de chaque équipe dans l’ordre.
+async function reconstituer() {
+  const groupes = new Map();
+  local.messages.forEach((m) => {
+    const p = m.message.split('.');
+    if (p.length !== 5 || p[0] !== 'f1') { return; }
+    const [, mid, i, n, morceau] = p;
+    const total = Number(n);
+    const rang = Number(i);
+    if (!(total >= 1 && total <= 40 && rang >= 1 && rang <= total)) { return; }
+    const g = groupes.get(mid) || { total, morceaux: new Map() };
+    if (g.total !== total) { return; }
+    g.morceaux.set(rang, morceau);
+    groupes.set(mid, g);
+  });
+  for (const [mid, g] of groupes) {
+    if (dechiffres.has(mid) || g.morceaux.size !== g.total) { continue; }
+    const texte = Array.from({ length: g.total }, (_, k) => g.morceaux.get(k + 1)).join('');
+    try {
+      const d = await dechiffrer(cles.dechiffrement, texte);
+      const ok = d && d.v === 1 && typeof d.id === 'string' && cleSure(d.id) && typeof d.t === 'number' && d.x && typeof d.x === 'object';
+      dechiffres.set(mid, ok ? d : null);
+    } catch (e) {
+      dechiffres.set(mid, null);
+    }
+  }
+  const parEquipe = new Map();
+  [...dechiffres.values()].filter(Boolean).sort((a, b) => a.t - b.t).forEach((d) => {
+    let st = parEquipe.get(d.id);
+    if (!st || d.complet) { st = { plat: Object.create(null), maj: 0, messages: st ? st.messages : 0 }; }
+    Object.keys(d.x).forEach((k) => {
+      if (!/^[a-z]\.[A-Za-z0-9_-]{1,40}$/.test(k) || INTERDITES.has(k.slice(2))) { return; }
+      if (d.x[k] === null) { delete st.plat[k]; } else { st.plat[k] = d.x[k]; }
+    });
+    st.maj = Math.max(st.maj, d.t);
+    st.messages += 1;
+    parEquipe.set(d.id, st);
+  });
+  equipes = [...parEquipe.entries()].map(([id, st]) => deplier(id, st));
+}
+
+async function lireDepart() {
+  if (!cfg.collecte.sujetHorloge) { return; }
+  const lignes = await lireSujet(cfg.collecte.sujetHorloge, '12h');
+  let meilleur = null;
+  for (const m of lignes) {
+    if (!m.message.startsWith('h1.')) { continue; }
+    const d = await verifier(cfg.collecte.cleSignature, m.message.slice(3));
+    if (d && typeof d.t === 'number' && (!meilleur || d.t > meilleur.t)) { meilleur = d; }
+  }
+  departDiffuse = meilleur;
+}
+
 // ---------------------------------------------------------------- chargement
 async function charger() {
-  if (enChargement) { return; }
+  if (enChargement || !cles) { return; }
   enChargement = true;
   const statutMaj = $('[data-maj]');
   try {
-    const r = await fetch(adresse('action=lire&cle=' + encodeURIComponent(cle)), { cache: 'no-store' });
-    const j = await r.json();
-    if (!j.ok) {
-      if (j.erreur === 'cle') { deconnecter('Clé incorrecte.'); return; }
-      throw new Error(j.erreur || 'réponse inattendue');
-    }
-    equipes = (j.equipes || []).map(normaliser).filter((e) => e.id);
-    departDiffuse = j.depart || '';
+    const connus = new Set(local.messages.map((m) => m.id));
+    const dernier = local.messages.reduce((t, m) => Math.max(t, m.time), 0);
+    const depuis = Math.max(dernier ? dernier - 1 : 0, local.depuis);
+    const neufs = (await lireSujet(cfg.collecte.sujet, depuis ? String(depuis) : 'all'))
+      .filter((m) => !connus.has(m.id) && m.time >= local.depuis && m.message.startsWith('f1.'));
+    if (neufs.length) { local.messages = local.messages.concat(neufs); }
+    const garde = garderLocal();
+    await reconstituer();
+    try { await lireDepart(); } catch (e) { /* l’heure diffusée sera relue à la prochaine actualisation */ }
     rendre();
-    statutMaj.textContent = 'Mise à jour à ' + heure(Date.now()) + '.';
-    statutMaj.className = 'statut';
+    const aujourdhui = local.messages.filter((m) => Date.now() / 1000 - m.time < 86400).length;
+    statutMaj.textContent = 'Mise à jour à ' + heure(Date.now()) + '. ' + nb(aujourdhui, 'message reçu', 'messages reçus')
+      + ' en 24 heures, sur ' + LIMITE_JOUR + ' possibles depuis un même réseau.'
+      + (garde ? '' : ' Ce navigateur ne peut plus garder de copie, téléchargez les réponses.');
+    statutMaj.className = 'statut' + (aujourdhui > LIMITE_JOUR * 0.8 || !garde ? ' alerte' : '');
   } catch (err) {
     statutMaj.textContent = 'Lecture impossible pour l’instant (' + err.message + '). Nouvel essai à la prochaine actualisation.';
     statutMaj.className = 'statut alerte';
@@ -151,7 +284,7 @@ function planifier() {
   clearInterval(minuteur);
   minuteur = setInterval(() => {
     if ($('#auto-maj').checked && document.visibilityState === 'visible') { charger(); }
-  }, 20000);
+  }, Math.max(10, Number(cfg.collecte.lectureSecondes) || 40) * 1000);
 }
 
 // ---------------------------------------------------------------- rendu
@@ -198,7 +331,7 @@ function depotCellule(d) {
 function rendreEnsemble() {
   const panneau = $('[data-panneau="ensemble"]');
   if (!equipes.length) {
-    panneau.replaceChildren(h('p', { class: 'statut', text: 'Aucune équipe pour l’instant. Les équipes apparaissent dès qu’un binôme ouvre une page de la séance.' }));
+    panneau.replaceChildren(h('p', { class: 'statut', text: 'Aucune équipe pour l’instant. Une équipe apparaît une vingtaine de secondes après avoir écrit ses noms sur la page Cadre.' }));
     return;
   }
   const tri = [...equipes].sort((a, b) => (a.drapeau === 'aide' ? 0 : 1) - (b.drapeau === 'aide' ? 0 : 1) || nomEquipe(a).localeCompare(nomEquipe(b), 'fr'));
@@ -309,8 +442,7 @@ function rendreEquipe() {
     if (q.section !== section) { section = q.section; blocs.push(h('h3', { text: section })); }
     if (q.type === 'qcm') {
       const r = ((e.reponses && e.reponses.qcm) || {})[q.cle];
-      blocs.push(h('p', { class: 'ligne-qcm' }, h('b', { text: q.id + '. ' }),
-        r && r.premier ? 'première réponse ' + r.premier.toUpperCase() + (r.premierJuste ? ' (juste)' : ' (fausse)') + ', réponse finale ' + String(r.dernier).toUpperCase() + ', ' + r.essais + (r.essais > 1 ? ' essais' : ' essai') : 'pas de réponse'));
+      blocs.push(h('p', { class: 'ligne-qcm' }, h('b', { text: q.id + '. ' }), ligneQCM(r)));
       return;
     }
     const v = reponseTexte(e, q);
@@ -321,21 +453,25 @@ function rendreEquipe() {
   });
   const conseils = (e.reponses && e.reponses.conseils) || [];
   const vus = ((e.reponses && e.reponses.cases) || {}).tips_vus || [];
-  blocs.push(h('p', { class: 'statut', text: 'Conseils choisis pour la vidéo, ' + (conseils.length ? conseils.join(', ') : 'aucun') + '. Conseils repérés chez l’autre, ' + (vus.length ? vus.join(', ') : 'aucun') + '.' }));
-  [['depot_parcours', 'Récapitulatif du parcours envoyé'], ['depot_video', 'Récapitulatif de la vidéo envoyé']].forEach(([cle, titre]) => {
-    if (e[cle]) {
-      blocs.push(h('details', { class: 'encadre' }, h('summary', { text: titre }), h('pre', { class: 'recap-recu', text: e[cle] })));
-    }
-  });
+  blocs.push(h('p', { class: 'statut', text: 'Conseils choisis pour la vidéo, ' + (conseils.length ? conseils.join(', ') : 'aucun') + '. Conseils repérés dans les notes reçues, ' + (vus.length ? vus.join(', ') : 'aucun') + '.' }));
+  blocs.push(h('p', { class: 'statut', text: texteDepot(e, 'parcours', 'Dépôt du parcours') + ' ' + texteDepot(e, 'video', 'Dépôt de la vidéo') }));
   zone.replaceChildren(...blocs);
   typographier(zone);
 }
 
+function texteDepot(e, type, titre) {
+  const d = e.depots[type];
+  if (!d || !d.le) { return titre + ', pas encore.'; }
+  const via = { envoi: 'envoyé', copie: 'copié', fichier: 'téléchargé' }[d.via];
+  return titre + ', ' + heure(d.le) + (via ? ', ' + via : '') + '.';
+}
+
 function rendreDepart() {
   const p = $('[data-depart-actuel]');
-  p.textContent = departDiffuse
-    ? 'Heure de départ diffusée à toute la classe, ' + departDiffuse.replace(':', ' h ') + '.'
-    : 'Aucune heure diffusée. Les appareils suivent l’horaire du fichier docs/data/schedule.json.';
+  const duJour = departDiffuse && departDiffuse.depart && new Date(departDiffuse.t).toDateString() === new Date().toDateString();
+  p.textContent = duJour
+    ? 'Heure de départ diffusée à toute la classe, ' + departDiffuse.depart.replace(':', ' h ') + ' (envoyée à ' + heure(departDiffuse.t) + ').'
+    : 'Aucune heure diffusée aujourd’hui. Les appareils suivent l’horaire du fichier docs/data/schedule.json.';
   typographier(p);
 }
 
@@ -344,19 +480,65 @@ async function diffuserDepart(valeur) {
   const st = $('[data-statut-horloge]');
   st.textContent = 'Envoi…';
   try {
-    await fetch(cfg.collecte.endpoint, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'horloge', cle, depart: valeur }) });
-    await new Promise((r) => setTimeout(r, 1200));
-    const r = await fetch(adresse('action=horloge'), { cache: 'no-store' });
-    const j = await r.json();
-    departDiffuse = j.depart || '';
+    const corps = 'h1.' + await signer(cles.signature, { depart: valeur, t: Date.now() });
+    const r = await fetch(relais() + '/' + encodeURIComponent(cfg.collecte.sujetHorloge), { method: 'POST', body: corps, cache: 'no-store' });
+    if (r.status === 429) { throw new Error('limite'); }
+    if (!r.ok) { throw new Error('relais'); }
+    // Le relais enregistre les messages avec un léger différé : on relit
+    // jusqu’à voir l’heure envoyée.
+    let recu = null;
+    for (let essai = 0; essai < 4 && recu !== valeur; essai++) {
+      await new Promise((ok) => setTimeout(ok, 1500));
+      await lireDepart();
+      recu = (departDiffuse && departDiffuse.depart) || '';
+    }
     rendreDepart();
-    st.textContent = (departDiffuse === valeur)
+    relireHorloge();
+    st.textContent = recu === valeur
       ? (valeur ? 'C’est fait. Départ à ' + valeur.replace(':', ' h ') + ' pour toute la classe.' : 'C’est fait. Retour à l’horaire du fichier.')
-      : 'Le changement n’est pas confirmé. Vérifiez la clé, puis recommencez.';
+      : 'Le changement n’est pas confirmé. Recommencez dans un instant.';
   } catch (e) {
-    st.textContent = 'L’envoi n’a pas abouti. Vérifiez la connexion, puis recommencez.';
+    st.textContent = e.message === 'limite'
+      ? 'Le relais refuse l’envoi pour l’instant, la limite de ce réseau est atteinte. Réessayez dans quelques minutes.'
+      : 'L’envoi n’a pas abouti. Vérifiez la connexion, puis recommencez.';
   }
   typographier(st);
+}
+
+// ---------------------------------------------------------------- téléchargements
+
+function telecharger(contenu, nom, type) {
+  const blob = new Blob([contenu], { type });
+  const a = h('a', { href: URL.createObjectURL(blob), download: nom });
+  document.body.append(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+
+function ligneQCM(r) {
+  return r && r.premier
+    ? 'première réponse ' + r.premier.toUpperCase() + (r.premierJuste ? ' (juste)' : ' (fausse)') + ', réponse finale ' + String(r.dernier).toUpperCase() + ', ' + r.essais + (r.essais > 1 ? ' essais' : ' essai')
+    : 'pas de réponse';
+}
+
+// Une fiche par équipe, avec chaque question et sa réponse.
+function texteExport() {
+  const lignes = ['Réponses des équipes, séance 9, téléchargées le ' + new Date().toLocaleString('fr-FR') + '.', ''];
+  [...equipes].sort((a, b) => nomEquipe(a).localeCompare(nomEquipe(b), 'fr')).forEach((e) => {
+    lignes.push('==== ' + nomEquipe(e) + (e.noms ? ' (' + e.noms + ')' : ''));
+    lignes.push('Dernier envoi, ' + (e.maj ? e.maj.toLocaleString('fr-FR') : 'inconnu') + '. Points d’enquête, ' + e.points + '. Indices retrouvés dans la correction, ' + indicesTrouves(e) + ' sur 6.');
+    lignes.push(texteDepot(e, 'parcours', 'Dépôt du parcours') + ' ' + texteDepot(e, 'video', 'Dépôt de la vidéo'));
+    let section = '';
+    questions.forEach((q) => {
+      if (q.section !== section) { section = q.section; lignes.push('', '-- ' + section); }
+      if (q.type === 'qcm') { lignes.push(q.id + '. ' + ligneQCM((e.reponses.qcm || {})[q.cle])); return; }
+      const v = reponseTexte(e, q);
+      if (!v && q.bonus) { return; }
+      lignes.push('', q.id + '. ' + q.enonce, 'Réponse. ' + (v || '(pas de réponse)'));
+    });
+    lignes.push('', '');
+  });
+  return lignes.join('\n');
 }
 
 // ---------------------------------------------------------------- onglets et actions
@@ -372,21 +554,31 @@ function changerVue(v) {
 
 function deconnecter(message) {
   clearInterval(minuteur);
+  cles = null;
   $('[data-tableau]').hidden = true;
   $('[data-connexion]').hidden = false;
   $('[data-erreur-cle]').textContent = message || '';
-  if (message) { oublierCle(); }
-  cle = '';
+  if (message) { oublierCode(); }
 }
 
-async function connecter(valeur) {
-  cle = valeur;
-  $('[data-erreur-cle]').textContent = '';
+async function connecter(valeur, souvenir) {
+  const erreur = $('[data-erreur-cle]');
+  const bouton = $('[data-connexion] button[type="submit"]');
+  erreur.textContent = '';
+  bouton.disabled = true;
+  bouton.textContent = 'Ouverture…';
+  const ouvertes = await ouvrirCoffre(cfg.collecte.coffre, valeur);
+  bouton.disabled = false;
+  bouton.textContent = 'Afficher les réponses';
+  if (!ouvertes) { deconnecter('Code incorrect.'); return; }
+  cles = ouvertes;
+  if (souvenir !== undefined) { garderCode(valeur, souvenir); }
   $('[data-connexion]').hidden = true;
   $('[data-tableau]').hidden = false;
+  chargerLocal();
   if (!questions.length) { questions = await catalogue(); }
   await charger();
-  if (cle) { planifier(); }
+  planifier();
 }
 
 async function demarrer() {
@@ -394,23 +586,44 @@ async function demarrer() {
     if (document.documentElement.classList.contains('js-pret')) { r(); } else { window.addEventListener('fabrique:pret', r, { once: true }); }
   });
   cfg = await config();
-  if (!(cfg.collecte && cfg.collecte.actif && cfg.collecte.endpoint)) { return; }
+  const k = cfg.collecte || {};
+  if (!(k.actif && k.relais && k.sujet && k.coffre)) { return; }
 
   $('[data-connexion]').addEventListener('submit', (ev) => {
     ev.preventDefault();
-    const v = $('#cle-enseignant').value.trim();
+    const v = $('#code-enseignant').value.trim();
     if (!v) { return; }
-    garderCle(v, $('#cle-souvenir').checked);
-    connecter(v);
+    connecter(v, $('#code-souvenir').checked);
   });
   $('[data-actualiser]').addEventListener('click', charger);
-  $('[data-oublier]').addEventListener('click', () => { oublierCle(); deconnecter(''); $('#cle-enseignant').value = ''; });
+  $('[data-oublier]').addEventListener('click', () => { oublierCode(); deconnecter(''); $('#code-enseignant').value = ''; });
   $('[data-exporter]').addEventListener('click', () => {
-    const blob = new Blob([JSON.stringify(equipes, null, 2)], { type: 'application/json' });
-    const a = h('a', { href: URL.createObjectURL(blob), download: 's09_reponses_equipes.json' });
-    document.body.append(a);
-    a.click();
-    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    telecharger(JSON.stringify(equipes, null, 2), 's09_reponses_equipes.json', 'application/json');
+  });
+  $('[data-exporter-texte]').addEventListener('click', () => {
+    telecharger(texteExport(), 's09_reponses_equipes.txt', 'text/plain;charset=utf-8');
+  });
+  const effacer = $('[data-effacer-local]');
+  const libelle = effacer.textContent;
+  let confirmer = null;
+  effacer.addEventListener('click', () => {
+    const st = $('[data-statut-local]');
+    if (!confirmer) {
+      effacer.textContent = 'Confirmer l’effacement';
+      st.textContent = 'Les réponses déjà reçues ne s’afficheront plus ici. Téléchargez-les d’abord si besoin.';
+      confirmer = setTimeout(() => { confirmer = null; effacer.textContent = libelle; st.textContent = ''; }, 8000);
+      return;
+    }
+    clearTimeout(confirmer);
+    confirmer = null;
+    effacer.textContent = libelle;
+    local = { depuis: Math.floor(Date.now() / 1000), messages: [] };
+    dechiffres.clear();
+    equipes = [];
+    garderLocal();
+    rendre();
+    st.textContent = 'C’est fait. Seules les réponses envoyées à partir de maintenant s’afficheront.';
+    typographier(st);
   });
   document.querySelectorAll('[role="tab"]').forEach((t) => {
     t.addEventListener('click', () => changerVue(t.dataset.vue));
@@ -444,10 +657,10 @@ async function demarrer() {
     diffuserDepart(v);
   });
   $('[data-annuler-depart]').addEventListener('click', () => diffuserDepart(''));
-  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && cle && $('#auto-maj').checked) { charger(); } });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && cles && $('#auto-maj').checked) { charger(); } });
 
-  const memorisee = lireCle();
-  if (memorisee) { connecter(memorisee); }
+  const memorise = lireCode();
+  if (memorise) { connecter(memorise); }
 }
 
 demarrer();

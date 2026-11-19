@@ -5,7 +5,7 @@
 import { lire, modifier, surChangement } from './state.js';
 import { urlSeance, fichierCourant } from './donnees.js';
 import { ligneQCM } from './qcm.js';
-import { calculer, equipe, BADGES, ICONES_EQUIPE } from './gamify.js';
+import { calculer, equipe, listeNoms, BADGES, ICONES_EQUIPE } from './gamify.js';
 import { collecteActive, envoyerDepot } from './collect.js';
 import { formatHeure } from './clock.js';
 
@@ -32,7 +32,7 @@ const SOURCES = {
   }
 };
 
-const IGNORES = new Set(['usage', 'verif', 'equipe', 'nom1', 'nom2']);
+const IGNORES = new Set(['usage', 'verif', 'equipe', 'nom1', 'nom2', 'nom3']);
 const cache = new Map();
 
 async function documentDe(fichier) {
@@ -98,7 +98,7 @@ function entete(type) {
   const src = SOURCES[type];
   const lignes = [src.titre];
   lignes.push('Équipe. ' + (eq.defini ? eq.nom : '(nom d’équipe non renseigné)') + ' (icône ' + (ICONES_EQUIPE[eq.icone] || 'Loupe').toLowerCase() + ')');
-  lignes.push('Binôme. ' + (eq.n1 || '(nom non renseigné)') + ' et ' + (eq.n2 || '(nom non renseigné)'));
+  lignes.push('Membres. ' + (listeNoms([eq.n1, eq.n2, eq.n3]) || '(noms non renseignés)'));
   lignes.push('Récapitulatif généré le ' + new Date().toLocaleString('fr-FR'));
   lignes.push('Temps passé par page, en minutes. ' + src.temps.map(([id, lib]) => lib + ' ' + minutes(e.temps[id])).join(', ') + '.');
   const badges = BADGES.filter((b) => e.badges[b.id]).map((b) => b.nom);
@@ -170,7 +170,7 @@ export async function construire(type) {
     corps.push('Pour moi. ' + ((e.champs.n2 || '').trim() || '(rien)'));
     const vus = (e.cases.tips_vus || []).map((n) => String(n).padStart(2, '0'));
     corps.push('', 'COMPARAISON EN BINÔME');
-    corps.push('Conseils repérés dans les notes de l’autre. ' + (vus.length ? vus.join(', ') : '(aucun coché)'));
+    corps.push('Conseils repérés dans les notes reçues. ' + (vus.length ? vus.join(', ') : '(aucun coché)'));
   }
 
   for (const section of src.sections) {
@@ -253,7 +253,7 @@ export async function catalogue() {
         return;
       }
       const cle = el.dataset.q;
-      if (['equipe', 'nom1', 'nom2', 'icone'].includes(cle)) { return; }
+      if (['equipe', 'nom1', 'nom2', 'nom3', 'icone'].includes(cle)) { return; }
       const lab = el.querySelector('.qlabel');
       const radios = [...el.querySelectorAll('input[type="radio"][data-radio]')];
       const options = {};
@@ -379,7 +379,9 @@ async function brancherDepot(zone) {
         statut.className = 'statut ok';
       } else {
         modifier((e) => { delete e.depots[type]; }, { source: 'depot', id: type });
-        statut.textContent = 'L’envoi n’a pas abouti. Téléchargez le récapitulatif et gardez le fichier, puis prévenez l’enseignant.';
+        statut.textContent = res.raison === 'limite'
+          ? 'Le relais refuse les envois pour l’instant (trop d’envois depuis ce réseau). Téléchargez le récapitulatif et gardez le fichier, puis prévenez l’enseignant.'
+          : 'L’envoi n’a pas abouti. Téléchargez le récapitulatif et gardez le fichier, puis prévenez l’enseignant.';
         statut.className = 'statut alerte';
       }
     });

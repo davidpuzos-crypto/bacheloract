@@ -468,11 +468,13 @@ export function initNav(page, options = {}) {
     }
   });
   window.addEventListener('hashchange', () => { const st = statut(); majHorloge(st); gererArret(st); });
-  surCollecte(({ actif, dernierEnvoi }) => {
+  surCollecte(({ actif, dernierEnvoi, sature }) => {
     const p = refs.tiroirMenu.querySelector('[data-texte-donnees]');
     if (!p) { return; }
     p.textContent = actif
-      ? 'Vos réponses sont enregistrées dans ce navigateur et envoyées à l’enseignant, dans un tableau privé.' + (dernierEnvoi ? ' Dernier envoi à ' + formatHeure(dernierEnvoi).replace(/\u00a0/g, ' ') + '.' : '')
+      ? 'Vos réponses sont enregistrées dans ce navigateur et envoyées chiffrées à l’enseignant, aux moments clés de la séance.'
+        + (dernierEnvoi ? ' Dernier envoi à ' + formatHeure(dernierEnvoi).replace(/\u00a0/g, ' ') + '.' : '')
+        + (sature ? ' Le relais est saturé pour l’instant, gardez une copie de votre récapitulatif.' : '')
       : 'Vos réponses restent dans ce navigateur.';
     typographier(p);
   });

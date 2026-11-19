@@ -1,40 +1,77 @@
-// Envoi des réponses à l’enseignant, vers une feuille Google privée
-// (script Google Apps Script, voir scripts/apps-script/Code.gs et le README).
-// Désactivé tant que data/config.json ne contient pas collecte.actif = true
-// et l’adresse du script. Le jeton n’est pas un secret : il est lisible dans
-// le code du site, il évite seulement les envois par erreur.
+// Envoi des réponses à l’enseignant, sans compte ni script à installer.
+// Les réponses partent chiffrées vers un relais public (ntfy.sh, adresse et
+// sujets dans data/config.json). Seule la page « Réponses des équipes »,
+// ouverte avec le code de l’enseignant, peut les lire.
 //
-// Ce qui est envoyé : nom d’équipe, noms, icône, page et phase en cours,
-// points, avancement des quêtes, drapeau d’aide, réponses, QCM et dépôts.
-// Envois : peu après l’arrivée sur une page, à intervalle régulier si quelque
-// chose a changé, quand on quitte la page, quand le drapeau change, à chaque
-// point d’arrêt, et au dépôt.
+// Le relais garde les messages 12 heures et accepte, depuis un même réseau,
+// 250 messages par jour et une requête toutes les 5 secondes en moyenne.
+// Toute la classe partage souvent le même réseau : on envoie donc peu, et
+// seulement ce qui a changé depuis le dernier envoi réussi.
+// Moments d’envoi : peu après la saisie des noms, à chaque point d’arrêt,
+// quand le drapeau d’aide change, au dépôt, et au plus tard 15 minutes après
+// une modification restée sans envoi.
+//
+// L’heure de départ diffusée par l’enseignant est lue sur le même relais, au
+// plus toutes les 6 minutes. Elle est signée : une heure qui ne vient pas de
+// l’enseignant est ignorée.
 
 import { lire, modifierSansSignal } from './state.js';
 import { config, fichierCourant } from './donnees.js';
 import { calculer, equipe } from './gamify.js';
 import { statut, appliquerDepartDiffuse, surArret } from './clock.js';
+import { chiffrerPour, verifier } from './chiffre.js';
 
 const MAX_CHAMP = 8000;
+const TAILLE_MORCEAU = 3800;
+const MAX_MESSAGES_JOUR = 40;
+const CLE_ENVOI = 'fabrique:s09:envoi';
+const CLE_HORLOGE = 'fabrique:s09:horloge-lue';
+const LEGERS = new Set(['m.page', 'm.phase', 'm.points']);
+const SOURCES_IGNOREES = new Set(['options', 'arret']);
+const IDENTITE = new Set(['equipe', 'nom1', 'nom2', 'nom3', 'icone']);
+
 let cfg = null;
 let actif = false;
-let empreinteEnvoyee = '';
-let dernierEnvoi = null;
+let memoire = null;
+let enVol = null;
+let minuterieIdentite = null;
 const abonnes = [];
 
 export function surCollecte(cb) { abonnes.push(cb); }
-function prevenir() { abonnes.forEach((cb) => cb({ actif, dernierEnvoi })); }
-
-export async function collecteActive() {
-  const c = await config();
-  return !!(c.collecte && c.collecte.actif && c.collecte.endpoint);
+function prevenir() {
+  const env = etatEnvoi();
+  abonnes.forEach((cb) => cb({ actif, dernierEnvoi: env.dernier || null, sature: sature(env) }));
 }
-export function etatCollecte() { return { actif, dernierEnvoi }; }
 
-function adresse(parametres) {
-  const base = cfg.collecte.endpoint;
-  return base + (base.includes('?') ? '&' : '?') + parametres;
+function configActive(c) {
+  const k = c && c.collecte;
+  return !!(k && k.actif && k.relais && k.sujet && k.clePublique);
 }
+export async function collecteActive() { return configActive(await config()); }
+export function etatCollecte() { const env = etatEnvoi(); return { actif, dernierEnvoi: env.dernier || null, sature: sature(env) }; }
+
+function relais() { return String(cfg.collecte.relais).replace(/\/+$/, ''); }
+
+// ---------------------------------------------------------------- mémoire des envois
+
+function etatEnvoi() {
+  if (!memoire) {
+    try { memoire = JSON.parse(localStorage.getItem(CLE_ENVOI) || 'null'); } catch (e) { memoire = null; }
+  }
+  const id = lire().id || '';
+  // Mémoire créée avant l’identifiant de l’équipe : on la garde.
+  if (memoire && typeof memoire === 'object' && !memoire.id && id) { memoire.id = id; }
+  if (!memoire || typeof memoire !== 'object' || memoire.id !== id) {
+    memoire = { id, base: {}, jour: 0, n: 0, dernier: 0, arrets: {}, enAttenteDepuis: 0, derniereModif: 0, pauseJusqua: 0 };
+  }
+  // Nouvelle journée (autre séance sur le même appareil) : compteurs remis à zéro.
+  if (Date.now() - (memoire.jour || 0) > 86400000) { memoire.jour = Date.now(); memoire.n = 0; memoire.arrets = {}; }
+  return memoire;
+}
+function garderEnvoi() {
+  try { localStorage.setItem(CLE_ENVOI, JSON.stringify(memoire)); } catch (e) { /* stockage indisponible : la mémoire reste dans la page */ }
+}
+function sature(env) { return !!(env.pauseJusqua && Date.now() < env.pauseJusqua); }
 
 function identifiant() {
   if (!lire().id) {
@@ -43,133 +80,201 @@ function identifiant() {
   return lire().id;
 }
 
+// ---------------------------------------------------------------- contenu envoyé
+
 function couper(v) {
   return typeof v === 'string' && v.length > MAX_CHAMP ? v.slice(0, MAX_CHAMP) + ' […]' : v;
 }
 
-// Contenu envoyé à l’enseignant.
-function charge(type, supplement) {
+// L’état de l’équipe à plat : une clé par information, pour n’envoyer que ce
+// qui change. m. équipe et avancement, c. champs, r. choix, q. QCM, k. cases,
+// i. indices de la correction, d. dépôts.
+function aplatir() {
   const e = lire();
   const eq = equipe(e);
   const res = calculer(e);
   const s = statut();
-  const champs = {};
-  Object.entries(e.champs || {}).forEach(([k, v]) => {
-    if (['equipe', 'nom1', 'nom2'].includes(k)) { return; }
-    if (typeof v === 'string' && v.trim()) { champs[k] = couper(v); }
-  });
-  const qcm = {};
-  Object.entries(e.qcm || {}).forEach(([k, r]) => {
-    if (r && r.premier) { qcm[k] = { premier: r.premier, dernier: r.dernier, essais: r.essais, premierJuste: !!r.premierJuste, juste: !!r.juste }; }
-  });
   const quetes = {};
-  res.quetes.forEach((q) => { quetes[q.def.id] = { faits: q.faits, total: q.total, terminee: q.terminee }; });
-  return Object.assign({
-    action: 'ecrire',
-    jeton: cfg.collecte.jeton || '',
-    type,
-    id: identifiant(),
-    maj: new Date().toISOString(),
-    equipe: eq.nom,
-    noms: [eq.n1, eq.n2].filter(Boolean).join(' et '),
-    icone: eq.icone,
-    page: (document.body.dataset.page || fichierCourant()) + (window.location.hash || ''),
-    phase: s.avant ? 'avant' : s.apres ? 'apres' : (s.phase ? s.phase.id : ''),
-    points: res.points,
-    drapeau: e.drapeau === 'aide' ? 'aide' : 'ok',
-    quetes,
-    reponses: { champs, radios: e.radios || {}, qcm, conseils: e.conseils || [], cases: e.cases || {}, lu: e.lu || {}, indices: e.indices || {} },
-    depots: e.depots || {}
-  }, supplement || {});
+  res.quetes.forEach((q) => { quetes[q.def.id] = [q.faits, q.total, q.terminee ? 1 : 0]; });
+  const plat = {
+    'm.equipe': eq.nom,
+    'm.noms': [eq.n1, eq.n2, eq.n3].filter(Boolean),
+    'm.icone': eq.icone,
+    'm.page': (document.body.dataset.page || fichierCourant()) + (window.location.hash || ''),
+    'm.phase': s.avant ? 'avant' : s.apres ? 'apres' : (s.phase ? s.phase.id : ''),
+    'm.points': res.points,
+    'm.drapeau': e.drapeau === 'aide' ? 'aide' : 'ok',
+    'm.quetes': quetes
+  };
+  Object.entries(e.champs || {}).forEach(([k, v]) => {
+    if (IDENTITE.has(k)) { return; }
+    if (typeof v === 'string' && v.trim()) { plat['c.' + k] = couper(v); }
+  });
+  Object.entries(e.radios || {}).forEach(([k, v]) => { if (k !== 'icone' && v) { plat['r.' + k] = String(v); } });
+  Object.entries(e.qcm || {}).forEach(([k, r]) => {
+    if (r && r.premier) { plat['q.' + k] = [r.premier, r.dernier, r.essais || 1, r.premierJuste ? 1 : 0, r.juste ? 1 : 0]; }
+  });
+  Object.entries(e.cases || {}).forEach(([k, v]) => { if (Array.isArray(v) && v.length) { plat['k.' + k] = v; } });
+  if ((e.conseils || []).length) { plat['s.conseils'] = e.conseils; }
+  if (e.lu && Object.keys(e.lu).length) { plat['u.lu'] = Object.keys(e.lu).sort(); }
+  Object.entries(e.indices || {}).forEach(([k, r]) => {
+    if (r && (r.trouve || r.montre)) { plat['i.' + k] = [r.trouve ? 1 : 0, r.montre ? 1 : 0, r.essais || 0]; }
+  });
+  Object.entries(e.depots || {}).forEach(([k, d]) => { if (d && d.le) { plat['d.' + k] = [d.le, d.via || '']; } });
+  return plat;
 }
 
-function empreinte(d) {
-  const copie = Object.assign({}, d);
-  delete copie.maj;
-  return JSON.stringify(copie);
-}
+// ---------------------------------------------------------------- relais
 
-function envoyerBalise(corps) {
+async function publier(sujet, corps) {
   try {
-    return navigator.sendBeacon(cfg.collecte.endpoint, new Blob([corps], { type: 'text/plain;charset=utf-8' }));
+    const r = await fetch(relais() + '/' + encodeURIComponent(sujet), { method: 'POST', body: corps, cache: 'no-store' });
+    return { ok: r.ok, statut: r.status };
   } catch (e) {
-    return false;
+    return { ok: false, statut: 0 };
   }
 }
 
-async function poster(corps) {
-  try {
-    await fetch(cfg.collecte.endpoint, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: corps,
-      keepalive: corps.length < 60000
-    });
-    return true;
-  } catch (e) {
-    return false;
-  }
+function decouper(texte) {
+  const morceaux = [];
+  for (let i = 0; i < texte.length; i += TAILLE_MORCEAU) { morceaux.push(texte.slice(i, i + TAILLE_MORCEAU)); }
+  return morceaux.length ? morceaux : [''];
 }
 
-// Envoie l’état de l’équipe. Sans changement depuis le dernier envoi, rien
-// n’est envoyé, sauf si force est vrai.
-export async function synchroniser({ force = false, type = 'synchro', supplement = null } = {}) {
+// Envoie ce qui a changé depuis le dernier envoi réussi. Sans changement qui
+// compte, rien ne part, sauf si force est vrai (dépôt, drapeau).
+export async function envoyer({ force = false } = {}) {
   if (!actif) { return { ok: false, raison: 'inactive' }; }
-  const d = charge(type, supplement);
-  const emp = empreinte(d);
-  if (!force && emp === empreinteEnvoyee) { return { ok: true, inchange: true }; }
-  const ok = await poster(JSON.stringify(d));
-  if (ok) {
-    empreinteEnvoyee = emp;
-    dernierEnvoi = Date.now();
+  while (enVol) { await enVol; }
+  let fin;
+  enVol = new Promise((r) => { fin = r; });
+  try {
+    identifiant();
+    const env = etatEnvoi();
+    if (sature(env) && !force) { return { ok: false, raison: 'limite' }; }
+    const debut = Date.now();
+    const plat = aplatir();
+    const delta = {};
+    let compte = false;
+    Object.entries(plat).forEach(([k, v]) => {
+      if (env.base[k] !== JSON.stringify(v)) { delta[k] = v; if (!LEGERS.has(k)) { compte = true; } }
+    });
+    Object.keys(env.base).forEach((k) => { if (!(k in plat)) { delta[k] = null; compte = true; } });
+    if (!compte && !force) { env.enAttenteDepuis = 0; garderEnvoi(); return { ok: true, inchange: true }; }
+    if (env.n >= MAX_MESSAGES_JOUR && !force) { return { ok: false, raison: 'quota' }; }
+    const message = { v: 1, id: identifiant(), t: Date.now(), x: delta };
+    if (!Object.keys(env.base).length) { message.complet = 1; }
+    const texte = await chiffrerPour(cfg.collecte.clePublique, message);
+    const morceaux = decouper(texte);
+    const mid = Math.random().toString(36).slice(2, 10);
+    for (let i = 0; i < morceaux.length; i++) {
+      const r = await publier(cfg.collecte.sujet, 'f1.' + mid + '.' + (i + 1) + '.' + morceaux.length + '.' + morceaux[i]);
+      if (!r.ok) {
+        if (r.statut === 429) { env.pauseJusqua = Date.now() + 10 * 60000; garderEnvoi(); prevenir(); return { ok: false, raison: 'limite' }; }
+        return { ok: false, raison: 'reseau' };
+      }
+      env.n += 1;
+    }
+    env.base = {};
+    Object.entries(plat).forEach(([k, v]) => { env.base[k] = JSON.stringify(v); });
+    env.dernier = Date.now();
+    // Une modification faite pendant l’envoi reste à envoyer.
+    env.enAttenteDepuis = env.derniereModif > debut ? env.derniereModif : 0;
+    env.pauseJusqua = 0;
+    garderEnvoi();
     prevenir();
+    return { ok: true };
+  } finally {
+    enVol = null;
+    fin();
   }
-  return { ok };
 }
 
-// Envoi synchrone, au moment où l’on quitte la page.
-function synchroniserEnPartant() {
-  if (!actif) { return; }
-  const d = charge('synchro', null);
-  const emp = empreinte(d);
-  if (emp === empreinteEnvoyee) { return; }
-  if (envoyerBalise(JSON.stringify(d))) { empreinteEnvoyee = emp; }
+// Dépôt : envoi immédiat de tout ce qui n’est pas encore parti. Le texte du
+// récapitulatif n’est pas envoyé, la page de l’enseignant le reconstitue.
+export function envoyerDepot() {
+  return envoyer({ force: true });
 }
 
-// Envoi d’un dépôt (récapitulatif complet).
-export function envoyerDepot(typeDepot, texte) {
-  const cle = typeDepot === 'video' ? 'depot_video' : 'depot_parcours';
-  return synchroniser({ force: true, type: 'depot-' + typeDepot, supplement: { [cle]: texte } });
-}
+// ---------------------------------------------------------------- heure diffusée
+
+function delaiHorloge() { return Math.max(0.05, Number(cfg.collecte.horlogeMinutes) || 6) * 60000; }
 
 async function lireHorloge() {
+  const sujet = cfg.collecte.sujetHorloge;
+  if (!sujet || !cfg.collecte.cleSignature) { return; }
   try {
-    const r = await fetch(adresse('action=horloge'), { cache: 'no-store' });
-    const j = await r.json();
-    if (j && j.ok) { appliquerDepartDiffuse(j.depart || ''); }
-  } catch (e) { /* réseau ou script indisponible : l’horaire du fichier reste valable */ }
+    if (Date.now() - Number(localStorage.getItem(CLE_HORLOGE) || 0) < delaiHorloge() - 1000) { return; }
+    localStorage.setItem(CLE_HORLOGE, String(Date.now()));
+  } catch (e) { /* sans stockage, on lit à chaque ouverture de page */ }
+  try {
+    const r = await fetch(relais() + '/' + encodeURIComponent(sujet) + '/json?poll=1&since=12h', { cache: 'no-store' });
+    if (!r.ok) { return; }
+    let meilleur = null;
+    for (const ligne of (await r.text()).split('\n')) {
+      let m = null;
+      try { m = JSON.parse(ligne); } catch (e) { continue; }
+      if (!m || m.event !== 'message' || typeof m.message !== 'string' || !m.message.startsWith('h1.')) { continue; }
+      const d = await verifier(cfg.collecte.cleSignature, m.message.slice(3));
+      if (d && typeof d.t === 'number' && (!meilleur || d.t > meilleur.t)) { meilleur = d; }
+    }
+    if (meilleur) { appliquerDepartDiffuse(meilleur.depart || '', meilleur.t); }
+  } catch (e) { /* relais indisponible : l’horaire déjà connu reste valable */ }
 }
+
+// Lecture immédiate, sans attendre le délai entre deux lectures (page enseignant).
+export function relireHorloge() {
+  try { localStorage.removeItem(CLE_HORLOGE); } catch (e) { /* rien à faire */ }
+  return cfg ? lireHorloge() : Promise.resolve();
+}
+
+// ---------------------------------------------------------------- démarrage
 
 // espace : 'seance' (envois et horloge), 'prof' (horloge seulement), 'site' (rien).
 export async function initCollecte(espace, surChangement) {
   cfg = await config();
-  actif = !!(cfg.collecte && cfg.collecte.actif && cfg.collecte.endpoint);
+  actif = configActive(cfg);
   prevenir();
-  if (!actif || espace === 'site') { return; }
-  const intervalleHorloge = Math.max(10, Number(cfg.collecte.horlogeSecondes) || 60) * 1000;
+  if (!actif || espace === 'site') { actif = false; return; }
   lireHorloge();
-  setInterval(lireHorloge, intervalleHorloge);
-  if (espace !== 'seance') { actif = false; return; }
+  setInterval(lireHorloge, delaiHorloge());
+  if (espace !== 'seance') { actif = false; prevenir(); return; }
 
-  const intervalle = Math.max(10, Number(cfg.collecte.synchroSecondes) || 45) * 1000;
-  setTimeout(() => synchroniser(), 3000);
-  setInterval(() => synchroniser(), intervalle);
-  setInterval(() => synchroniser({ force: true }), 180000);
-  window.addEventListener('pagehide', synchroniserEnPartant);
-  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') { synchroniserEnPartant(); } });
-  surArret(() => { synchroniser({ force: true }); });
+  const relance = Math.max(0.05, Number(cfg.collecte.relanceMinutes) || 15) * 60000;
+  const premier = Math.max(0.5, Number(cfg.collecte.premierEnvoiSecondes) || 20) * 1000;
+  const etaler = () => Math.round(Math.random() * Math.max(0, Number(cfg.collecte.etalementSecondes) || 0) * 1000);
+
+  // Point d’arrêt : un envoi par arrêt et par appareil, dans les deux minutes.
+  surArret(({ statut: s }) => {
+    const a = s && s.arret;
+    if (!a || a.depuisMs > 120000) { return; }
+    const env = etatEnvoi();
+    if (env.arrets[a.phase.id]) { return; }
+    env.arrets[a.phase.id] = Date.now();
+    garderEnvoi();
+    setTimeout(() => { envoyer(); }, etaler());
+  });
+
   if (surChangement) {
-    surChangement((d) => { if (d.source === 'drapeau') { synchroniser({ force: true }); } });
+    surChangement((d) => {
+      if (!d || SOURCES_IGNOREES.has(d.source)) { return; }
+      const env = etatEnvoi();
+      env.derniereModif = Date.now();
+      if (!env.enAttenteDepuis) { env.enAttenteDepuis = env.derniereModif; }
+      garderEnvoi();
+      if (d.source === 'drapeau') { envoyer({ force: true }); return; }
+      if ((d.source === 'champ' || d.source === 'radio') && IDENTITE.has(d.id)) {
+        clearTimeout(minuterieIdentite);
+        minuterieIdentite = setTimeout(() => { envoyer(); }, premier);
+      }
+    });
   }
+
+  // Relance : une modification restée sans envoi part au plus tard après le délai.
+  const verifierRelance = () => {
+    const env = etatEnvoi();
+    if (env.enAttenteDepuis && Date.now() - env.enAttenteDepuis >= relance) { envoyer(); }
+  };
+  setTimeout(verifierRelance, 5000);
+  setInterval(verifierRelance, Math.min(60000, relance));
 }
