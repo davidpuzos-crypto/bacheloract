@@ -16,6 +16,7 @@ import { SEUIL_CHAMP } from './gamify.js';
 import { typographier } from './typo.js';
 
 let barre = null;
+let heureEl = null;
 let texte = null;
 let detail = null;
 let lien = null;
@@ -63,7 +64,7 @@ function demarquer() {
 }
 
 function masquer() {
-  if (barre) { barre.hidden = true; delete barre.dataset.etat; }
+  if (barre) { barre.hidden = true; delete barre.dataset.etat; heureEl.textContent = ''; }
   demarquer();
   dernier = '';
   mode = '';
@@ -115,20 +116,22 @@ function messagePassage(arret) {
 function afficherAilleurs(s) {
   demarquer();
   const ph = s.phase;
-  const heure = 'Il est ' + formatHeure(s.t) + '.';
+  // L’heure reste hors de la zone annoncée : sinon elle serait relue chaque minute.
+  const heure = 'Il est ' + formatHeure(s.t) + '. ';
+  if (heureEl.textContent !== heure) { heureEl.textContent = heure; typographier(heureEl); }
   const passage = s.arret && s.arret.cible.id === ph.id ? s.arret : null;
   let etat = 'ailleurs';
-  let phrase = heure + ' Vous devriez être sur « ' + ph.label + ' », jusqu’à ' + heureMinute(ph.debut + ph.duree) + '.';
+  let phrase = 'Vous devriez être sur « ' + ph.label + ' », jusqu’à ' + heureMinute(ph.debut + ph.duree) + '.';
   let suite = messagePassage(passage);
   let texteLien = (passage && passage.phase.stopBouton) || 'Y aller';
   if (s.apres) {
     etat = 'fin';
-    phrase = heure + ' La séance est terminée.';
+    phrase = 'La séance est terminée.';
     suite = '';
     texteLien = 'Voir le bilan';
   } else if (ph.id === 'pause') {
     etat = 'pause';
-    phrase = heure + ' C’est la pause, jusqu’à ' + heureMinute(ph.debut + ph.duree) + '.';
+    phrase = 'C’est la pause, jusqu’à ' + heureMinute(ph.debut + ph.duree) + '.';
     suite = 'Vos réponses sont enregistrées.';
     texteLien = 'Voir la pause';
   }
@@ -190,6 +193,7 @@ function mettreAJour() {
   const phrase = 'À cette heure, vous devriez en être à la question ' + nom + '. ' + etat;
   marquer(el);
   mode = 'question';
+  heureEl.textContent = '';
   lien.textContent = 'Aller à la question';
   lien.href = '#';
   barre.hidden = false;
@@ -209,8 +213,9 @@ export function initRepere(espace) {
   barre = document.createElement('div');
   barre.className = 'repere-barre';
   barre.hidden = true;
-  barre.innerHTML = '<p><span role="status" aria-live="polite"><span class="repere-texte"></span><span class="repere-detail"></span></span> <a class="repere-lien" href="#">Aller à la question</a></p>';
+  barre.innerHTML = '<p><span><span class="repere-heure"></span><span role="status" aria-live="polite"><span class="repere-texte"></span><span class="repere-detail"></span></span></span> <a class="repere-lien" href="#">Aller à la question</a></p>';
   entete.append(barre);
+  heureEl = barre.querySelector('.repere-heure');
   texte = barre.querySelector('.repere-texte');
   detail = barre.querySelector('.repere-detail');
   lien = barre.querySelector('.repere-lien');
