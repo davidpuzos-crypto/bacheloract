@@ -6,7 +6,7 @@
 import { lire, modifier, exporterJSON, effacer, stockageDisponible, surChangement, surStockageIndisponible } from './state.js';
 import { statut, surTic, surPhase, phases, formatCompte, formatHeure, heureMinute, fichierDe, ancreDe, ordreFichier, graceMs, minutesTexte } from './clock.js';
 import { icone, urlSeance, url, fichierCourant } from './donnees.js';
-import { htmlCarnet, calculer, equipe, echapper, surMiseAJourJeu } from './gamify.js';
+import { htmlProgression, calculer, equipe, echapper, surMiseAJourJeu } from './gamify.js';
 import { typographier } from './typo.js';
 import { surCollecte } from './collect.js';
 
@@ -55,7 +55,7 @@ function construireEntete() {
         </div>
         <div class="outils-entete">
           <button type="button" class="bouton-entete drapeau" data-etat="ok" aria-pressed="false"></button>
-          <button type="button" class="bouton-entete pastille-equipe" aria-expanded="false" aria-controls="tiroir-carnet"></button>
+          <button type="button" class="bouton-entete pastille-equipe" aria-expanded="false" aria-controls="tiroir-progression"></button>
           <button type="button" class="bouton-entete bouton-menu" aria-expanded="false" aria-controls="tiroir-menu">${svg('menu')}<span>Menu</span></button>
         </div>
       </div>
@@ -87,11 +87,11 @@ function construireEntete() {
         <p class="statut"><a href="${url('index.html')}">Toutes les séances du cours</a></p>
       </div>
     </div>`);
-  const tiroirCarnet = el(`
-    <div class="tiroir carnet" id="tiroir-carnet" role="dialog" aria-modal="true" aria-labelledby="titre-carnet" hidden>
-      <div class="tiroir-tete"><h2 id="titre-carnet">Carnet d’enquête</h2>
+  const tiroirProgression = el(`
+    <div class="tiroir progression" id="tiroir-progression" role="dialog" aria-modal="true" aria-labelledby="titre-progression" hidden>
+      <div class="tiroir-tete"><h2 id="titre-progression">Votre progression</h2>
         <button type="button" class="bouton-entete" data-fermer>${svg('fermer')}<span>Fermer</span></button></div>
-      <div data-carnet-contenu></div>
+      <div data-progression-contenu></div>
     </div>`);
   const bandeau = el('<div class="stop-bandeau" role="alert" hidden><span data-bandeau-texte></span><a class="btn petit" data-bandeau-lien href="#"></a></div>');
   const ecran = el(`
@@ -104,10 +104,10 @@ function construireEntete() {
       </div>
     </div>`);
   entete.after(bandeau);
-  document.body.append(voile, tiroirMenu, tiroirCarnet, ecran);
+  document.body.append(voile, tiroirMenu, tiroirProgression, ecran);
 
   refs = {
-    entete, voile, tiroirMenu, tiroirCarnet, bandeau, ecran,
+    entete, voile, tiroirMenu, tiroirProgression, bandeau, ecran,
     phaseNom: entete.querySelector('.phase-nom'),
     reste: entete.querySelector('.phase-reste'),
     resteLisible: entete.querySelector('[data-reste-lisible]'),
@@ -117,7 +117,7 @@ function construireEntete() {
     pastille: entete.querySelector('.pastille-equipe'),
     boutonMenu: entete.querySelector('.bouton-menu'),
     liste: tiroirMenu.querySelector('[data-liste-pages]'),
-    carnetContenu: tiroirCarnet.querySelector('[data-carnet-contenu]')
+    progressionContenu: tiroirProgression.querySelector('[data-progression-contenu]')
   };
   brancherTiroirs();
   brancherReglages();
@@ -137,7 +137,7 @@ function ouvrir(tiroir, bouton) {
   fermer();
   tiroirOuvert = tiroir;
   declencheur = bouton;
-  if (tiroir === refs.tiroirCarnet) { majCarnet(); }
+  if (tiroir === refs.tiroirProgression) { majProgression(); }
   tiroir.hidden = false;
   refs.voile.hidden = false;
   bouton.setAttribute('aria-expanded', 'true');
@@ -154,7 +154,7 @@ function fermer() {
 
 function brancherTiroirs() {
   refs.boutonMenu.addEventListener('click', () => (tiroirOuvert === refs.tiroirMenu ? fermer() : ouvrir(refs.tiroirMenu, refs.boutonMenu)));
-  refs.pastille.addEventListener('click', () => (tiroirOuvert === refs.tiroirCarnet ? fermer() : ouvrir(refs.tiroirCarnet, refs.pastille)));
+  refs.pastille.addEventListener('click', () => (tiroirOuvert === refs.tiroirProgression ? fermer() : ouvrir(refs.tiroirProgression, refs.pastille)));
   refs.voile.addEventListener('click', fermer);
   document.querySelectorAll('[data-fermer]').forEach((b) => b.addEventListener('click', fermer));
   document.addEventListener('keydown', (e) => {
@@ -204,15 +204,15 @@ function majMenuEnCours(s) {
 function majPastille() {
   const eq = equipe();
   const res = calculer();
-  refs.pastille.innerHTML = svg(eq.icone) + '<span class="libelle-long">' + (eq.defini ? echapper(eq.nom) : 'Carnet d’enquête') + '</span>'
+  refs.pastille.innerHTML = svg(eq.icone) + '<span class="libelle-long">' + (eq.defini ? echapper(eq.nom) : 'Progression') + '</span>'
     + '<span class="points">' + res.points + ' pts</span>';
-  refs.pastille.setAttribute('aria-label', 'Ouvrir le carnet d’enquête. ' + (eq.defini ? 'Équipe ' + eq.nom + '. ' : '') + res.points + ' points d’enquête.');
+  refs.pastille.setAttribute('aria-label', 'Ouvrir votre progression. ' + (eq.defini ? 'Équipe ' + eq.nom + '. ' : '') + res.points + ' points d’enquête.');
 }
 
-function majCarnet(options = {}) {
-  if (!refs.carnetContenu) { return; }
-  refs.carnetContenu.innerHTML = htmlCarnet(options);
-  typographier(refs.carnetContenu);
+function majProgression(options = {}) {
+  if (!refs.progressionContenu) { return; }
+  refs.progressionContenu.innerHTML = htmlProgression(options);
+  typographier(refs.progressionContenu);
 }
 
 function majDrapeau() {
@@ -456,11 +456,11 @@ export function initNav(page, options = {}) {
   surChangement((d) => {
     majPastille();
     if (d.source === 'options' || d.efface || d.externe) { appliquerOptions(); majReglages(); majDrapeau(); }
-    if (tiroirOuvert === refs.tiroirCarnet) { majCarnet(); }
+    if (tiroirOuvert === refs.tiroirProgression) { majProgression(); }
   });
   surMiseAJourJeu((info) => {
     majPastille();
-    if (tiroirOuvert === refs.tiroirCarnet) { majCarnet(info); }
+    if (tiroirOuvert === refs.tiroirProgression) { majProgression(info); }
   });
   surStockageIndisponible(() => {
     if (!document.querySelector('.avertissement-stockage')) {

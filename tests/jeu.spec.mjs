@@ -1,4 +1,4 @@
-// 6. Gamification : points d’enquête, badges, anneaux, phrase mystère,
+// 6. Gamification : points d’enquête, badges, anneaux, progression,
 // mode sobre et prefers-reduced-motion. Aucun niveau affiché.
 import { test, expect } from '@playwright/test';
 import { ouvrir, CLE } from './aides.mjs';
@@ -24,29 +24,30 @@ const ETAT_COMPLET = {
   options: { sobre: false, theme: 'auto', horloge: {} }
 };
 
-test('enquête complète : 355 points, huit badges, phrase entière', async ({ page }) => {
+test('enquête complète : 355 points, huit badges, quatre quêtes', async ({ page }) => {
   await page.addInitScript(([cle, e]) => { if (!localStorage.getItem(cle)) { localStorage.setItem(cle, JSON.stringify(e)); } }, [CLE, ETAT_COMPLET]);
   await ouvrir(page, 'seance-09/10-fin.html', '12:05');
   // 11 champs × 10 + 19 QCM × 5 + 2 bonus × 15 + 4 quêtes à l’heure × 20
   // + 4 lectures × 10
   await expect(page.locator('.pastille-equipe .points')).toHaveText(/^355\s*pts$/);
-  const carnet = page.locator('main [data-carnet]');
-  await expect(carnet.locator('.score .valeur')).toHaveText('355');
-  await expect(carnet.locator('.score .niveau')).toHaveCount(0);
-  await expect(carnet.locator('.score')).toContainText('4 quêtes résolues sur 4');
-  await expect(carnet.locator('.badge[data-obtenu="1"]')).toHaveCount(8);
-  await expect(carnet.locator('.quete[data-etat="terminee"]')).toHaveCount(4);
-  await expect(carnet.locator('.anneau .pc')).toHaveText(['100 %', '100 %', '100 %', '100 %']);
-  await expect(page.locator('[data-phrase] .phrase-mystere')).toHaveClass(/complete/);
-  await expect(page.locator('[data-phrase]')).toContainText('Ce qui semble le plus personnel est souvent le plus social.');
+  const prog = page.locator('main [data-progression]');
+  await expect(prog.locator('.score .valeur')).toHaveText('355');
+  await expect(prog.locator('.score .niveau')).toHaveCount(0);
+  await expect(prog.locator('.score')).toContainText('4 quêtes résolues sur 4');
+  await expect(prog.locator('.badge[data-obtenu="1"]')).toHaveCount(8);
+  await expect(prog.locator('.quete[data-etat="terminee"]')).toHaveCount(4);
+  await expect(prog.locator('.anneau .pc')).toHaveText(['100 %', '100 %', '100 %', '100 %']);
+  // Plus de phrase mystère ni de « carnet ».
+  await expect(page.locator('.phrase-mystere, [data-phrase]')).toHaveCount(0);
+  await expect(page.locator('main')).not.toContainText(/carnet|phrase mystère/i);
 });
 
-test('les points ne descendent jamais sous zéro et la phrase reste partielle', async ({ page }) => {
+test('les points ne descendent jamais sous zéro', async ({ page }) => {
   await ouvrir(page, 'seance-09/pause.html', '10:10');
   await expect(page.locator('.pastille-equipe .points')).toHaveText(/^0\s*pts$/);
-  await expect(page.locator('main [data-carnet] .phrase-mystere .cache')).toHaveCount(4);
-  await expect(page.locator('main [data-carnet] .score .niveau')).toHaveCount(0);
-  await expect(page.locator('main [data-carnet]')).not.toContainText('Stagiaire');
+  await expect(page.locator('main [data-progression] .quete[data-etat="terminee"]')).toHaveCount(0);
+  await expect(page.locator('main [data-progression] .score .niveau')).toHaveCount(0);
+  await expect(page.locator('main [data-progression]')).not.toContainText('Stagiaire');
 });
 
 test('quête terminée : tampon, annonce et confettis', async ({ page }) => {
@@ -60,7 +61,7 @@ test('quête terminée : tampon, annonce et confettis', async ({ page }) => {
   await expect(page.locator('.annonce').first()).toContainText('Quête Définir résolue.');
   await expect(page.locator('canvas.confettis')).toHaveCount(1);
   await page.click('.pastille-equipe');
-  await expect(page.locator('#tiroir-carnet .quete[data-c="definir"] .tampon')).toBeVisible();
+  await expect(page.locator('#tiroir-progression .quete[data-c="definir"] .tampon')).toBeVisible();
 });
 
 test('prefers-reduced-motion : pas de confettis', async ({ browser }) => {
@@ -87,7 +88,7 @@ test('mode sobre : points comptés, badges et animations masqués', async ({ pag
   await page.click('[data-sobre-bouton]');
   await expect(page.locator('html')).toHaveAttribute('data-sobre', '1');
   await page.keyboard.press('Escape');
-  await expect(page.locator('main [data-carnet] .badges')).toBeHidden();
+  await expect(page.locator('main [data-progression] .badges')).toBeHidden();
   await expect(page.locator('.pastille-equipe .points')).toHaveText(/^355\s*pts$/);
 });
 

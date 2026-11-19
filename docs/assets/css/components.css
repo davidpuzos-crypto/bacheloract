@@ -113,7 +113,7 @@
 .progres-seance { height: 4px; background: var(--surface-2); }
 .progres-seance span { display: block; height: 100%; width: 0; background: var(--accent); transition: width 0.6s ease; }
 
-/* ---------- Tiroirs (menu, carnet) ---------- */
+/* ---------- Tiroirs (menu, progression) ---------- */
 .tiroir {
   position: fixed;
   top: 0;
@@ -776,8 +776,6 @@ details.sous > p, details.sous > div { margin: 0.5rem 0 0; }
 
 .sous-nav { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 18px 0 0; font-family: var(--police-ui); font-weight: 700; }
 
-.phrase-finale { margin: 1.5rem 0 1rem; max-width: 60rem; }
-.phrase-finale .phrase-mystere { font-size: clamp(1.5rem, 3.6vw, 2.5rem); line-height: 1.35; }
 
 .consigne { font-family: var(--police-ui); font-weight: 700; max-width: var(--mesure); }
 .notions .num { font-size: 1.2rem; }

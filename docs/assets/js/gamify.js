@@ -1,6 +1,7 @@
-// Gamification sobre : points d’enquête, quêtes, badges, anneaux de
-// compétences et phrase mystère. Pas de niveau ni de classement. Les points
-// ne sont pas une note.
+// Gamification sobre : points d’enquête, quêtes, badges et anneaux de
+// compétences. Pas de niveau ni de classement. Les points ne sont pas une
+// note. Chaque quête s’ouvre quand le travail de la précédente est envoyé
+// (voir porte.js).
 // Tout est recalculé à partir de l’état : rien ne se perd d’une page à l’autre.
 
 import { lire, modifierSansSignal, enregistrerMaintenant, surChangement } from './state.js';
@@ -16,24 +17,24 @@ export const POINTS = { champ: 10, qcmPremier: 5, qcmEnsuite: 2, bonus: 15, quet
 // Quêtes : ce qui doit être fait pour les terminer.
 export const QUETES = [
   {
-    id: 'definir', numero: 1, label: 'Définir', morceau: 'Ce qui semble',
+    id: 'definir', numero: 1, label: 'Définir',
     phases: ['methode', 'chercher'], fin: 'chercher',
     champs: ['a1', 'a2', 'b1'], radios: ['b0'],
     qcm: ['M1', 'M2', 'M3', 'A3']
   },
   {
-    id: 'citer', numero: 2, label: 'Citer', morceau: 'le plus personnel',
+    id: 'citer', numero: 2, label: 'Citer',
     phases: ['citer-lecture', 'citer-pratique', 'correction-definir'], fin: 'citer-pratique',
     champs: ['c1', 'c3'], qcm: ['C-Q1', 'C-Q2', 'C-Q4']
   },
   {
-    id: 'lire', numero: 3, label: 'Lire', morceau: 'est souvent',
+    id: 'lire', numero: 3, label: 'Lire',
     phases: ['lire', 'analyser', 'depot', 'correction'], fin: 'correction',
     champs: ['l1', 'l2', 'l3', 'l4', 'l5', 'l6'], depot: 'parcours',
     qcm: ['L-Q1', 'L-Q2', 'R1', 'F-Q1', 'F-Q2', 'R2', 'R3', 'F-Q3', 'R4']
   },
   {
-    id: 'noter', numero: 4, label: 'Noter', morceau: 'le plus social.',
+    id: 'noter', numero: 4, label: 'Noter',
     phases: ['notes', 'video', 'froid', 'questions'], fin: 'questions',
     conseils: 3, qcm: ['V4', 'V5', 'V6']
   }
@@ -56,7 +57,7 @@ export const BADGES = [
   { id: 'temps', nom: 'Dans les temps', icone: 'b-temps', critere: 'Chercher, Citer et Analyser terminées avant la fin de leur phase.' },
   { id: 'critique', nom: 'Esprit critique', icone: 'b-critique', critere: 'Au moins une question bonus répondue.' },
   { id: 'stratege', nom: 'Stratège', icone: 'b-stratege', critere: 'Trois conseils choisis avant la vidéo et les trois questions du QCM de la vidéo justes.' },
-  { id: 'fil', nom: 'Fil rouge', icone: 'b-fil', critere: 'La phrase mystère complète.' }
+  { id: 'fil', nom: 'Fil rouge', icone: 'b-fil', critere: 'Les quatre quêtes résolues.' }
 ];
 
 export const ICONES_EQUIPE = { loupe: 'Loupe', boussole: 'Boussole', plume: 'Plume', lanterne: 'Lanterne', jumelles: 'Jumelles', cle: 'Clé' };
@@ -183,19 +184,6 @@ function svg(id, classe = '') {
   return '<svg class="' + classe + '" aria-hidden="true" focusable="false"><use href="' + icone(id) + '"></use></svg>';
 }
 
-function htmlPhrase(e, nouvelles = []) {
-  const complete = QUETES.every((q) => !!e.quetes[q.id]);
-  const morceaux = QUETES.map((q) => {
-    if (e.quetes[q.id]) {
-      const neuf = nouvelles.includes(q.id) ? ' nouveau' : '';
-      return '<span class="morceau revele' + neuf + '">' + echapper(q.morceau) + '</span>';
-    }
-    const largeur = Math.max(3, q.morceau.length * 0.55);
-    return '<span class="morceau cache" style="width:' + largeur + 'em"><span class="visuellement-cache">morceau à débloquer avec la quête ' + echapper(q.label) + '</span></span>';
-  });
-  return '<p class="phrase-mystere' + (complete ? ' complete' : '') + '">' + morceaux.join(' ') + '</p>';
-}
-
 function htmlAnneaux(res) {
   const C = 2 * Math.PI * 40;
   return '<div class="anneaux">' + res.quetes.map((q) => {
@@ -234,7 +222,7 @@ function htmlBadges(e, nouveaux = []) {
   }).join('') + '</ul>';
 }
 
-export function htmlCarnet(options = {}) {
+export function htmlProgression(options = {}) {
   const e = lire();
   const res = calculer(e);
   const eq = equipe(e);
@@ -243,19 +231,16 @@ export function htmlCarnet(options = {}) {
   const noms = listeNoms([eq.n1, eq.n2, eq.n3].map(echapper));
   const resolues = res.quetes.filter((q) => q.terminee).length;
   return ''
-    + '<div class="carnet-bloc equipe-carte">' + svg(eq.icone, 'icone-equipe')
+    + '<div class="progression-bloc equipe-carte">' + svg(eq.icone, 'icone-equipe')
     + '<div><b>' + (eq.defini ? echapper(eq.nom) : 'Équipe sans nom') + '</b><span>' + (noms || 'Noms à indiquer sur la page Cadre') + '</span></div></div>'
-    + '<div class="carnet-bloc"><h3>Points d’enquête</h3><div class="score"><span class="valeur">' + res.points + '</span>'
+    + '<div class="progression-bloc"><h3>Points d’enquête</h3><div class="score"><span class="valeur">' + res.points + '</span>'
     + '<span class="prochain">' + resolues + (resolues > 1 ? ' quêtes résolues sur 4' : ' quête résolue sur 4') + '</span></div>'
     + '<p class="mention-note">Les points ne sont pas une note. Ils suivent votre avancement, sans classement.</p></div>'
-    + '<div class="carnet-bloc"><h3>Compétences</h3>' + htmlAnneaux(res) + '</div>'
-    + '<div class="carnet-bloc"><h3>Quêtes</h3>' + htmlQuetes(res, nq) + '</div>'
-    + '<div class="carnet-bloc deco"><h3>Badges</h3>' + htmlBadges(e, nb) + '</div>'
-    + '<div class="carnet-bloc"><h3>Phrase mystère</h3>' + htmlPhrase(e, nq) + '</div>';
+    + '<div class="progression-bloc"><h3>Compétences</h3>' + htmlAnneaux(res) + '</div>'
+    + '<div class="progression-bloc"><h3>Quêtes</h3>' + htmlQuetes(res, nq) + '</div>'
+    + '<div class="progression-bloc deco"><h3>Badges</h3>' + htmlBadges(e, nb) + '</div>';
 }
 
-export function phraseComplete(e = lire()) { return QUETES.every((q) => !!e.quetes[q.id]); }
-export function htmlPhraseSeule(e = lire()) { return htmlPhrase(e); }
 
 // Carte des quêtes du hub : à venir, en cours, terminée.
 export function htmlCarteQuetes() {
@@ -286,7 +271,7 @@ function rafraichir(detail = {}) {
   pointsAffiches = res.points;
   if (delta > 0 && !detail.externe && !detail.efface) { gain(delta, detail.ancre || document.querySelector('.pastille-equipe')); }
   nouveau.quetes.forEach((q) => {
-    annoncer('Quête ' + q.label + ' résolue. Un morceau de la phrase mystère est débloqué.');
+    annoncer('Quête ' + q.label + ' résolue.');
     confettis();
   });
   if (!sobre()) {

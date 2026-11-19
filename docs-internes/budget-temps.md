@@ -6,7 +6,7 @@ Hypothèses de calcul : lecture à 200 mots par minute, 130 pour l’extrait de 
 
 | Phase | Durée | Mots lus | Champs requis | QCM | Autres activités | Estimation | Marge | État |
 |---|---|---|---|---|---|---|---|---|
-| Cadre | 3 min | 239 | equipe (0.3 min), icone (0.2 min), nom1 (0.3 min), nom2 (0.3 min), nom3 (0.3 min) | 0 |  | 2,6 min | 0,4 min | tient |
+| Cadre | 3 min | 249 | equipe (0.3 min), icone (0.2 min), nom1 (0.3 min), nom2 (0.3 min), nom3 (0.3 min) | 0 |  | 2,6 min | 0,4 min | tient |
 | Méthode | 5 min | 417 + notes 157 | aucun | 3 |  | 4,4 min | 0,6 min | tient |
 | Chercher | 14 min | 308 | a1 (1 min), a2 (2 min), b0 (0.3 min), b1 (2 min) | 1 | Lecture des sources sur les sites externes (page de Géoconfluences, seconde source) (5 min) | 12,3 min | 1,7 min | tient |
 | Citer, lecture | 4 min | 677 | aucun | 0 |  | 3,4 min | 0,6 min | tient |
@@ -22,14 +22,14 @@ Hypothèses de calcul : lecture à 200 mots par minute, 130 pour l’extrait de 
 | QCM sur la vidéo, en équipe | 4 min | 23 | aucun | 3 | Discussion en équipe avant chaque réponse (1,5 min) | 3,1 min | 0,9 min | tient |
 | Pour aller plus loin | 10 min | 970 | aucun | 3 | Lecture du tableau et du schéma (0,8 min) | 8,8 min | 1,2 min | tient |
 
-Total estimé avant la pause : 53,1 minutes pour 62. Après la pause : 74,9 minutes pour 88.
+Total estimé avant la pause : 53,2 minutes pour 62. Après la pause : 74,9 minutes pour 88.
 
 ## Détails
 
 ### Cadre
 
 Lecture 1,2 min, champs 1,4 min, QCM 0 min, autres 0 min.
-Budget de lecture : 239 mots pour 250 au plus.
+Budget de lecture : 249 mots pour 250 au plus.
 
 ### Méthode
 

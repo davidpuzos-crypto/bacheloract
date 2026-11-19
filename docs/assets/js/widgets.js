@@ -1,10 +1,10 @@
 // Outils propres à certaines pages : exemple annoté, progression de lecture,
-// choix des conseils, modèle de fiche, carnet intégré, déroulé, liens de configuration.
+// choix des conseils, modèle de fiche, progression intégrée, déroulé, liens de configuration.
 
 import { lire, modifier, surChangement } from './state.js';
 import { config, urlSeance } from './donnees.js';
 import { statut, surTic, phases, heureMinute, formatCompte, fichierDe } from './clock.js';
-import { htmlCarnet, htmlCarteQuetes, htmlPhraseSeule, surMiseAJourJeu, echapper } from './gamify.js';
+import { htmlProgression, htmlCarteQuetes, surMiseAJourJeu, echapper } from './gamify.js';
 import { typographier } from './typo.js';
 import { copier } from './recap.js';
 
@@ -76,7 +76,7 @@ function progressionLecture() {
       const lu = !!lire().lu[bouton.dataset.toutLu];
       bouton.setAttribute('aria-pressed', lu ? 'true' : 'false');
       bouton.textContent = lu ? 'Lecture terminée' : bouton.dataset.libelle;
-      if (etat) { etat.textContent = lu ? 'C’est noté dans votre carnet.' : ''; }
+      if (etat) { etat.textContent = lu ? 'C’est noté.' : ''; }
     };
     bouton.dataset.libelle = bouton.textContent;
     bouton.addEventListener('click', () => {
@@ -164,16 +164,14 @@ function modeleFiche() {
   });
 }
 
-// ---------------------------------------------------------------- carnet intégré dans une page
-function carnetsDansLaPage() {
-  const blocs = document.querySelectorAll('[data-carnet]');
+// ---------------------------------------------------------------- progression intégrée dans une page
+function progressionsDansLaPage() {
+  const blocs = document.querySelectorAll('[data-progression]');
   const cartes = document.querySelectorAll('[data-carte-quetes]');
-  const phrases = document.querySelectorAll('[data-phrase]');
-  if (!blocs.length && !cartes.length && !phrases.length) { return; }
+  if (!blocs.length && !cartes.length) { return; }
   const rendre = (info = {}) => {
-    blocs.forEach((b) => { b.innerHTML = htmlCarnet(info); typographier(b); });
+    blocs.forEach((b) => { b.innerHTML = htmlProgression(info); typographier(b); });
     cartes.forEach((b) => { b.innerHTML = htmlCarteQuetes(); typographier(b); });
-    phrases.forEach((b) => { b.innerHTML = htmlPhraseSeule(); typographier(b); });
   };
   surMiseAJourJeu(rendre);
   rendre();
@@ -355,7 +353,7 @@ export function initWidgets() {
   choixConseils();
   rappelConseils();
   modeleFiche();
-  carnetsDansLaPage();
+  progressionsDansLaPage();
   deroules();
   phaseActuelle();
   heuresDansLeTexte();

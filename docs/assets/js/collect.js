@@ -106,6 +106,12 @@ function aplatir() {
     'm.drapeau': e.drapeau === 'aide' ? 'aide' : 'ok',
     'm.quetes': quetes
   };
+  return Object.assign(plat, aplatirReponses(e));
+}
+
+// Les réponses seules (sans les clés m.), sans calcul ni horloge.
+function aplatirReponses(e = lire()) {
+  const plat = {};
   Object.entries(e.champs || {}).forEach(([k, v]) => {
     if (IDENTITE.has(k)) { return; }
     if (typeof v === 'string' && v.trim()) { plat['c.' + k] = couper(v); }
@@ -119,6 +125,20 @@ function aplatir() {
   if (e.lu && Object.keys(e.lu).length) { plat['u.lu'] = Object.keys(e.lu).sort(); }
   Object.entries(e.depots || {}).forEach(([k, d]) => { if (d && d.le) { plat['d.' + k] = [d.le, d.via || '']; } });
   return plat;
+}
+
+// Vrai quand le travail de l’équipe est déjà parti : aucune réponse écrite,
+// choisie ou déposée n’a changé depuis le dernier envoi réussi. Les lectures
+// terminées (u.) ne comptent pas comme du travail. cles limite la vérification
+// à certaines réponses (par exemple celles d’une quête : 'c.a1', 'q.M1'…).
+export function travailEnvoye(cles = null) {
+  const env = etatEnvoi();
+  const travail = (k) => /^[crqksd]\./.test(k) && (!cles || cles.includes(k));
+  const plat = aplatirReponses();
+  for (const [k, v] of Object.entries(plat)) {
+    if (travail(k) && env.base[k] !== JSON.stringify(v)) { return false; }
+  }
+  return Object.keys(env.base).every((k) => !travail(k) || k in plat);
 }
 
 // ---------------------------------------------------------------- relais

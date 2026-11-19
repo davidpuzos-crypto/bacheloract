@@ -11,8 +11,8 @@ import { RACINE } from './lib/pages.mjs';
 import { controler } from './lint-copy.mjs';
 
 export const CORRECTIONS = [
-  { nom: 'Correction de Définir et Citer', fichier: '5b-correction-definir.html', porte: 'definir' },
-  { nom: 'Correction de l’étude', fichier: '7-correction.html', porte: 'parcours' }
+  { nom: 'Correction de Définir et Citer', fichier: '5b-correction-definir.html', porte: 'citer' },
+  { nom: 'Correction de l’étude', fichier: '7-correction.html', porte: 'lire' }
 ];
 
 function verifierCorrections() {

@@ -44,7 +44,7 @@ export function texteDeLecture(racine, options = {}) {
   const retirer = [
     'script', 'style', 'template', '[hidden]', '.notes-cachees', '.fbs', '.fb',
     '.pager', 'nav', 'footer', 'header', '.visuellement-cache', 'textarea', 'input',
-    '.qcm', '.q', '.depot', '[data-carnet]', '[data-carte-quetes]', '[data-phrase]',
+    '.qcm', '.q', '.depot', '[data-progression]', '[data-carte-quetes]',
     '[data-deroule]', '.compteur-quete', '.boite-note', '.rangee-boutons', 'button'
   ].concat(options.retirer || []);
   clone.querySelectorAll(retirer.join(',')).forEach((n) => n.remove());

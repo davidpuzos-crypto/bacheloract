@@ -1,7 +1,7 @@
 // 4. Récapitulatif : contenu, ordre, manques signalés, téléchargement et copie.
 import fs from 'node:fs';
 import { test, expect } from '@playwright/test';
-import { ouvrir, saisir, etat, LONG } from './aides.mjs';
+import { ouvrir, saisir, etat, LONG, passerPorte } from './aides.mjs';
 
 test('récapitulatif du parcours', async ({ page, context }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
@@ -17,9 +17,11 @@ test('récapitulatif du parcours', async ({ page, context }) => {
   await page.check('#qcm-A3-a');
   await saisir(page, 'a6', 'Bonus A6 de test, assez long pour être compté comme bonus.');
   await ouvrir(page, 'seance-09/5-citer-pratique.html');
+  await passerPorte(page);
   await saisir(page, 'c1', 'Deux citations de test pour C1, assez longues.');
   await page.check('#qcm-C-Q1-a');
   await ouvrir(page, 'seance-09/6-lire.html#depot');
+  await passerPorte(page);
   await saisir(page, 'l6', LONG);
 
   const zone = page.locator('[data-depot="parcours"]');
