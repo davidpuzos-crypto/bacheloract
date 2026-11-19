@@ -9,7 +9,7 @@ Le site est statique (HTML, CSS, JavaScript sans framework). Il est publié par 
 | Emplacement | Contenu |
 |---|---|
 | `docs/` | Le site publié. Accueil du cours (`index.html`), pages de la séance 9 (`seance-09/`), pages de l’enseignant (`prof/`), styles, scripts, polices et icônes (`assets/`). |
-| `docs/data/schedule.json` | Le déroulé chronométré : heure de départ, phases, textes des écrans STOP. |
+| `docs/data/schedule.json` | Le déroulé chronométré : heure de départ, phases, repères et messages de passage d’une phase à l’autre. |
 | `docs/data/config.json` | Les liens (Insee, vidéo, ressources…), l’envoi chiffré des réponses à l’enseignant et les options d’affichage. |
 | `scripts/` | Le build, le contrôle éditorial, le calcul des budgets de temps, le contrôle des liens, un petit serveur local. |
 | `scripts/code-enseignant.mjs` | Change le code enseignant de la page « Réponses des équipes » (voir « Voir les réponses en direct »). |
@@ -156,7 +156,7 @@ node scripts/code-enseignant.mjs "nouveau code" --ancien-code "code actuel"
 ## Comment le site fonctionne
 
 - **État partagé** : toutes les pages lisent et écrivent le même objet dans le navigateur (clé `fabrique:s09:v1`). Une écriture a lieu 350 ms après chaque saisie, et tout de suite quand on quitte la page. Si le navigateur refuse d’enregistrer (navigation privée stricte), un message demande de copier régulièrement le récapitulatif.
-- **Horloge** : les phases, les comptes à rebours et les écrans STOP viennent de `schedule.json`. À chaque point d’arrêt, un bandeau prévient pendant 60 secondes, puis un écran plein cadre propose un seul bouton vers la page suivante. Les réponses sont conservées, et les pages précédentes restent accessibles ensuite.
+- **Horloge** : les phases et les comptes à rebours viennent de `schedule.json`. Aucune page n’est imposée, chaque équipe circule librement. Quand une équipe est en retard sur le déroulé, une ligne sous l’en-tête le dit explicitement (« Il est 9 h 23. Vous devriez être sur « Lecture, bien citer », jusqu’à 9 h 26 »), avec le message de passage prévu dans `schedule.json` (`stopTexte`) et un lien pour y aller. Sur la bonne page, la même ligne dit à quelle question l’équipe devrait en être. Aux moments de passage, les réponses partent aussi automatiquement à l’enseignant. L’écran de projection affiche toujours un grand « Stop » (`stopMot`) pour toute la salle.
 - **Corrections** : sans mot de passe, chacune s’affiche quand l’équipe a envoyé son travail (voir « Envoyer pour passer, sans mot de passe »). Chaque question est affichée avec la réponse de l’équipe, une réponse proposée et des conseils de méthode. Dans la correction de l’étude, « Voir le passage » surligne le passage de l’étude qui justifie la réponse.
 - **Repère horaire** : sur les pages de travail, une ligne sous le chrono dit à quelle question l’équipe devrait en être, si elle est dans les temps, et mène à la question.
 - **Mise en page** : tous les blocs d’une page partagent la même colonne. Sur grand écran, une colonne « Sur cette page » affiche à droite le sommaire, les questions faites ou à faire et le créneau prévu. Les pages qui occupent toute la largeur (l’étude et ses questions) n’en ont pas.

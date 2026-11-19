@@ -1,10 +1,10 @@
 // En-tête partagé : phase en cours, compte à rebours, progression de la
-// séance, lien vers la phase en cours, équipe et points, drapeau d’aide,
-// menu des pages, réglages (thème, mode sobre, export, effacement) et
-// écrans de fin de phase (bandeau puis plein cadre).
+// séance, équipe et points, drapeau d’aide, menu des pages et réglages
+// (thème, mode sobre, export, effacement). Aucune page n’est imposée :
+// la ligne de repère (repere.js) dit où l’équipe devrait être.
 
 import { lire, modifier, exporterJSON, effacer, stockageDisponible, surChangement, surStockageIndisponible } from './state.js';
-import { statut, surTic, surPhase, phases, formatCompte, formatHeure, heureMinute, fichierDe, ancreDe, ordreFichier, graceMs, minutesTexte } from './clock.js';
+import { statut, surTic, surPhase, phases, formatCompte, formatHeure, heureMinute, fichierDe, minutesTexte } from './clock.js';
 import { icone, urlSeance, url, fichierCourant } from './donnees.js';
 import { htmlProgression, calculer, equipe, echapper, surMiseAJourJeu } from './gamify.js';
 import { typographier } from './typo.js';
@@ -13,7 +13,6 @@ import { surCollecte } from './collect.js';
 let idPage = '';
 let espace = 'seance'; // seance, prof ou site
 let refs = {};
-let dernierAffichageArret = null;
 
 function el(html) {
   const t = document.createElement('template');
@@ -51,7 +50,6 @@ function construireEntete() {
           <span class="phase-nom">Séance 9</span>
           <span class="phase-reste" aria-hidden="true"></span>
           <span class="visuellement-cache" data-reste-lisible></span>
-          <a class="aller-phase" hidden href="#">Aller à la phase en cours</a>
         </div>
         <div class="outils-entete">
           <button type="button" class="bouton-entete drapeau" data-etat="ok" aria-pressed="false"></button>
@@ -93,25 +91,13 @@ function construireEntete() {
         <button type="button" class="bouton-entete" data-fermer>${svg('fermer')}<span>Fermer</span></button></div>
       <div data-progression-contenu></div>
     </div>`);
-  const bandeau = el('<div class="stop-bandeau" role="alert" hidden><span data-bandeau-texte></span><a class="btn petit" data-bandeau-lien href="#"></a></div>');
-  const ecran = el(`
-    <div class="stop-ecran" role="dialog" aria-modal="true" aria-labelledby="stop-texte" hidden>
-      <div class="stop-carte">
-        <span class="stop-mot" aria-hidden="true">Stop</span>
-        <p class="stop-texte" id="stop-texte"></p>
-        <span class="stop-heure"></span>
-        <a class="btn" data-stop-lien href="#"></a>
-      </div>
-    </div>`);
-  entete.after(bandeau);
-  document.body.append(voile, tiroirMenu, tiroirProgression, ecran);
+  document.body.append(voile, tiroirMenu, tiroirProgression);
 
   refs = {
-    entete, voile, tiroirMenu, tiroirProgression, bandeau, ecran,
+    entete, voile, tiroirMenu, tiroirProgression,
     phaseNom: entete.querySelector('.phase-nom'),
     reste: entete.querySelector('.phase-reste'),
     resteLisible: entete.querySelector('[data-reste-lisible]'),
-    aller: entete.querySelector('.aller-phase'),
     progres: entete.querySelector('.progres-seance'),
     drapeau: entete.querySelector('.drapeau'),
     pastille: entete.querySelector('.pastille-equipe'),
@@ -290,7 +276,6 @@ function brancherReglages() {
 
 function majHorloge(s) {
   if (!refs.phaseNom) { return; }
-  const fichier = fichierCourant();
   let nom = '';
   let reste = '';
   let lisible = '';
@@ -313,124 +298,7 @@ function majHorloge(s) {
   refs.progres.setAttribute('aria-valuenow', String(pc));
   refs.progres.setAttribute('aria-valuetext', pc + ' % de la séance écoulée');
 
-  // Lien « Aller à la phase en cours »
-  const aller = refs.aller;
-  if (espace === 'seance' && s.phase && !s.avant) {
-    const cible = s.apres ? phases()[phases().length - 1].page : s.phase.page;
-    const fCible = fichierDe(cible);
-    const ancre = ancreDe(cible);
-    if (fCible !== fichier) {
-      aller.hidden = false;
-      aller.textContent = 'Aller à la phase en cours';
-      aller.href = urlSeance(cible);
-    } else if (ancre && window.location.hash !== ancre) {
-      aller.hidden = false;
-      aller.textContent = 'Aller à la section en cours';
-      aller.href = ancre;
-    } else {
-      aller.hidden = true;
-    }
-  } else {
-    aller.hidden = true;
-  }
   majMenuEnCours(s);
-}
-
-// ---------------------------------------------------------------- points d’arrêt
-
-function texteArret(arret) {
-  const ph = phases();
-  const pause = ph.find((p) => p.id === 'pause');
-  const reprise = pause ? heureMinute(pause.debut + pause.duree) : '';
-  return String(arret.phase.stopTexte || 'Stop.').replace('{reprise}', reprise);
-}
-
-function vu(idArret) { return !!lire().arrets[idArret]; }
-function marquerVu(idArret) {
-  if (vu(idArret)) { return; }
-  modifier((e) => { e.arrets[idArret] = Date.now(); }, { source: 'arret' });
-}
-
-// Position de la page affichée dans le déroulé (fichier et section).
-function indexLieu() {
-  const f = fichierCourant();
-  const h = window.location.hash;
-  const ph = phases();
-  let i = h ? ph.findIndex((p) => p.page === f + h) : -1;
-  if (i < 0) { i = ordreFichier(f); }
-  return i;
-}
-
-// La page affichée est déjà la cible du point d’arrêt, ou une page plus loin.
-function cibleAtteinte(cible) {
-  const iCible = phases().findIndex((p) => p.id === cible.id);
-  const iLieu = indexLieu();
-  return iLieu >= 0 && iCible >= 0 && iLieu >= iCible;
-}
-
-function allerVers(cible, idArret) {
-  marquerVu(idArret);
-  cacherArret();
-  const fCible = fichierDe(cible.page);
-  const ancre = ancreDe(cible.page);
-  if (fCible === fichierCourant() && ancre) {
-    window.location.hash = ancre;
-    const h = document.querySelector(ancre);
-    if (h) { h.scrollIntoView(); const t = h.querySelector('h2'); if (t) { t.setAttribute('tabindex', '-1'); t.focus({ preventScroll: true }); } }
-  } else {
-    window.location.href = urlSeance(cible.page);
-  }
-}
-
-function cacherArret() {
-  refs.bandeau.hidden = true;
-  if (!refs.ecran.hidden) {
-    refs.ecran.hidden = true;
-    document.querySelectorAll('[data-inerte-stop]').forEach((n) => { n.inert = false; n.removeAttribute('data-inerte-stop'); });
-  }
-  dernierAffichageArret = null;
-}
-
-function montrerEcran(s) {
-  const a = s.arret;
-  const lien = refs.ecran.querySelector('[data-stop-lien]');
-  const mot = refs.ecran.querySelector('.stop-mot');
-  mot.textContent = a.phase.stopMot || 'Stop';
-  mot.classList.toggle('long', mot.textContent.length > 4);
-  refs.ecran.querySelector('.stop-texte').textContent = texteArret(a);
-  refs.ecran.querySelector('.stop-heure').textContent = 'Il est ' + formatHeure(s.t) + '.';
-  lien.textContent = a.phase.stopBouton || 'Continuer';
-  lien.href = urlSeance(a.cible.page);
-  lien.onclick = (ev) => { ev.preventDefault(); allerVers(a.cible, a.phase.id); };
-  typographier(refs.ecran);
-  if (refs.ecran.hidden) {
-    refs.bandeau.hidden = true;
-    refs.ecran.hidden = false;
-    [...document.body.children].forEach((n) => {
-      if (n !== refs.ecran && !n.inert && n.tagName !== 'SCRIPT') { n.inert = true; n.setAttribute('data-inerte-stop', ''); }
-    });
-    lien.focus();
-  }
-}
-
-function montrerBandeau(s) {
-  const a = s.arret;
-  const restant = Math.max(0, Math.ceil((graceMs() - a.depuisMs) / 1000));
-  refs.bandeau.querySelector('[data-bandeau-texte]').textContent = 'Fin de la phase ' + a.phase.label + '. Terminez votre phrase, la suite s’affiche dans ' + restant + ' s.';
-  const lien = refs.bandeau.querySelector('[data-bandeau-lien]');
-  lien.textContent = a.phase.stopBouton || 'Continuer';
-  lien.href = urlSeance(a.cible.page);
-  lien.onclick = (ev) => { ev.preventDefault(); allerVers(a.cible, a.phase.id); };
-  refs.bandeau.hidden = false;
-}
-
-function gererArret(s) {
-  if (espace !== 'seance' || !refs.ecran) { return; }
-  const a = s.arret;
-  if (!a || vu(a.phase.id)) { cacherArret(); return; }
-  if (cibleAtteinte(a.cible)) { marquerVu(a.phase.id); cacherArret(); return; }
-  dernierAffichageArret = a.phase.id;
-  if (a.depuisMs < graceMs()) { montrerBandeau(s); } else { montrerEcran(s); }
 }
 
 // ---------------------------------------------------------------- initialisation
@@ -444,15 +312,13 @@ export function initNav(page, options = {}) {
   typographier(refs.entete);
   const annonceur = el('<p class="visuellement-cache" aria-live="polite" data-annonce-phase></p>');
   document.body.append(annonceur);
-  surTic((s) => { majHorloge(s); gererArret(s); });
+  surTic((s) => { majHorloge(s); });
   surPhase((d) => {
     const s = d.statut;
     if (d.precedente === undefined) { return; }
     annonceur.textContent = s.avant ? '' : s.apres ? 'La séance est terminée.' : 'Nouvelle phase, ' + s.phase.label + '.';
   });
-  const s = statut();
-  majHorloge(s);
-  gererArret(s);
+  majHorloge(statut());
   surChangement((d) => {
     majPastille();
     if (d.source === 'options' || d.efface || d.externe) { appliquerOptions(); majReglages(); majDrapeau(); }
@@ -467,7 +333,6 @@ export function initNav(page, options = {}) {
       refs.entete.after(el('<p class="avertissement-stockage" role="alert">Ce navigateur n’enregistre pas vos réponses, copiez régulièrement le récapitulatif.</p>'));
     }
   });
-  window.addEventListener('hashchange', () => { const st = statut(); majHorloge(st); gererArret(st); });
   surCollecte(({ actif, dernierEnvoi, sature }) => {
     const p = refs.tiroirMenu.querySelector('[data-texte-donnees]');
     if (!p) { return; }

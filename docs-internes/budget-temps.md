@@ -6,9 +6,9 @@ Hypothèses de calcul : lecture à 200 mots par minute, 130 pour l’extrait de 
 
 | Phase | Durée | Mots lus | Champs requis | QCM | Autres activités | Estimation | Marge | État |
 |---|---|---|---|---|---|---|---|---|
-| Cadre | 3 min | 249 | equipe (0.3 min), icone (0.2 min), nom1 (0.3 min), nom2 (0.3 min), nom3 (0.3 min) | 0 |  | 2,6 min | 0,4 min | tient |
+| Cadre | 3 min | 245 | equipe (0.3 min), icone (0.2 min), nom1 (0.3 min), nom2 (0.3 min), nom3 (0.3 min) | 0 |  | 2,6 min | 0,4 min | tient |
 | Méthode | 5 min | 417 + notes 157 | aucun | 3 |  | 4,4 min | 0,6 min | tient |
-| Chercher | 14 min | 308 | a1 (1 min), a2 (2 min), b0 (0.3 min), b1 (2 min) | 1 | Lecture des sources sur les sites externes (page de Géoconfluences, seconde source) (5 min) | 12,3 min | 1,7 min | tient |
+| Chercher | 14 min | 315 | a1 (1 min), a2 (2 min), b0 (0.3 min), b1 (2 min) | 1 | Lecture des sources sur les sites externes (page de Géoconfluences, seconde source) (5 min) | 12,4 min | 1,6 min | tient |
 | Citer, lecture | 4 min | 677 | aucun | 0 |  | 3,4 min | 0,6 min | tient |
 | Citer, pratique | 9 min | 158 | c1 (2 min), c3 (3 min) | 3 |  | 7,3 min | 1,7 min | tient |
 | Correction, définir et citer | 5 min | 823 | aucun | 0 |  | 4,1 min | 0,9 min | tient |
@@ -29,7 +29,7 @@ Total estimé avant la pause : 53,2 minutes pour 62. Après la pause : 74,9 minu
 ### Cadre
 
 Lecture 1,2 min, champs 1,4 min, QCM 0 min, autres 0 min.
-Budget de lecture : 249 mots pour 250 au plus.
+Budget de lecture : 245 mots pour 250 au plus.
 
 ### Méthode
 
@@ -39,8 +39,8 @@ QCM : M1, M2, M3.
 
 ### Chercher
 
-Lecture 1,5 min, champs 5,3 min, QCM 0,5 min, autres 5 min.
-Budget de lecture : 308 mots pour 350 au plus.
+Lecture 1,6 min, champs 5,3 min, QCM 0,5 min, autres 5 min.
+Budget de lecture : 315 mots pour 350 au plus.
 QCM : A3.
 Bonus facultatifs, non comptés : a6.
 

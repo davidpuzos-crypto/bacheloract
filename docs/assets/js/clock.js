@@ -85,7 +85,6 @@ export function departMs(t = maintenant()) {
 }
 
 export function phases() { return P ? P.phases : []; }
-export function graceMs() { return ((P && P.gracePointArretSecondes) || 60) * 1000; }
 export function dureeTotaleMin() {
   const ph = phases();
   return ph.length ? ph[ph.length - 1].debut : 180;

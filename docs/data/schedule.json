@@ -1,7 +1,6 @@
 {
   "titre": "Séance 9, La fabrique du social",
   "departParDefaut": "09:00",
-  "gracePointArretSecondes": 60,
   "phases": [
     {"id": "cadre",              "label": "Cadre",                          "debut": 0,   "duree": 3,  "page": "1-cadre.html"},
     {"id": "methode",            "label": "Méthode",                        "debut": 3,   "duree": 5,  "page": "2-methode.html",

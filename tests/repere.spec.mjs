@@ -24,9 +24,15 @@ test('repère : question visée, retard puis « dans les temps », lien vers la 
   await expect(page.locator('#f-b1')).toBeFocused();
 });
 
-test('repère : rien sur une page sans repère ou hors de la phase en cours', async ({ page }) => {
+test('repère : en retard, la ligne dit où être ; sur une page sans repère, rien', async ({ page }) => {
+  // À 9 h 16, la séance en est à Chercher : la page Méthode est en retard.
   await ouvrir(page, 'seance-09/2-methode.html', '09:16');
-  await expect(page.locator('.repere-barre')).toBeHidden();
-  await ouvrir(page, 'seance-09/4-citer-lecture.html', '09:26');
-  await expect(page.locator('.repere-barre')).toBeHidden();
+  const barre = page.locator('.repere-barre');
+  await expect(barre).toHaveAttribute('data-etat', 'ailleurs');
+  await expect(barre.locator('.repere-texte')).toHaveText(/Il est 9\s*h\s*16\.\s*Vous devriez être sur «\s*Chercher\s*», jusqu’à 9\s*h\s*22\./);
+  await expect(barre.locator('.repere-lien')).toHaveAttribute('href', /3-chercher\.html/);
+  await expect(page.locator('.drapeau-repere')).toHaveCount(0);
+  // Bonne page, mais phase sans repère : la ligne se tait.
+  await ouvrir(page, 'seance-09/4-citer-lecture.html', '09:23');
+  await expect(barre).toBeHidden();
 });

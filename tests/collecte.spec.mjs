@@ -121,7 +121,7 @@ test('point d’arrêt : un envoi, puis rien de plus sans nouveauté', async ({ 
   const chercher = PROGRAMME.phases.find((x) => x.id === 'chercher');
   await ouvrir(p, 'seance-09/3-chercher.html?now=' + heure(chercher.debut + chercher.duree, -8));
   await p.fill('[data-id="a1"]', 'Réponse écrite juste avant la fin de la phase Chercher.');
-  await expect(p.locator('.stop-bandeau')).toBeVisible({ timeout: 15000 });
+  await expect(p.locator('.repere-barre[data-etat="ailleurs"]')).toBeVisible({ timeout: 15000 });
   await attendreMessages(request, 1);
   const n = (await messages(request)).length;
   // Nouvelle page dans la même phase : l’arrêt est déjà traité.
