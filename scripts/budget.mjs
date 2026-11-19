@@ -17,41 +17,44 @@ const QCM_MIN = 0.5;
 // appuyées sur le document : elles sont comptées large.
 const DUREES = {
   equipe: 0.3, icone: 0.2, nom1: 0.3, nom2: 0.3, nom3: 0.3,
-  a1: 1, a2: 2, a3: 1.5, b0: 0.3, b1: 2, b2: 2, b4: 2,
-  c1: 2, c2: 3, c3: 3,
-  l1: 5, l2: 2, l3: 2, l4: 3, l5: 5, l6: 5,
-  n3: 2, bp: 2, s1: 2.5, g1: 3
+  a1: 1, a2: 2, b0: 0.3, b1: 2,
+  c1: 2, c3: 3,
+  l1: 4, l2: 2, l3: 2, l4: 3, l5: 4, l6: 4,
+  n3: 2, bp: 1.5, s1: 2.5
 };
 
 // L’étude de l’Insee se lit lentement : texte dense, chiffres, tableau.
 const MOTS_MINUTE_ETUDE = 130;
+// La page d’ouverture présente des notions nouvelles : lecture posée.
+const MOTS_MINUTE_OUVERTURE = 150;
 
 const PHASES = [
   { id: 'cadre', titre: 'Cadre', fichier: 'docs/seance-09/1-cadre.html', minutes: 3, maxMots: 250 },
   { id: 'methode', titre: 'Méthode', fichier: 'docs/seance-09/2-methode.html', minutes: 5, maxMots: 650, notes: true },
-  { id: 'chercher', titre: 'Chercher', fichier: 'docs/seance-09/3-chercher.html', minutes: 16, maxMots: 350,
-    extras: [['Lecture des sources sur les sites externes (page de Géoconfluences, seconde source)', 5.5]] },
-  { id: 'citer-lecture', titre: 'Citer, lecture', fichier: 'docs/seance-09/4-citer-lecture.html', minutes: 5, maxMots: 900 },
-  { id: 'citer-pratique', titre: 'Citer, pratique', fichier: 'docs/seance-09/5-citer-pratique.html', minutes: 11, maxMots: 180,
-    extras: [['Ouverture du guide APA de l’ENS', 0.5]] },
-  { id: 'correction-definir', titre: 'Correction, définir et citer', fichier: 'private/seance-09/5b-correction-definir.html', minutes: 5, maxMots: 1000 },
+  { id: 'chercher', titre: 'Chercher', fichier: 'docs/seance-09/3-chercher.html', minutes: 14, maxMots: 350,
+    extras: [['Lecture des sources sur les sites externes (page de Géoconfluences, seconde source)', 5]] },
+  { id: 'citer-lecture', titre: 'Citer, lecture', fichier: 'docs/seance-09/4-citer-lecture.html', minutes: 4, maxMots: 720 },
+  { id: 'citer-pratique', titre: 'Citer, pratique', fichier: 'docs/seance-09/5-citer-pratique.html', minutes: 9, maxMots: 180 },
+  { id: 'correction-definir', titre: 'Correction, définir et citer', fichier: 'private/seance-09/5b-correction-definir.html', minutes: 5, maxMots: 900 },
   { id: 'lire', titre: 'Lire l’étude', fichier: 'docs/seance-09/6-lire.html', exclure: '#depot, #analyser', minutes: 22, maxMots: 260,
     extrait: '.citation-insee', maxExtrait: 1400, motsMinuteExtrait: MOTS_MINUTE_ETUDE,
     extras: [['Lecture du tableau de la figure 2', 3]] },
   { id: 'analyser', titre: 'Analyser l’étude', fichier: 'docs/seance-09/6-lire.html', section: '#analyser', minutes: 27, maxMots: 120,
     extras: [['Retours au document pour appuyer les réponses', 2]] },
-  { id: 'depot', titre: 'Dépôt', fichier: 'docs/seance-09/6-lire.html', section: '#depot', minutes: 3,
-    extras: [['Envoyer le récapitulatif à l’enseignant, ou le télécharger', 1.5]] },
+  { id: 'depot', titre: 'Dépôt', fichier: 'docs/seance-09/6-lire.html', section: '#depot', minutes: 2,
+    extras: [['Envoyer le récapitulatif à l’enseignant, ou le télécharger', 1.2]] },
   { id: 'correction', titre: 'Correction de l’étude', fichier: 'private/seance-09/7-correction.html', minutes: 8, maxMots: 1500,
     retirer: '.citation-insee', extras: [['Retours à l’étude avec « Voir le passage »', 1]] },
-  { id: 'notes', titre: 'Conseils de prise de notes', fichier: 'docs/seance-09/8-notes.html', minutes: 5, maxMots: 500,
-    extras: [['Choix de trois conseils parmi les huit', 1]] },
+  { id: 'notes', titre: 'Conseils de prise de notes', fichier: 'docs/seance-09/8-notes.html', minutes: 4, maxMots: 500,
+    extras: [['Lecture des huit conseils et choix de trois', 1.8]] },
   { id: 'video', titre: 'Vidéo, pendant', fichier: 'docs/seance-09/9-video.html', section: '#pendant', minutes: 25,
     extras: [['Projection de la vidéo, prise de notes en même temps', 25]], horsBudgetLecture: true },
   { id: 'froid', titre: 'Vidéo, à froid et comparer', fichier: 'docs/seance-09/9-video.html', section: '#comparer', minutes: 5, maxMots: 150,
     cases: 8 },
-  { id: 'questions', titre: 'Vidéo, questions', fichier: 'docs/seance-09/9-video.html', section: '#questions', minutes: 10, maxMots: 100,
-    extras: [['Dépôt express (copier ou télécharger, déposer)', 1]] }
+  { id: 'questions', titre: 'Vidéo, questions', fichier: 'docs/seance-09/9-video.html', section: '#questions', minutes: 7, maxMots: 100,
+    extras: [['Dépôt express (envoyer ou télécharger)', 1]] },
+  { id: 'ouverture', titre: 'Pour aller plus loin', fichier: 'docs/seance-09/aller-plus-loin.html', minutes: 10, maxMots: 1100,
+    motsMinute: MOTS_MINUTE_OUVERTURE, extras: [['Lecture du tableau et du schéma', 0.8]] }
 ];
 
 // Phases avant la pause, et minutes disponibles avant et après (d’après data/schedule.json).
@@ -117,7 +120,7 @@ export function calculerBudgets() {
     const champsListe = (ph.id === 'cadre' ? identite : requis).concat(ph.id === 'froid' ? facultatifs.filter((b) => b.getAttribute('data-q') === 'n3') : []);
     const minutesChamps = champsListe.reduce((s, b) => s + dureeChamp(b), 0);
     const minutesLecture = ph.horsBudgetLecture ? 0
-      : (motsLecture + motsNotes + motsAussi) / MOTS_MINUTE + motsExtrait / (ph.motsMinuteExtrait || MOTS_MINUTE);
+      : (motsLecture + motsNotes + motsAussi) / (ph.motsMinute || MOTS_MINUTE) + motsExtrait / (ph.motsMinuteExtrait || MOTS_MINUTE);
     const minutesQCM = qcm.length * QCM_MIN;
     const minutesCases = (ph.cases || 0) * (5 / 60);
     const minutesExtras = (ph.extras || []).reduce((s, e) => s + e[1], 0);
@@ -150,7 +153,7 @@ export function ecrireMarkdown(resultats) {
   l.push('');
   l.push('Document produit par `node scripts/budget.mjs` à partir du HTML des pages. Ne pas le modifier à la main.');
   l.push('');
-  l.push('Hypothèses de calcul : lecture à 200 mots par minute, 130 pour l’extrait de l’Insee, plus dense ; 30 secondes par QCM ; champ court 1 minute, champ de rédaction 2 à 3 minutes (durées par champ dans `scripts/budget.mjs`) ; nom d’équipe et noms 20 secondes chacun ; case à cocher 5 secondes. Les questions bonus et les champs facultatifs ne sont pas comptés. Le texte compté est celui qui est visible par défaut : les aides repliées, les retours de QCM et les blocs fermés de la correction n’entrent pas dans la lecture.');
+  l.push('Hypothèses de calcul : lecture à 200 mots par minute, 130 pour l’extrait de l’Insee et 150 pour la page d’ouverture, plus denses ; 30 secondes par QCM ; champ court 1 minute, champ de rédaction 2 à 3 minutes (durées par champ dans `scripts/budget.mjs`) ; nom d’équipe et noms 20 secondes chacun ; case à cocher 5 secondes. Les questions bonus et les champs facultatifs ne sont pas comptés. Le texte compté est celui qui est visible par défaut : les aides repliées, les retours de QCM et les blocs fermés de la correction n’entrent pas dans la lecture.');
   l.push('');
   l.push('| Phase | Durée | Mots lus | Champs requis | QCM | Autres activités | Estimation | Marge | État |');
   l.push('|---|---|---|---|---|---|---|---|---|');

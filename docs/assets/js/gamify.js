@@ -18,14 +18,13 @@ export const QUETES = [
   {
     id: 'definir', numero: 1, label: 'Définir', morceau: 'Ce qui semble',
     phases: ['methode', 'chercher'], fin: 'chercher',
-    champs: ['a1', 'a2', 'a3', 'b1', 'b2'], radios: ['b0'],
-    conditionnels: [{ id: 'b4', si: ['b0', 'sophia'] }],
-    qcm: ['M1', 'M2', 'M3']
+    champs: ['a1', 'a2', 'b1'], radios: ['b0'],
+    qcm: ['M1', 'M2', 'M3', 'A3']
   },
   {
     id: 'citer', numero: 2, label: 'Citer', morceau: 'le plus personnel',
     phases: ['citer-lecture', 'citer-pratique', 'correction-definir'], fin: 'citer-pratique',
-    champs: ['c1', 'c2', 'c3'], qcm: ['C-Q1', 'C-Q2', 'C-Q4']
+    champs: ['c1', 'c3'], qcm: ['C-Q1', 'C-Q2', 'C-Q4']
   },
   {
     id: 'lire', numero: 3, label: 'Lire', morceau: 'est souvent',
@@ -36,23 +35,23 @@ export const QUETES = [
   {
     id: 'noter', numero: 4, label: 'Noter', morceau: 'le plus social.',
     phases: ['notes', 'video', 'froid', 'questions'], fin: 'questions',
-    champs: ['bp', 's1', 'g1'], conseils: 3, qcm: ['V4', 'V5', 'V6']
+    champs: ['bp', 's1'], conseils: 3, qcm: ['V4', 'V5', 'V6']
   }
 ];
 
 // Les trois temps d’écriture, pour le badge « Dans les temps ».
 export const ETAPES = [
-  { id: 'chercher', label: 'Chercher', fin: 'chercher', champs: ['a1', 'a2', 'a3', 'b1', 'b2'], radios: ['b0'], conditionnels: [{ id: 'b4', si: ['b0', 'sophia'] }] },
-  { id: 'pratique', label: 'Citer, pratique', fin: 'citer-pratique', champs: ['c1', 'c2', 'c3'], qcm: ['C-Q1', 'C-Q2', 'C-Q4'] },
+  { id: 'chercher', label: 'Chercher', fin: 'chercher', champs: ['a1', 'a2', 'b1'], radios: ['b0'], qcm: ['A3'] },
+  { id: 'pratique', label: 'Citer, pratique', fin: 'citer-pratique', champs: ['c1', 'c3'], qcm: ['C-Q1', 'C-Q2', 'C-Q4'] },
   { id: 'analyser', label: 'Analyser l’étude', fin: 'depot', champs: ['l1', 'l2', 'l3', 'l4', 'l5', 'l6'] }
 ];
 
-export const BONUS = ['a6', 'g2', 'g3', 'g4'];
+export const BONUS = ['a6', 'c2', 'g1', 'g2', 'g3', 'g4'];
 
 export const BADGES = [
-  { id: 'detective', nom: 'Détective de sources', icone: 'b-detective', critere: 'Qui parle et depuis quelle discipline, A2 et A3 renseignées.' },
+  { id: 'detective', nom: 'Détective de sources', icone: 'b-detective', critere: 'Qui parle et depuis quelle discipline, A2 renseignée et A3 trouvée.' },
   { id: 'citation', nom: 'Citation en or', icone: 'b-citation', critere: 'Les trois QCM de la page Citer justes du premier coup.' },
-  { id: 'biblio', nom: 'Bibliographe', icone: 'b-biblio', critere: 'C2 d’au moins 80 caractères.' },
+  { id: 'biblio', nom: 'Bibliographe', icone: 'b-biblio', critere: 'La référence bonus C2 rédigée, 60 caractères au moins.' },
   { id: 'lynx', nom: 'Œil de lynx', icone: 'b-oeil', critere: 'Les trois QCM sur les chiffres de l’écart justes du premier coup.' },
   { id: 'temps', nom: 'Dans les temps', icone: 'b-temps', critere: 'Chercher, Citer et Analyser terminées avant la fin de leur phase.' },
   { id: 'critique', nom: 'Esprit critique', icone: 'b-critique', critere: 'Au moins une question bonus répondue.' },
@@ -115,7 +114,7 @@ export function calculer(e = lire()) {
     if (ponctuelle && av.complet) { points += POINTS.queteALHeure; }
     return Object.assign({ def: q, terminee, ponctuelle }, av);
   });
-  ['citer', 'correction-definir', 'correction'].forEach((id) => { if (e.lu && e.lu[id]) { points += POINTS.lu; } });
+  ['citer', 'correction-definir', 'correction', 'ouverture'].forEach((id) => { if (e.lu && e.lu[id]) { points += POINTS.lu; } });
   return { points, quetes };
 }
 
@@ -123,9 +122,9 @@ function conditionsBadges(e, quetes) {
   const premierJuste = (id) => !!(e.qcm[id] && e.qcm[id].premierJuste);
   const etapesALHeure = ETAPES.every((et) => aLHeure(e.etapes[et.id], et.fin));
   return {
-    detective: long(e, 'a2') >= SEUIL_CHAMP && long(e, 'a3') >= SEUIL_CHAMP,
+    detective: long(e, 'a2') >= SEUIL_CHAMP && !!(e.qcm.A3 && e.qcm.A3.juste),
     citation: ['C-Q1', 'C-Q2', 'C-Q4'].every(premierJuste),
-    biblio: long(e, 'c2') >= 80,
+    biblio: long(e, 'c2') >= 60,
     lynx: ['F-Q1', 'F-Q2', 'F-Q3'].every(premierJuste),
     temps: etapesALHeure,
     critique: BONUS.some((id) => long(e, id) >= SEUIL_BONUS),

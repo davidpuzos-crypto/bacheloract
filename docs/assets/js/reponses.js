@@ -23,7 +23,7 @@ const LIMITE_JOUR = 250;
 const PAGES = {
   hub: 'Accueil', cadre: 'Cadre', methode: 'Méthode', chercher: 'Chercher', 'citer-lecture': 'Bien citer',
   'citer-pratique': 'Citer, pratique', 'correction-definir': 'Correction, définir et citer', pause: 'Pause', lire: 'Lire', correction: 'Correction de l’étude', notes: 'Conseils de notes',
-  video: 'Vidéo', fin: 'Bilan', accueil: 'Accueil du cours'
+  video: 'Vidéo', ouverture: 'Pour aller plus loin', fin: 'Bilan', accueil: 'Accueil du cours'
 };
 const SECTIONS = { '#lire': 'lecture', '#analyser': 'analyse', '#depot': 'Dépôt', '#pendant': 'pendant', '#comparer': 'à froid et comparer', '#questions': 'questions' };
 const INTERDITES = new Set(['__proto__', 'constructor', 'prototype']);

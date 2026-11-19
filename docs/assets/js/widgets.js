@@ -255,19 +255,42 @@ function carnetsDansLaPage() {
 }
 
 // ---------------------------------------------------------------- déroulé de la matinée (heures réelles)
+// Blocs du déroulé, pour le lire d’un coup d’œil.
+const BLOCS_DEROULE = [
+  ['Démarrage', ['cadre']],
+  ['Définir et citer', ['methode', 'chercher', 'citer-lecture', 'citer-pratique', 'correction-definir']],
+  ['L’étude de l’Insee', ['lire', 'pause', 'analyser', 'depot', 'correction']],
+  ['La vidéo et la prise de notes', ['notes', 'video', 'froid', 'questions']],
+  ['Pour finir', ['ouverture', 'fin']]
+];
+
 function deroules() {
   const tables = document.querySelectorAll('[data-deroule]');
   if (!tables.length) { return; }
   const rendre = () => {
     const s = statut();
+    const ligne = (p) => {
+      const enCours = s.phase && !s.avant && !s.apres && s.phase.id === p.id;
+      const classes = [enCours ? 'en-cours' : '', p.id === 'pause' ? 'pause' : ''].filter(Boolean).join(' ');
+      return '<tr' + (classes ? ' class="' + classes + '"' : '') + '><th scope="row" class="heure">' + heureMinute(p.debut) + '</th>'
+        + '<td><a href="' + urlSeance(p.page) + '">' + echapper(p.id === 'fin' ? 'Fin et bilan' : p.label) + '</a>'
+        + (enCours ? ' <span class="marqueur">en cours</span>' : '')
+        + (p.stop ? ' <span class="tag-stop">stop à ' + heureMinute(p.debut + p.duree) + '</span>' : '') + '</td>'
+        + '<td class="duree">' + (p.duree ? p.duree + '\u00a0min' : '') + '</td></tr>';
+    };
+    const html = [];
+    const vues = new Set();
+    BLOCS_DEROULE.forEach(([titre, ids]) => {
+      const ph = phases().filter((p) => ids.includes(p.id));
+      if (!ph.length) { return; }
+      const duree = ph.filter((p) => p.id !== 'pause').reduce((n, p) => n + p.duree, 0);
+      html.push('<tr class="groupe"><th colspan="2" scope="colgroup">' + echapper(titre) + '</th><td class="duree">' + (duree ? duree + '\u00a0min' : '') + '</td></tr>');
+      ph.forEach((p) => { vues.add(p.id); html.push(ligne(p)); });
+    });
+    phases().filter((p) => !vues.has(p.id)).forEach((p) => html.push(ligne(p)));
     tables.forEach((tb) => {
       const corps = tb.querySelector('tbody');
-      corps.innerHTML = phases().map((p) => {
-        const enCours = s.phase && !s.avant && !s.apres && s.phase.id === p.id;
-        const duree = p.duree ? p.duree + '\u00a0min' : '';
-        const arret = p.stop ? '<tr class="arret"><th scope="row" class="heure">' + heureMinute(p.debut + p.duree) + '</th><td></td><td>Stop. Fin de la phase ' + echapper(p.label) + '</td></tr>' : '';
-        return '<tr' + (enCours ? ' class="en-cours"' : '') + '><th scope="row" class="heure">' + heureMinute(p.debut) + '</th><td>' + duree + '</td><td><a href="' + urlSeance(p.page) + '">' + echapper(p.id === 'fin' ? 'Fin et bilan' : p.label) + '</a>' + (enCours ? ' <span class="marqueur">(en cours)</span>' : '') + '</td></tr>' + arret;
-      }).join('');
+      corps.innerHTML = html.join('');
       typographier(corps);
     });
   };

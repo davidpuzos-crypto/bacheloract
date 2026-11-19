@@ -12,6 +12,7 @@ import { typographier } from './typo.js';
 
 let barre = null;
 let texte = null;
+let detail = null;
 let lien = null;
 let dernier = '';
 let cible = null;
@@ -21,12 +22,12 @@ function questionDe(id) {
   return document.querySelector('.q[data-q="' + id + '"], fieldset.qcm[data-qcm="' + id + '"]');
 }
 
-function nomDe(el) {
+export function nomDe(el) {
   const q = el.querySelector('.qid');
   return q ? q.textContent.trim() : (el.dataset.q || el.dataset.qcm || '').toUpperCase();
 }
 
-function faite(el) {
+export function faite(el) {
   const e = lire();
   if (el.matches('fieldset.qcm')) {
     const r = e.qcm[el.dataset.qcm];
@@ -87,28 +88,34 @@ function mettreAJour() {
   const iPremier = liste.findIndex((q) => !faite(q));
   const nom = nomDe(el);
   let etat = '';
+  let suite = '';
   let classe = 'ok';
   if (iPremier < 0) {
-    etat = 'Tout est rempli, relisez vos réponses.';
+    etat = 'Tout est rempli.';
+    suite = 'Relisez vos réponses.';
   } else if (iPremier > iCible) {
     etat = 'Vous êtes en avance.';
   } else if (iPremier === iCible) {
     etat = 'Vous êtes dans les temps.';
   } else if (iCible - iPremier === 1) {
-    etat = 'Léger retard, ne restez pas bloqués sur ' + nomDe(liste[iPremier]) + '.';
+    etat = 'Léger retard.';
+    suite = 'Ne restez pas bloqués sur ' + nomDe(liste[iPremier]) + '.';
     classe = 'leger';
   } else {
-    etat = 'Vous avez du retard. Passez à ' + nom + ', vous reviendrez ensuite sur ce qui manque.';
+    etat = 'Vous avez du retard.';
+    suite = 'Passez à ' + nom + ', vous reviendrez ensuite sur ce qui manque.';
     classe = 'retard';
   }
   const phrase = 'À cette heure, vous devriez en être à la question ' + nom + '. ' + etat;
   marquer(el);
   barre.hidden = false;
   barre.dataset.etat = classe;
-  if (phrase !== dernier) {
-    dernier = phrase;
+  if (phrase + suite !== dernier) {
+    dernier = phrase + suite;
     texte.textContent = phrase;
+    detail.textContent = suite ? ' ' + suite : '';
     typographier(texte);
+    typographier(detail);
   }
 }
 
@@ -118,9 +125,10 @@ export function initRepere(espace) {
   barre = document.createElement('div');
   barre.className = 'repere-barre';
   barre.hidden = true;
-  barre.innerHTML = '<p><span class="repere-texte" role="status" aria-live="polite"></span> <a class="repere-lien" href="#">Aller à la question</a></p>';
+  barre.innerHTML = '<p><span role="status" aria-live="polite"><span class="repere-texte"></span><span class="repere-detail"></span></span> <a class="repere-lien" href="#">Aller à la question</a></p>';
   entete.append(barre);
   texte = barre.querySelector('.repere-texte');
+  detail = barre.querySelector('.repere-detail');
   lien = barre.querySelector('.repere-lien');
   lien.addEventListener('click', (ev) => {
     ev.preventDefault();
