@@ -29,13 +29,6 @@ for (const [chemin, temoins] of PAGES) {
   });
 }
 
-test('les deux corrections ont des mots de passe différents', async () => {
-  const a = motDePasseDefinir();
-  const b = motDePasse();
-  test.skip(!a || !b, 'Mots de passe inconnus (.env.local).');
-  expect(a).not.toBe(b);
-});
-
 test('correction de Définir et Citer : réponses proposées et conseils, juste après l’exercice', async ({ page }) => {
   const mdp = motDePasseDefinir();
   test.skip(!mdp, 'Mot de passe inconnu (CORRECTION_DEFINIR_PASSWORD ou .env.local).');

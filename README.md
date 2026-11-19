@@ -74,7 +74,7 @@ L’horloge suit l’heure de chaque appareil. Toutes les phases se calculent à
 
 ## Changer les mots de passe des corrections
 
-Il y a deux corrections, chacune avec son mot de passe : celle de Définir et Citer, à annoncer vers 9 h 40, et celle de l’étude de l’Insee, à annoncer après le dépôt, vers 11 h 07. Deux mots de passe différents, sinon la correction de l’étude serait lisible dès 9 h 40.
+Il y a deux corrections, chacune avec son mot de passe : celle de Définir et Citer, à annoncer vers 9 h 40, et celle de l’étude de l’Insee, à annoncer après le dépôt, vers 11 h 07. Vous pouvez prendre le même mot de passe pour les deux, mais la correction de l’étude est alors lisible dès 9 h 40.
 
 Il faut un ordinateur avec [Node.js](https://nodejs.org) (version 18 ou plus) et une copie du dépôt.
 
@@ -94,7 +94,7 @@ Il faut un ordinateur avec [Node.js](https://nodejs.org) (version 18 ou plus) et
    ```
 4. Publiez les fichiers `docs/seance-09/5b-correction-definir.html` et `docs/seance-09/7-correction.html` mis à jour (voir « Publier »).
 
-Des mots de passe provisoires ont été utilisés pour le premier chiffrement. Choisissez les vôtres avant la séance. Le jour même, annoncez chacun au bon moment, par exemple avec le bouton « Afficher en grand » de l’écran de projection (le mot de passe saisi là n’est enregistré nulle part).
+Les mots de passe ne sont écrits nulle part dans le dépôt. Le jour même, annoncez chacun au bon moment, par exemple avec le bouton « Afficher en grand » de l’écran de projection (le mot de passe saisi là n’est enregistré nulle part).
 
 ## Reconstruire
 
@@ -150,7 +150,11 @@ Rien à installer. Pendant la séance, chaque navigateur envoie les réponses de
 node scripts/code-enseignant.mjs
 ```
 
-Le nouveau code s’affiche une seule fois. Publiez ensuite `docs/data/config.json` (voir « Publier »). Changez de code entre deux séances, pas pendant : les réponses envoyées avant le changement ne seraient plus lisibles.
+Le nouveau code s’affiche une seule fois. Publiez ensuite `docs/data/config.json` (voir « Publier »). Changez de code entre deux séances, pas pendant : les réponses envoyées avant le changement ne seraient plus lisibles. Pour changer seulement le code en gardant les réponses déjà reçues lisibles, ajoutez l’ancien :
+
+```bash
+node scripts/code-enseignant.mjs "nouveau code" --ancien-code "code actuel"
+```
 
 **Avant la séance, depuis la salle.** Ouvrez une page de la séance, tapez un nom d’équipe et un nom, attendez une demi-minute, puis ouvrez la page « Réponses des équipes » avec votre code. L’équipe de test doit apparaître. Si rien n’arrive, le réseau de l’école bloque peut-être ntfy.sh : les équipes téléchargeront alors leur récapitulatif.
 
