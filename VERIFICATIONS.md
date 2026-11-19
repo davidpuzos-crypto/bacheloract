@@ -28,7 +28,7 @@ Contrôle fait avec `npm run liens` depuis l’environnement de construction. Un
 5. **Date de parution de l’Insee Focus n° 377.** Le site reprend « 26 février 2026 » de la v2 (page Lire, correction L1). Le PDF fourni indique seulement « Février 2026 ». Vérifiez la mention « Paru le » sur la page de l’Insee.
 6. **Vidéo.** Le PDF de la transcription n’a pas été fourni. Les QCM V4 à V6 et le bonus G2 (« un écart de 25,7 % en 2012 ») sont repris de la v2 sans nouvelle vérification. La transcription automatique déforme des passages : **revérifiez ces questions contre la vidéo, aux horodatages des chapitres.** La liste de sources de la description ne semble contenir aucune référence pour Pierre Bourdieu ni pour Catherine Vidal (à confirmer). L’attribution « artisan de sa propre domination » à Bourdieu n’est affichée nulle part sur le site.
 7. **Pourcentages de rétention** (20, 40, 60, 80 %) de la diapo 33. Sans source indiquée, ils ressemblent à la « pyramide de l’apprentissage ». Ils sont **masqués** (`afficherPourcentages: false` dans `docs/data/config.json`). La phrase « Écrire, c’est faire » n’apparaît qu’avec eux.
-8. **Intersectionnalité.** Volontairement pas abordée dans cette séance (choix de l’enseignant, qui préfère travailler la méthode). Le mot a été retiré du site, y compris du titre de la séance, devenu « Genre et pouvoir d’agir ».
+8. **Intersectionnalité.** Abordée seulement en ouverture, par dix minutes de lecture en fin de séance (page « Pour aller plus loin », voir le point 15). Le titre de la séance reste « Genre et pouvoir d’agir ».
 9. **Envoi des réponses à l’enseignant**, sans Google ni Moodle. Les réponses passent chiffrées par le relais public ntfy.sh (sans compte), et la page « Réponses des équipes » les déchiffre avec le code enseignant. Points à vérifier :
    1. **Depuis la salle**, avant la séance : une équipe de test doit apparaître sur la page « Réponses des équipes ». Le réseau de l’école peut bloquer ntfy.sh. Le protocole a été vérifié sur le vrai relais avec un sujet d’essai (envoi d’un morceau de 3,8 Ko, relecture identique, accès autorisé depuis une page web), et tout le parcours a été testé avec un faux relais local.
    2. **Limites du relais** pour un usage sans compte, lues sur ntfy.sh le 19 novembre 2026 : 250 messages par jour et une requête toutes les 5 secondes en moyenne (60 d’un coup), par adresse réseau, et conservation 12 heures. Une classe partage souvent la même adresse. Le site envoie donc peu (environ 15 messages par équipe et par séance), ce qui tient pour une quinzaine d’équipes. Ces limites peuvent changer : si le relais refuse, les équipes en sont prévenues et téléchargent leur récapitulatif.
@@ -50,6 +50,12 @@ Contrôle fait avec `npm run liens` depuis l’environnement de construction. Un
     - L5 : les phrases « Par ailleurs, cet écart de salaire « à emploi comparable »… » et « Or ces différences… ».
     - L6 : les deux passages qui emploient « genrée » et « genres ».
 14. **Questions sur Blidon** (page Chercher, A2 et A3). La citation sur la « géographie du genre » (Blidon, 2015) a été fournie par l’enseignant : comparez-la avec la page en ligne avant la séance. La correction indique que Marianne Blidon est une géographe française, d’après l’enseignant, et laisse en blanc la source que chaque équipe aura trouvée.
+15. **Page « Pour aller plus loin »** (approches intersectionnelles, dix minutes de lecture). À relire en entier avant la séance. D’où vient chaque élément :
+    - Les quatre chiffres du tableau viennent de la figure 2 de l’Insee Focus n° 377 (cadres 4 180 et 4 906 euros, ouvriers 1 850 et 2 096 euros). L’Insee n’emploie pas le mot « intersectionnalité », la page le dit.
+    - Les définitions et les références (Géoconfluences, Martin, Perrot et Johri, Schmoll, Gautier et Zancarini-Fournel, Lahdily, Crenshaw) sont celles fournies par l’enseignant. Les citations sont reprises mot pour mot. Les numéros de paragraphe (par. 17, 19, 24, 31, 52) viennent des ancres des liens Cairn fournis, à contrôler sur les articles. L’année 2025 pour le livre de Schmoll est celle affichée par Cairn.
+    - Les explications (femmes noires invisibles pour les luttes antiracistes et féministes, addition contre imbrication, outil à utiliser en contexte, débats sur la classe sociale et sur le militantisme) et les repères (Crenshaw, anthologie de 1982 et traduction de son titre, Kergoat et la « consubstantialité ») reprennent le support pédagogique fourni par l’enseignant, qui n’est pas cité sur la page, comme demandé.
+    - Ajouts de rédaction à valider : l’image du carrefour, la phrase « En sciences sociales, “race” ne désigne pas une réalité biologique, mais une catégorie produite par le racisme », et les trois courtes phrases de commentaire sous les définitions.
+    - Les liens vers Cairn et Géoconfluences répondent 403 depuis l’environnement de construction, comme les autres liens vers ces sites. À ouvrir dans un navigateur.
 
 ## 3. Coupes et écarts faits pour tenir les budgets de temps
 
@@ -59,17 +65,19 @@ Le cahier des charges demande de couper plutôt que d’allonger une phase. Le c
 
 Moins de temps pour définir, plus pour l’étude de l’Insee :
 
-- Définir et citer tiennent en 45 minutes, de 9 h 00 à 9 h 45, correction comprise (Chercher 16 minutes, Bien citer 5, Citer en pratique 11, correction 5).
-- La correction de Définir et Citer vient juste après l’exercice, de 9 h 40 à 9 h 45, avec son propre mot de passe.
-- Lecture de l’étude avant la pause, de 9 h 45 à 10 h 07, avec neuf questions à choix multiple qui suivent l’ordre du texte et renvoient chacune au passage où chercher.
-- Analyse après la pause, de 10 h 37 à 11 h 04 (L1 à L6), puis dépôt et correction de l’étude (8 minutes).
+- Définir et citer tiennent en 40 minutes, de 9 h 00 à 9 h 40, correction comprise (Chercher 14 minutes, Bien citer 4, Citer en pratique 9, correction 5).
+- La correction de Définir et Citer vient juste après l’exercice, de 9 h 35 à 9 h 40, avec son propre mot de passe.
+- Lecture de l’étude avant la pause, de 9 h 40 à 10 h 02, avec neuf questions à choix multiple qui suivent l’ordre du texte et renvoient chacune au passage où chercher.
+- Analyse après la pause, de 10 h 32 à 10 h 59 (L1 à L6), puis dépôt et correction de l’étude (8 minutes).
+- Dix minutes dégagées en fin de séance, de 11 h 50 à 12 h 00, pour la lecture « Pour aller plus loin ». Elles viennent de Chercher et Citer (5 minutes), du dépôt (1), des conseils de notes (1) et des questions sur la vidéo (3). Le temps consacré à l’étude de l’Insee n’a pas bougé.
 
 Questions retirées ou allégées pour que chaque phase tienne :
 
-- Chercher : l’ancienne A2 (quel paragraphe citer) est retirée. Deux questions demandées par l’enseignant la remplacent, A2 (qui parle, et dans quelle discipline) et A3 (le passage sur la géographie du genre ajoute-t-il une dimension propre à la géographie ?).
+- Chercher : l’ancienne A2 (quel paragraphe citer) est retirée. Deux questions demandées par l’enseignant la remplacent, A2 (qui parle, et dans quelle discipline) et A3 (quelle dimension ajoute le passage sur la géographie du genre ?). A3 est une question à choix, corrigée tout de suite. B2 (type de source de la seconde définition) et B4 (trace de l’usage de SophIA) sont retirées.
 - Méthode : le tableau « Ce qu’on vérifie » est retiré, la page dure 5 minutes.
-- Citer : le QCM C-Q5 est retiré, et la synthèse C3 demande deux ou trois phrases au lieu de trois ou quatre.
-- Vidéo : les QCM V7 et V8 sont retirés.
+- Citer : le QCM C-Q5 est retiré, et la synthèse C3 demande deux ou trois phrases au lieu de trois ou quatre. La bibliographie C2 devient un bonus, limité à la référence de la page de Géoconfluences. Le tableau des modèles APA du cours est replié.
+- Analyse de l’étude : L1, L5 et L6 demandent trois ou quatre phrases au lieu de quatre à six.
+- Vidéo : les QCM V7 et V8 sont retirés, G1 devient un bonus, et BP demande trois bonnes pratiques au lieu de quatre ou cinq.
 - Correction : les QCM K1 et K2 sont retirés.
 - Dépôt : la déclaration d’usage de l’IA est retirée du site (demande de l’enseignant).
 - Le mot « entrée » (au sens d’article de dictionnaire) est remplacé par « page » ou « article » partout.
@@ -99,9 +107,10 @@ Les huit cases à cocher portent des libellés courts tirés des conseils (« Re
 - **Corrections.** Deux pages chiffrées, chacune avec son mot de passe. Celle de Définir et Citer (`5b-correction-definir.html`) vient juste après l’exercice. Celle de l’étude (`7-correction.html`) vient après le dépôt. Chaque question montre la réponse de l’équipe, une réponse proposée et des conseils de méthode, visibles d’emblée. Le libellé « La forme attendue » remplace « Réponse proposée » pour A2, et « Un exemple » est gardé pour B1, B2, C1 et C2 comme dans la v2.
 - **Repère horaire.** Sur les pages de travail, une ligne sous le chrono dit à quelle question l’équipe devrait en être, si elle est dans les temps, en léger retard ou en retard, et mène à la question. Les repères sont dans `docs/data/schedule.json` (minute depuis le début de la phase, question) et peuvent être ajustés.
 - **Bouton « J’ai tout lu »** de la page « Bien citer » : +10 points, comme « J’ai lu la correction » (le montant n’était pas fixé).
-- **Quête Lire** : terminée quand les neuf QCM de lecture, L1 à L6 et un dépôt (copie, fichier ou envoi) sont faits.
-- **Badge « Détective de sources »** : A2 et A3 renseignées, c’est-à-dire qui parle et depuis quelle discipline.
-- **Badge « Dans les temps »** : Chercher avant 9 h 24, Citer avant 9 h 40, Analyser avant 11 h 07 (fin du dépôt).
+- **Quête Lire** : terminée quand les neuf QCM de lecture, L1 à L6 et un dépôt (copie, fichier ou envoi) sont faits. La lecture « Pour aller plus loin » n’entre dans aucune quête, elle rapporte seulement quelques points.
+- **Badge « Détective de sources »** : A2 renseignée et A3 trouvée, c’est-à-dire qui parle et depuis quelle discipline.
+- **Badge « Dans les temps »** : Chercher avant 9 h 22, Citer avant 9 h 35, Analyser avant 11 h 01 (fin du dépôt).
+- **Mise en page** : une seule largeur de colonne pour tous les blocs, une colonne « Sur cette page » à droite sur grand écran (sommaire, questions faites, créneau prévu), des réponses de QCM dont toute la ligne se clique, un déroulé d’accueil regroupé en cinq blocs, et un en-tête plus compact sur téléphone. Deux débordements en largeur ont été corrigés (barre de lecture, champ « autre texte » sur téléphone).
 - **Jeu sans grades** : les niveaux (Stagiaire, Sociologue…) sont supprimés. Le carnet affiche les points d’enquête et les quêtes résolues.
 - **Écrans plein cadre** : le grand mot peut changer selon l’étape (« Reprise » à la fin de la pause, « Vidéo » avant la vidéo, « Stop » ailleurs), par le champ `stopMot` de `schedule.json`.
 - **Écran STOP** : il s’affiche d’abord en bandeau pendant 60 secondes, puis en plein écran. Il ne s’affiche pas si la page ouverte est déjà la suivante, ou plus loin dans le déroulé.
@@ -116,6 +125,6 @@ Les huit cases à cocher portent des libellés courts tirés des conseils (« Re
 ## 5. Publication
 
 - Le site est publié par GitHub Pages depuis la branche `main` : `https://davidpuzos-crypto.github.io/bacheloract/` (la racine redirige vers `docs/`). Chaque mise à jour est préparée sur la branche `claude/elegant-planck-ir8tii`, puis fusionnée.
-- Le même mot, choisi par l’enseignant, ouvre les deux corrections et la page « Réponses des équipes ». Il n’est écrit nulle part dans le dépôt. Un mot court se devine plus facilement, et avec un même mot de passe la correction de l’étude est lisible dès 9 h 40 : à changer si besoin (README).
+- Le même mot, choisi par l’enseignant, ouvre les deux corrections et la page « Réponses des équipes ». Il n’est écrit nulle part dans le dépôt. Un mot court se devine plus facilement, et avec un même mot de passe la correction de l’étude est lisible dès 9 h 35 : à changer si besoin (README).
 - Testez l’envoi des réponses depuis la salle (README, section « Voir les réponses en direct »). Il n’y a rien à installer.
 - Après chaque publication, vérifiez sur l’adresse publique la page chiffrée, le téléchargement du récapitulatif et l’horloge.

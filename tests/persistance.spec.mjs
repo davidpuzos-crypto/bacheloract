@@ -5,7 +5,7 @@ import { ouvrir, saisir, etat, LONG } from './aides.mjs';
 
 const CHAMPS = [
   ['seance-09/1-cadre.html', 'equipe'],
-  ['seance-09/3-chercher.html', 'b2'],
+  ['seance-09/3-chercher.html', 'b1'],
   ['seance-09/5-citer-pratique.html', 'c2'],
   ['seance-09/6-lire.html', 'l3'],
   ['seance-09/6-lire.html', 'l5'],
@@ -26,10 +26,10 @@ for (const [p, id] of CHAMPS) {
 
 test('écriture immédiate à la fermeture de l’onglet', async ({ page }) => {
   await ouvrir(page, 'seance-09/3-chercher.html', '09:20');
-  await page.fill('[data-id="a3"]', LONG);
+  await page.fill('[data-id="a2"]', LONG);
   await page.evaluate(() => window.dispatchEvent(new Event('pagehide')));
   const e = await etat(page);
-  expect(e.champs.a3).toBe(LONG);
+  expect(e.champs.a2).toBe(LONG);
 });
 
 test('effacement en deux temps, réglages conservés', async ({ page }) => {

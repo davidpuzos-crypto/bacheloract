@@ -5,33 +5,33 @@ import { ouvrir, CLE } from './aides.mjs';
 
 const T = 'Réponse complète de test, bien plus longue que quarante caractères au total.';
 const champs = {};
-['a1', 'a2', 'a3', 'b1', 'b2', 'c1', 'c2', 'c3', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'bp', 's1', 'g1', 'a6', 'g2', 'g3', 'g4']
+['a1', 'a2', 'b1', 'c1', 'c2', 'c3', 'l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'bp', 's1', 'g1', 'a6', 'g2', 'g3', 'g4']
   .forEach((id) => { champs[id] = T + ' ' + T; });
 champs.equipe = 'Les Curieuses';
 champs.nom1 = 'Camille Martin';
 champs.nom2 = 'Sacha Durand';
 const juste = { premier: 'x', dernier: 'x', essais: 1, juste: true, premierJuste: true };
 const qcm = {};
-['M1', 'M2', 'M3', 'C-Q1', 'C-Q2', 'C-Q4', 'L-Q1', 'L-Q2', 'R1', 'F-Q1', 'F-Q2', 'R2', 'R3', 'F-Q3', 'R4', 'V4', 'V5', 'V6']
+['M1', 'M2', 'M3', 'A3', 'C-Q1', 'C-Q2', 'C-Q4', 'L-Q1', 'L-Q2', 'R1', 'F-Q1', 'F-Q2', 'R2', 'R3', 'F-Q3', 'R4', 'V4', 'V5', 'V6']
   .forEach((id) => { qcm[id] = Object.assign({}, juste); });
 
 const ETAT_COMPLET = {
   v: 1, champs, radios: { b0: 'ses', icone: 'plume' }, cases: { tips_vus: ['1', '2', '3'] }, qcm,
-  temps: {}, lu: { citer: 1, 'correction-definir': 1, correction: 1 }, conseils: [1, 4, 5],
-  quetes: { definir: { fin: 20 }, citer: { fin: 40 }, lire: { fin: 130 }, noter: { fin: 175 } },
-  etapes: { chercher: { fin: 20 }, pratique: { fin: 40 }, analyser: { fin: 115 } },
+  temps: {}, lu: { citer: 1, 'correction-definir': 1, correction: 1, ouverture: 1 }, conseils: [1, 4, 5],
+  quetes: { definir: { fin: 20 }, citer: { fin: 34 }, lire: { fin: 125 }, noter: { fin: 168 } },
+  etapes: { chercher: { fin: 20 }, pratique: { fin: 34 }, analyser: { fin: 115 } },
   badges: {}, arrets: {}, depots: { parcours: { le: 1, via: 'copie' } }, drapeau: 'ok',
   options: { sobre: false, theme: 'auto', horloge: {} }
 };
 
-test('enquête complète : 430 points, huit badges, phrase entière', async ({ page }) => {
+test('enquête complète : 435 points, huit badges, phrase entière', async ({ page }) => {
   await page.addInitScript(([cle, e]) => { if (!localStorage.getItem(cle)) { localStorage.setItem(cle, JSON.stringify(e)); } }, [CLE, ETAT_COMPLET]);
   await ouvrir(page, 'seance-09/10-fin.html', '12:05');
-  // 17 champs × 10 + 18 QCM × 5 + 4 bonus × 15 + 4 quêtes à l’heure × 20
-  // + 3 lectures × 10
-  await expect(page.locator('.pastille-equipe .points')).toHaveText(/^430\s*pts$/);
+  // 13 champs × 10 + 19 QCM × 5 + 6 bonus × 15 + 4 quêtes à l’heure × 20
+  // + 4 lectures × 10
+  await expect(page.locator('.pastille-equipe .points')).toHaveText(/^435\s*pts$/);
   const carnet = page.locator('main [data-carnet]');
-  await expect(carnet.locator('.score .valeur')).toHaveText('430');
+  await expect(carnet.locator('.score .valeur')).toHaveText('435');
   await expect(carnet.locator('.score .niveau')).toHaveCount(0);
   await expect(carnet.locator('.score')).toContainText('4 quêtes résolues sur 4');
   await expect(carnet.locator('.badge[data-obtenu="1"]')).toHaveCount(8);
@@ -88,7 +88,7 @@ test('mode sobre : points comptés, badges et animations masqués', async ({ pag
   await expect(page.locator('html')).toHaveAttribute('data-sobre', '1');
   await page.keyboard.press('Escape');
   await expect(page.locator('main [data-carnet] .badges')).toBeHidden();
-  await expect(page.locator('.pastille-equipe .points')).toHaveText(/^430\s*pts$/);
+  await expect(page.locator('.pastille-equipe .points')).toHaveText(/^435\s*pts$/);
 });
 
 test('drapeau d’équipe : texte et icône, pas seulement la couleur', async ({ page }) => {

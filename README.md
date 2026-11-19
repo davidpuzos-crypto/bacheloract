@@ -18,7 +18,7 @@ Le site est statique (HTML, CSS, JavaScript sans framework). Il est publié par 
 | `docs-internes/budget-temps.md` | Le calcul du temps nécessaire à chaque phase, page par page. |
 | `VERIFICATIONS.md` | Tout ce qui reste à vérifier avant la séance, et les coupes faites. |
 
-Les pages élèves sont, dans l’ordre : `index.html` (accueil de la séance), `1-cadre`, `2-methode`, `3-chercher`, `4-citer-lecture`, `5-citer-pratique`, `5b-correction-definir` (chiffrée), `6-lire` (lecture avant la pause, analyse après, puis dépôt), `pause`, `7-correction` (chiffrée), `8-notes`, `9-video`, `10-fin`. Côté enseignant : `prof/reponses.html` (les réponses des équipes en direct), `prof/projecteur.html` (à projeter) et `prof/deroule.html` (feuille de route).
+Les pages élèves sont, dans l’ordre : `index.html` (accueil de la séance), `1-cadre`, `2-methode`, `3-chercher`, `4-citer-lecture`, `5-citer-pratique`, `5b-correction-definir` (chiffrée), `6-lire` (lecture avant la pause, analyse après, puis dépôt), `pause`, `7-correction` (chiffrée), `8-notes`, `9-video`, `aller-plus-loin` (lecture d’ouverture), `10-fin`. Côté enseignant : `prof/reponses.html` (les réponses des équipes en direct), `prof/projecteur.html` (à projeter) et `prof/deroule.html` (feuille de route).
 
 ## Le déroulé de la séance
 
@@ -28,21 +28,22 @@ Pour un départ à 9 h 00. Le détail, avec ce qu’il faut dire à chaque phase
 |---|---|---|
 | 9 h 00 | 3 min | Cadre |
 | 9 h 03 | 5 min | Méthode |
-| 9 h 08 | 16 min | Chercher une définition du genre, et qui la donne |
-| 9 h 24 | 5 min | Bien citer, le cours |
-| 9 h 29 | 11 min | Citer, la pratique |
-| 9 h 40 | 5 min | Correction de Définir et Citer (premier mot de passe) |
-| 9 h 45 | 22 min | Lire l’étude de l’Insee, avec neuf questions qui obligent à lire |
-| 10 h 07 | 30 min | Pause |
-| 10 h 37 | 27 min | Analyser l’étude, question par question (L1 à L6) |
-| 11 h 04 | 3 min | Dépôt |
-| 11 h 07 | 8 min | Correction de l’étude (second mot de passe) |
-| 11 h 15 | 5 min | Conseils de prise de notes |
-| 11 h 20 | 25 min | Vidéo |
-| 11 h 45 | 5 min | Notes à froid, comparaison en équipe |
-| 11 h 50 | 10 min | Questions sur la vidéo, dépôt express |
+| 9 h 08 | 14 min | Chercher une définition du genre, et qui la donne |
+| 9 h 22 | 4 min | Bien citer, le cours |
+| 9 h 26 | 9 min | Citer, la pratique |
+| 9 h 35 | 5 min | Correction de Définir et Citer (premier mot de passe) |
+| 9 h 40 | 22 min | Lire l’étude de l’Insee, avec neuf questions qui obligent à lire |
+| 10 h 02 | 30 min | Pause |
+| 10 h 32 | 27 min | Analyser l’étude, question par question (L1 à L6) |
+| 10 h 59 | 2 min | Dépôt |
+| 11 h 01 | 8 min | Correction de l’étude (second mot de passe) |
+| 11 h 09 | 4 min | Conseils de prise de notes |
+| 11 h 13 | 25 min | Vidéo |
+| 11 h 38 | 5 min | Notes à froid, comparaison en équipe |
+| 11 h 43 | 7 min | Questions sur la vidéo, dépôt express |
+| 11 h 50 | 10 min | Pour aller plus loin, lecture sur les approches intersectionnelles |
 
-Définir et citer tiennent en 45 minutes, correction comprise. Sur les pages de travail, une ligne sous le chrono indique la question où l’équipe devrait en être à cette heure (repères réglables dans `docs/data/schedule.json`). Le temps nécessaire à chaque phase est calculé page par page dans `docs-internes/budget-temps.md`.
+Définir et citer tiennent en 40 minutes, correction comprise. Les dix dernières minutes sont une lecture d’ouverture, « Pour aller plus loin », accessible aussi à tout moment depuis le menu. Sur les pages de travail, une ligne sous le chrono indique la question où l’équipe devrait en être à cette heure (repères réglables dans `docs/data/schedule.json`). Le temps nécessaire à chaque phase est calculé page par page dans `docs-internes/budget-temps.md`.
 
 ## Modifier une question ou un texte
 
@@ -74,7 +75,7 @@ L’horloge suit l’heure de chaque appareil. Toutes les phases se calculent à
 
 ## Changer les mots de passe des corrections
 
-Il y a deux corrections, chacune avec son mot de passe : celle de Définir et Citer, à annoncer vers 9 h 40, et celle de l’étude de l’Insee, à annoncer après le dépôt, vers 11 h 07. Vous pouvez prendre le même mot de passe pour les deux, mais la correction de l’étude est alors lisible dès 9 h 40.
+Il y a deux corrections, chacune avec son mot de passe : celle de Définir et Citer, à annoncer vers 9 h 35, et celle de l’étude de l’Insee, à annoncer après le dépôt, vers 11 h 01. Vous pouvez prendre le même mot de passe pour les deux, mais la correction de l’étude est alors lisible dès 9 h 35.
 
 Il faut un ordinateur avec [Node.js](https://nodejs.org) (version 18 ou plus) et une copie du dépôt.
 
@@ -180,6 +181,7 @@ node scripts/code-enseignant.mjs "nouveau code" --ancien-code "code actuel"
 - **Horloge** : les phases, les comptes à rebours et les écrans STOP viennent de `schedule.json`. À chaque point d’arrêt, un bandeau prévient pendant 60 secondes, puis un écran plein cadre propose un seul bouton vers la page suivante. Les réponses sont conservées, et les pages précédentes restent accessibles ensuite.
 - **Corrections** : chaque question est affichée avec la réponse de l’équipe, une réponse proposée et des conseils de méthode. Dans la correction de l’étude, « Voir le passage » surligne le passage de l’étude qui justifie la réponse.
 - **Repère horaire** : sur les pages de travail, une ligne sous le chrono dit à quelle question l’équipe devrait en être, si elle est dans les temps, et mène à la question.
+- **Mise en page** : tous les blocs d’une page partagent la même colonne. Sur grand écran, une colonne « Sur cette page » affiche à droite le sommaire, les questions faites ou à faire et le créneau prévu. Les pages qui occupent toute la largeur (l’étude et ses questions, la feuille de notes) n’en ont pas.
 - **Dépôt** : le bouton « Envoyer à l’enseignant » envoie tout ce qui n’est pas encore parti et signale que le dépôt est fait. Le récapitulatif peut aussi être téléchargé (`s09_<equipe>_parcours.txt`, et `s09_<equipe>_video.txt` pour la vidéo) ou copié, en secours.
 - **Jeu** : points d’enquête, quatre quêtes, huit badges, anneaux de compétences et phrase mystère. Les points ne sont pas une note, il n’y a ni niveau ni classement. Le mode sobre (menu) masque les animations et les badges. Les animations sont coupées si l’appareil demande moins de mouvement.
 - **Accessibilité** : navigation au clavier, retours de QCM annoncés aux lecteurs d’écran, contrastes vérifiés en mode sombre et clair. Les tests incluent un audit axe-core sur chaque page, et Lighthouse donne 100 en accessibilité sur chaque page.
