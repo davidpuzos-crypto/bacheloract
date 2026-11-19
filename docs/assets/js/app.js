@@ -12,6 +12,7 @@ import { initJeu } from './gamify.js';
 import { initRecap } from './recap.js';
 import { initWidgets } from './widgets.js';
 import { initCollecte } from './collect.js';
+import { initIndices } from './indices.js';
 
 async function demarrer() {
   const corps = document.body;
@@ -28,6 +29,7 @@ async function demarrer() {
   initJeu();
   initNav(page, { espace });
   initWidgets();
+  initIndices();
   initRecap();
   await initCollecte(espace, surChangement);
   document.documentElement.classList.add('js-pret');

@@ -102,7 +102,7 @@ function entete(type) {
   lignes.push('Récapitulatif généré le ' + new Date().toLocaleString('fr-FR'));
   lignes.push('Temps passé par page, en minutes. ' + src.temps.map(([id, lib]) => lib + ' ' + minutes(e.temps[id])).join(', ') + '.');
   const badges = BADGES.filter((b) => e.badges[b.id]).map((b) => b.nom);
-  lignes.push('Points d’expérience. ' + res.points + ', niveau ' + res.niveau.nom + '. Badges. ' + (badges.length ? badges.join(', ') : 'aucun pour l’instant') + '.');
+  lignes.push('Points d’enquête. ' + res.points + '. Badges. ' + (badges.length ? badges.join(', ') : 'aucun pour l’instant') + '.');
   lignes.push('Les points ne sont pas une note.');
   return lignes;
 }
@@ -267,7 +267,6 @@ export async function catalogue() {
       });
     });
   }
-  ['K1', 'K2'].forEach((k) => sortie.push({ type: 'qcm', cle: k, id: k, section: 'Correction', enonce: 'Question de contrôle de la correction (texte dans la page chiffrée).', options: {} }));
   return sortie;
 }
 

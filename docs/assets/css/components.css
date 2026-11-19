@@ -420,6 +420,12 @@ details.aide p { margin: 0.5rem 0 0; color: var(--texte-doux); max-width: 60ch; 
 .omis { color: var(--texte-doux); text-align: center; margin: 0.8rem 0; letter-spacing: 0.1em; }
 .doc .note-extrait { color: var(--texte-doux); font-size: 0.86rem; margin-top: 1.2em; }
 .colonne-questions { min-width: 0; }
+.vers-passage-ligne { margin: 10px 0 0; font-family: var(--police-ui); font-size: 0.9rem; }
+.statut-lecture { font-family: var(--police-ui); font-weight: 700; color: var(--texte-doux); margin: 0 0 1rem; }
+.statut-lecture:empty { display: none; }
+.passage-eclaire { animation: eclaire 2.2s ease-out; border-radius: 3px; }
+@keyframes eclaire { 0%, 35% { background: var(--surligneur); box-shadow: 0 0 0 6px var(--surligneur); } 100% { background: transparent; box-shadow: 0 0 0 6px transparent; } }
+@media (prefers-reduced-motion: reduce) { .passage-eclaire { animation: none; outline: 3px solid var(--surligneur); } }
 @media (min-width: 1040px) {
   .lecture-split { grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr); align-items: start; }
   .doc {
@@ -563,7 +569,9 @@ textarea.recap { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, m
   letter-spacing: -0.03em;
   color: var(--accent);
   margin-bottom: 0.25em;
+  text-transform: uppercase;
 }
+.stop-mot.long { font-size: clamp(3rem, 12.5vw, 8.5rem); }
 .stop-texte { font-size: clamp(1.25rem, 3vw, 1.9rem); font-weight: 700; line-height: 1.35; margin: 0 0 1.4em; color: var(--texte); }
 .stop-heure { display: block; color: var(--texte-doux); font-size: 1rem; font-weight: 600; margin-bottom: 1.6em; font-variant-numeric: tabular-nums; }
 .stop-ecran .btn { font-size: 1.2rem; padding: 1rem 1.8rem; }

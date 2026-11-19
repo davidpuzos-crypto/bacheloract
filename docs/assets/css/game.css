@@ -172,3 +172,71 @@ html[data-sobre="1"] .barre-niveau span { animation: none !important; transition
   .badges { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .anneaux { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* Chasse aux indices (correction de l’étude de l’Insee) */
+.chasse .doc .z[role="button"] { cursor: pointer; border-radius: 2px; transition: background-color 0.2s ease; }
+.chasse .doc .z[role="button"]:hover { background: var(--accent-doux); }
+.chasse .doc .z[role="button"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.chasse .doc .indice-pose { background: var(--surligneur); box-shadow: inset 0 -2px 0 var(--accent); }
+.chasse .doc .indice-pose::after {
+  content: attr(data-etiquette);
+  font-family: var(--police-ui);
+  font-weight: 800;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  background: var(--accent);
+  color: var(--accent-texte);
+  padding: 0 0.35em;
+  border-radius: 3px;
+  margin-left: 0.3em;
+  vertical-align: 0.15em;
+}
+.chasse .doc .indice-rate { background: var(--erreur-fond); animation: secousse 0.35s ease; }
+@keyframes secousse { 0%, 100% { translate: 0 0; } 25% { translate: -3px 0; } 75% { translate: 3px 0; } }
+.consigne-chasse {
+  position: sticky;
+  top: -20px;
+  z-index: 2;
+  margin: -20px -22px 14px;
+  padding: 12px 22px;
+  background: var(--accent);
+  color: var(--accent-texte);
+  font-family: var(--police-ui);
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+.cartes-indices { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.carte-indice {
+  padding: 14px 16px;
+  border: 1px solid var(--trait);
+  border-left: 4px solid var(--trait-fort);
+  border-radius: var(--rayon);
+  background: var(--surface);
+  font-family: var(--police-ui);
+}
+.carte-indice[data-etat="actif"] { border-color: var(--accent); border-left-color: var(--accent); box-shadow: var(--ombre); }
+.carte-indice[data-etat="trouve"] { border-left-color: var(--ok); }
+.carte-indice[data-etat="montre"] { border-left-color: var(--trait-fort); }
+.tete-indice { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; margin: 0 0 6px; }
+.titre-indice { font-weight: 800; }
+.etat-indice { margin-left: auto; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--texte-doux); }
+.carte-indice[data-etat="actif"] .etat-indice { color: var(--accent); }
+.carte-indice[data-etat="trouve"] .etat-indice { color: var(--ok); }
+.carte-indice[data-etat="trouve"] .etat-indice::before { content: "✓ "; }
+.question-indice { margin: 0 0 6px; font-family: var(--police-texte); font-size: 1.02rem; }
+.aide-indice { margin: 0 0 6px; color: var(--alerte); font-weight: 600; font-size: 0.92rem; }
+.carte-indice .rangee-boutons { margin: 6px 0 0; }
+.carte-indice .corrige { margin-top: 8px; }
+.carte-indice .modele { font-family: var(--police-texte); }
+.detail-indice { margin: 0.7rem 0; padding: 8px 12px; border-radius: var(--rayon); background: var(--accent-doux); font-size: 0.92rem; }
+.consigne-chasse p { margin: 0; }
+.annonce-chasse { font-weight: 600; opacity: 0.92; }
+.annonce-chasse:not(:empty) { margin-top: 4px !important; }
+.chasse .doc:focus { outline: none; }
+.chasse .doc:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.partie-definir { margin-top: 3.2rem; }
+@media (max-width: 1039px) {
+  .consigne-chasse { top: var(--haut-consigne, var(--entete-h)); }
+}
+@media (prefers-reduced-motion: reduce) { .chasse .doc .indice-rate { animation: none; } }

@@ -5,7 +5,7 @@ import { ouvrir, saisir, etat, LONG } from './aides.mjs';
 
 const CHAMPS = [
   ['seance-09/1-cadre.html', 'equipe'],
-  ['seance-09/3-chercher.html', 'a2'],
+  ['seance-09/3-chercher.html', 'b2'],
   ['seance-09/5-citer-pratique.html', 'c2'],
   ['seance-09/6-lire.html', 'l3'],
   ['seance-09/6-lire.html', 'verif'],

@@ -1,6 +1,6 @@
 // 1. Navigation complète du hub au bilan, état conservé d’une page à l’autre.
 import { test, expect } from '@playwright/test';
-import { ouvrir, saisir, etat, LONG } from './aides.mjs';
+import { ouvrir, saisir, etat, LONG, PROGRAMME } from './aides.mjs';
 
 test('parcours du hub au bilan avec un état partagé', async ({ page }) => {
   const erreurs = [];
@@ -29,8 +29,9 @@ test('parcours du hub au bilan avec un état partagé', async ({ page }) => {
   const suite = [
     ['Passer à la lecture', /4-citer-lecture\.html/],
     ['Passer à la pratique', /5-citer-pratique\.html/],
+    ['Ouvrir l’étude de l’Insee', /6-lire\.html/],
     ['Voir la pause', /pause\.html/],
-    ['Passer à la lecture de l’étude', /6-lire\.html/],
+    ['Analyser l’étude', /6-lire\.html#analyser/],
     ['Ouvrir la correction', /7-correction\.html/],
     ['Passer aux conseils de prise de notes', /8-notes\.html/],
     ['Ouvrir la feuille de notes', /9-video\.html/],
@@ -66,7 +67,7 @@ test('chaque page affiche l’en-tête partagé et le menu des pages', async ({ 
     await expect(page.locator('.entete .phase-nom')).toHaveText('Chercher');
     await page.click('.bouton-menu');
     await expect(page.locator('#tiroir-menu')).toBeVisible();
-    await expect(page.locator('#tiroir-menu .menu-pages li')).toHaveCount(15);
+    await expect(page.locator('#tiroir-menu .menu-pages li')).toHaveCount(PROGRAMME.phases.length + 1);
     await expect(page.locator('#tiroir-menu .menu-pages li.en-cours')).toHaveCount(1);
     await page.keyboard.press('Escape');
     await expect(page.locator('#tiroir-menu')).toBeHidden();

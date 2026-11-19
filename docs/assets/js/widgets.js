@@ -343,6 +343,48 @@ function toutOuvrir() {
   });
 }
 
+// ---------------------------------------------------------------- « Voir le passage » et suivi de la lecture (lire)
+// Le lien fait défiler le document jusqu’au passage, sans changer l’adresse
+// de la page, et l’éclaire un instant. Sur grand écran, seul le document
+// défile : la question reste sous les yeux.
+function versPassages() {
+  const doux = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('a.vers-passage').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      const cible = document.getElementById((a.getAttribute('href') || '').slice(1));
+      if (!cible) { return; }
+      e.preventDefault();
+      const doc = cible.closest('.doc');
+      const defile = doc && doc.scrollHeight > doc.clientHeight + 1 && getComputedStyle(doc).overflowY !== 'visible';
+      if (defile) {
+        const haut = cible.getBoundingClientRect().top - doc.getBoundingClientRect().top + doc.scrollTop - 12;
+        doc.scrollTo({ top: Math.max(0, haut), behavior: doux ? 'smooth' : 'auto' });
+      } else {
+        cible.scrollIntoView({ block: 'start', behavior: doux ? 'smooth' : 'auto' });
+      }
+      cible.classList.remove('passage-eclaire');
+      void cible.offsetWidth;
+      cible.classList.add('passage-eclaire');
+      setTimeout(() => cible.classList.remove('passage-eclaire'), 2400);
+    });
+  });
+  const statutEl = document.querySelector('[data-statut-lecture]');
+  if (!statutEl) { return; }
+  const section = statutEl.closest('section') || document;
+  const ids = [...section.querySelectorAll('fieldset.qcm[data-qcm]')].map((f) => f.dataset.qcm);
+  const maj = () => {
+    const q = lire().qcm || {};
+    const faites = ids.filter((id) => q[id] && q[id].dernier).length;
+    const justes = ids.filter((id) => q[id] && q[id].dernier && q[id].juste).length;
+    statutEl.textContent = faites === ids.length
+      ? 'Les ' + ids.length + ' questions de lecture sont traitées, dont ' + justes + ' avec la bonne réponse trouvée. Avant la pause, relisez ce qui vous a fait hésiter.'
+      : faites + ' question' + (faites > 1 ? 's' : '') + ' de lecture sur ' + ids.length + ' traitée' + (faites > 1 ? 's' : '') + '.';
+    typographier(statutEl);
+  };
+  surChangement(maj);
+  maj();
+}
+
 // ---------------------------------------------------------------- vos réponses dans la correction
 function vosReponses() {
   document.querySelectorAll('[data-votre-reponse]').forEach((el) => {
@@ -371,6 +413,7 @@ export function initWidgets() {
   heuresDansLeTexte();
   toutOuvrir();
   vosReponses();
+  versPassages();
 }
 
 export { fichierDe };

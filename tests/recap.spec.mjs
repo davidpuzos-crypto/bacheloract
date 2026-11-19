@@ -5,7 +5,8 @@ import { ouvrir, saisir, etat, LONG } from './aides.mjs';
 
 test('récapitulatif du parcours', async ({ page, context }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
-  await ouvrir(page, 'seance-09/1-cadre.html', '10:40');
+  // Avant le premier point d’arrêt, toutes les pages restent accessibles.
+  await ouvrir(page, 'seance-09/1-cadre.html', '09:10');
   await saisir(page, 'equipe', 'Les Curieuses');
   await saisir(page, 'nom1', 'Camille Martin');
   await saisir(page, 'nom2', 'Sacha Durand');
@@ -30,7 +31,8 @@ test('récapitulatif du parcours', async ({ page, context }) => {
   expect(texte).toContain('Équipe. Les Curieuses');
   expect(texte).toContain('Binôme. Camille Martin et Sacha Durand');
   expect(texte).toMatch(/Temps passé par page, en minutes\./);
-  expect(texte).toMatch(/Points d’expérience\. \d+, niveau /);
+  expect(texte).toMatch(/Points d’enquête\. \d+\. Badges\. /);
+  expect(texte).not.toMatch(/niveau|Stagiaire/i);
   expect(texte).toContain('Réponse. Citation A1 de test, assez longue pour compter.');
   expect(texte).toContain('B4. Vous avez utilisé SophIA.');
   expect(texte).toContain('A6 (bonus). Bonus facultatif.');
@@ -40,7 +42,7 @@ test('récapitulatif du parcours', async ({ page, context }) => {
   expect(texte.indexOf('A1.')).toBeLessThan(texte.indexOf('C1.'));
   expect(texte.indexOf('C1.')).toBeLessThan(texte.indexOf('L1.'));
   // Manques signalés
-  expect(texte).toMatch(/Il manque encore .*A2/);
+  expect(texte).toMatch(/Il manque encore .*B1/);
   expect(texte).toContain('Réponse. (pas de réponse)');
   // Détail des QCM et déclaration
   expect(texte).toContain('DÉTAIL DES QUESTIONS À CHOIX MULTIPLE');

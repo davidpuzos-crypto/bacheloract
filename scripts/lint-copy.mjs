@@ -118,7 +118,7 @@ function controlerDonnees(erreur) {
   const p = path.join(DOCS, 'data', 'schedule.json');
   const d = JSON.parse(fs.readFileSync(p, 'utf8'));
   for (const ph of d.phases) {
-    for (const k of ['label', 'stopTexte', 'stopBouton']) {
+    for (const k of ['label', 'stopMot', 'stopTexte', 'stopBouton']) {
       const v = ph[k];
       if (!v) { continue; }
       if (/'/.test(v)) { erreur('docs/data/schedule.json', 'apostrophe droite (' + ph.id + '.' + k + ')', v); }

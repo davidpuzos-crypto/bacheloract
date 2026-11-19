@@ -37,7 +37,7 @@ test('retour immédiat et points +5 puis +2', async ({ page }) => {
 });
 
 test('les retours de QCM sont annoncés et utilisables au clavier', async ({ page }) => {
-  await ouvrir(page, 'seance-09/6-lire.html', '10:40');
+  await ouvrir(page, 'seance-09/6-lire.html', '09:50');
   const q = page.locator('[data-qcm="F-Q3"]');
   await page.focus('#qcm-F-Q3-a');
   await page.keyboard.press('ArrowDown');

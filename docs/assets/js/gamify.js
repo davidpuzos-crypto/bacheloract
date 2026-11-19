@@ -1,5 +1,6 @@
-// Gamification sobre : points d’expérience, niveaux, quêtes, badges,
-// anneaux de compétences et phrase mystère. Les points ne sont pas une note.
+// Gamification sobre : points d’enquête, quêtes, indices, badges, anneaux de
+// compétences et phrase mystère. Pas de niveau ni de classement. Les points
+// ne sont pas une note.
 // Tout est recalculé à partir de l’état : rien ne se perd d’une page à l’autre.
 
 import { lire, modifierSansSignal, enregistrerMaintenant, surChangement } from './state.js';
@@ -10,56 +11,53 @@ import { annoncer, gain, confettis, sobre } from './ui.js';
 
 export const SEUIL_CHAMP = 25;
 export const SEUIL_BONUS = 40;
-export const POINTS = { champ: 10, qcmPremier: 5, qcmEnsuite: 2, bonus: 15, queteALHeure: 20, lu: 10 };
-export const NIVEAUX = [
-  { seuil: 0, nom: 'Stagiaire' },
-  { seuil: 100, nom: 'Enquêteur·ice' },
-  { seuil: 200, nom: 'Analyste' },
-  { seuil: 300, nom: 'Sociologue' }
-];
+export const POINTS = { champ: 10, qcmPremier: 5, qcmEnsuite: 2, bonus: 15, queteALHeure: 20, lu: 10, indice: 5 };
+
+// Les six indices à retrouver dans le document, pendant la correction.
+export const INDICES = ['L1', 'L2', 'L3', 'L4', 'L5', 'L6'];
 
 // Quêtes : ce qui doit être fait pour les terminer.
 export const QUETES = [
   {
     id: 'definir', numero: 1, label: 'Définir', morceau: 'Ce qui semble',
     phases: ['methode', 'chercher'], fin: 'chercher',
-    champs: ['a1', 'a2', 'a3', 'b1', 'b2'], radios: ['b0'],
+    champs: ['a1', 'b1', 'b2'], radios: ['b0'],
     conditionnels: [{ id: 'b4', si: ['b0', 'sophia'] }],
     qcm: ['M1', 'M2', 'M3']
   },
   {
     id: 'citer', numero: 2, label: 'Citer', morceau: 'le plus personnel',
     phases: ['citer-lecture', 'citer-pratique'], fin: 'citer-pratique',
-    champs: ['c1', 'c2', 'c3'], qcm: ['C-Q1', 'C-Q2', 'C-Q4', 'C-Q5']
+    champs: ['c1', 'c2', 'c3'], qcm: ['C-Q1', 'C-Q2', 'C-Q4']
   },
   {
     id: 'lire', numero: 3, label: 'Lire', morceau: 'est souvent',
-    phases: ['lire', 'depot', 'correction'], fin: 'correction',
+    phases: ['lire', 'analyser', 'depot', 'correction'], fin: 'correction',
     champs: ['l1', 'l2', 'l3', 'l4', 'l5', 'l6'], radios: ['usage'], depot: 'parcours',
-    qcm: ['L-Q1', 'L-Q2', 'F-Q1', 'F-Q2', 'F-Q3', 'K1', 'K2']
+    qcm: ['L-Q1', 'L-Q2', 'R1', 'F-Q1', 'F-Q2', 'R2', 'R3', 'F-Q3', 'R4'], indices: INDICES
   },
   {
     id: 'noter', numero: 4, label: 'Noter', morceau: 'le plus social.',
     phases: ['notes', 'video', 'froid', 'questions'], fin: 'questions',
-    champs: ['bp', 's1', 'g1'], conseils: 3, qcm: ['V4', 'V5', 'V6', 'V7', 'V8']
+    champs: ['bp', 's1', 'g1'], conseils: 3, qcm: ['V4', 'V5', 'V6']
   }
 ];
 
-// Les trois quêtes d’écriture, pour le badge « Dans les temps ».
+// Les trois temps d’écriture, pour le badge « Dans les temps ».
 export const ETAPES = [
-  { id: 'chercher', label: 'Chercher', fin: 'chercher', champs: ['a1', 'a2', 'a3', 'b1', 'b2'], radios: ['b0'], conditionnels: [{ id: 'b4', si: ['b0', 'sophia'] }] },
-  { id: 'pratique', label: 'Citer, pratique', fin: 'citer-pratique', champs: ['c1', 'c2', 'c3'], qcm: ['C-Q1', 'C-Q2', 'C-Q4', 'C-Q5'] },
-  { id: 'lire', label: 'Lire', fin: 'depot', champs: ['l1', 'l2', 'l3', 'l4', 'l5', 'l6'], qcm: ['L-Q1', 'L-Q2', 'F-Q1', 'F-Q2', 'F-Q3'] }
+  { id: 'chercher', label: 'Chercher', fin: 'chercher', champs: ['a1', 'b1', 'b2'], radios: ['b0'], conditionnels: [{ id: 'b4', si: ['b0', 'sophia'] }] },
+  { id: 'pratique', label: 'Citer, pratique', fin: 'citer-pratique', champs: ['c1', 'c2', 'c3'], qcm: ['C-Q1', 'C-Q2', 'C-Q4'] },
+  { id: 'analyser', label: 'Analyser l’étude', fin: 'depot', champs: ['l1', 'l2', 'l3', 'l4', 'l5', 'l6'] }
 ];
 
-export const BONUS = ['a6', 'g2', 'g3', 'g4'];
+export const BONUS = ['a3', 'a6', 'g2', 'g3', 'g4'];
 
 export const BADGES = [
-  { id: 'detective', nom: 'Détective de sources', icone: 'b-detective', critere: 'A3 d’au moins 60 caractères.' },
-  { id: 'citation', nom: 'Citation en or', icone: 'b-citation', critere: 'Les quatre QCM de la page Citer justes du premier coup.' },
+  { id: 'detective', nom: 'Détective de sources', icone: 'b-detective', critere: 'Les six indices de la correction retrouvés dans le document, sans les montrer.' },
+  { id: 'citation', nom: 'Citation en or', icone: 'b-citation', critere: 'Les trois QCM de la page Citer justes du premier coup.' },
   { id: 'biblio', nom: 'Bibliographe', icone: 'b-biblio', critere: 'C2 d’au moins 80 caractères.' },
-  { id: 'lynx', nom: 'Œil de lynx', icone: 'b-oeil', critere: 'Les trois QCM sur les chiffres justes du premier coup.' },
-  { id: 'temps', nom: 'Dans les temps', icone: 'b-temps', critere: 'Chercher, Citer et Lire terminées avant la fin de leur phase.' },
+  { id: 'lynx', nom: 'Œil de lynx', icone: 'b-oeil', critere: 'Les trois QCM sur les chiffres de l’écart justes du premier coup.' },
+  { id: 'temps', nom: 'Dans les temps', icone: 'b-temps', critere: 'Chercher, Citer et Analyser terminées avant la fin de leur phase.' },
   { id: 'critique', nom: 'Esprit critique', icone: 'b-critique', critere: 'Au moins une question bonus répondue.' },
   { id: 'stratege', nom: 'Stratège', icone: 'b-stratege', critere: 'Trois conseils choisis et trois bonnes pratiques repérées.' },
   { id: 'fil', nom: 'Fil rouge', icone: 'b-fil', critere: 'La phrase mystère complète.' }
@@ -80,6 +78,7 @@ function elements(def, e) {
   (def.conditionnels || []).forEach((c) => { if (e.radios[c.si[0]] === c.si[1]) { liste.push(long(e, c.id) >= SEUIL_CHAMP); } });
   (def.radios || []).forEach((id) => liste.push(!!e.radios[id]));
   (def.qcm || []).forEach((id) => liste.push(!!(e.qcm[id] && e.qcm[id].dernier)));
+  (def.indices || []).forEach((id) => { const r = (e.indices || {})[id]; liste.push(!!(r && (r.trouve || r.montre))); });
   if (def.depot) { liste.push(!!e.depots[def.depot]); }
   if (def.conseils) { liste.push((e.conseils || []).length >= def.conseils); }
   return liste;
@@ -122,19 +121,17 @@ export function calculer(e = lire()) {
   });
   if (e.lu && e.lu.citer) { points += POINTS.lu; }
   if (e.lu && e.lu.correction) { points += POINTS.lu; }
-  let niveau = NIVEAUX[0];
-  NIVEAUX.forEach((n) => { if (points >= n.seuil) { niveau = n; } });
-  const iNiv = NIVEAUX.indexOf(niveau);
-  const prochain = NIVEAUX[iNiv + 1] || null;
-  return { points, niveau, prochain, quetes };
+  const trouves = INDICES.filter((id) => { const r = (e.indices || {})[id]; return r && r.trouve && !r.montre; }).length;
+  points += trouves * POINTS.indice;
+  return { points, quetes, indicesTrouves: trouves };
 }
 
 function conditionsBadges(e, quetes) {
   const premierJuste = (id) => !!(e.qcm[id] && e.qcm[id].premierJuste);
   const etapesALHeure = ETAPES.every((et) => aLHeure(e.etapes[et.id], et.fin));
   return {
-    detective: long(e, 'a3') >= 60,
-    citation: ['C-Q1', 'C-Q2', 'C-Q4', 'C-Q5'].every(premierJuste),
+    detective: INDICES.every((id) => { const r = (e.indices || {})[id]; return r && r.trouve && !r.montre; }),
+    citation: ['C-Q1', 'C-Q2', 'C-Q4'].every(premierJuste),
     biblio: long(e, 'c2') >= 80,
     lynx: ['F-Q1', 'F-Q2', 'F-Q3'].every(premierJuste),
     temps: etapesALHeure,
@@ -244,19 +241,13 @@ export function htmlCarnet(options = {}) {
   const eq = equipe(e);
   const nq = options.nouvellesQuetes || [];
   const nb = options.nouveauxBadges || [];
-  const vers = res.prochain
-    ? 'Encore ' + (res.prochain.seuil - res.points) + ' points pour le niveau ' + res.prochain.nom + '.'
-    : 'Niveau maximal atteint.';
-  const largeur = res.prochain
-    ? Math.round(((res.points - res.niveau.seuil) / (res.prochain.seuil - res.niveau.seuil)) * 100)
-    : 100;
   const noms = [eq.n1, eq.n2].filter(Boolean).map(echapper).join(' et ');
+  const resolues = res.quetes.filter((q) => q.terminee).length;
   return ''
     + '<div class="carnet-bloc equipe-carte">' + svg(eq.icone, 'icone-equipe')
     + '<div><b>' + (eq.defini ? echapper(eq.nom) : 'Équipe sans nom') + '</b><span>' + (noms || 'Noms à indiquer sur la page Cadre') + '</span></div></div>'
-    + '<div class="carnet-bloc"><h3>Points d’expérience</h3><div class="score"><span class="valeur">' + res.points + '</span>'
-    + '<span class="niveau">' + res.niveau.nom + '</span><span class="prochain">' + vers + '</span></div>'
-    + '<div class="barre-niveau" aria-hidden="true"><span style="width:' + largeur + '%"></span></div>'
+    + '<div class="carnet-bloc"><h3>Points d’enquête</h3><div class="score"><span class="valeur">' + res.points + '</span>'
+    + '<span class="prochain">' + resolues + (resolues > 1 ? ' quêtes résolues sur 4' : ' quête résolue sur 4') + ', ' + res.indicesTrouves + ' indice' + (res.indicesTrouves > 1 ? 's' : '') + ' sur 6 retrouvé' + (res.indicesTrouves > 1 ? 's' : '') + ' dans l’étude</span></div>'
     + '<p class="mention-note">Les points ne sont pas une note. Ils suivent votre avancement, sans classement.</p></div>'
     + '<div class="carnet-bloc"><h3>Compétences</h3>' + htmlAnneaux(res) + '</div>'
     + '<div class="carnet-bloc"><h3>Quêtes</h3>' + htmlQuetes(res, nq) + '</div>'

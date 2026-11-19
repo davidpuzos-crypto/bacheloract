@@ -19,7 +19,7 @@ const SOURCE = path.join(RACINE, 'private', 'seance-09', '7-correction.html');
 const CIBLE = path.join(RACINE, 'docs', 'seance-09', '7-correction.html');
 const MODELE = path.join(RACINE, 'scripts', 'staticrypt-modele.html');
 const CONFIG_SEL = 'scripts/staticrypt.json';
-const TEMOINS = ['Pièges fréquents', 'Ce qu’on attend', 'Réponse proposée', 'qcm-K1'];
+const TEMOINS = ['Pièges fréquents', 'Ce qu’on attend', 'Réponse proposée', 'data-indice', 'Le détail qui compte'];
 
 const args = new Set(process.argv.slice(2));
 
