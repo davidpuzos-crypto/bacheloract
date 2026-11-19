@@ -2,7 +2,7 @@
 // en mode sombre et en mode clair.
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { PAGES, motDePasse } from './aides.mjs';
+import { PAGES, motDePassePour } from './aides.mjs';
 
 for (const theme of ['dark', 'light']) {
   for (const p of PAGES) {
@@ -10,8 +10,8 @@ for (const theme of ['dark', 'light']) {
       const contexte = await browser.newContext({ colorScheme: theme, viewport: { width: 1440, height: 900 } });
       const page = await contexte.newPage();
       await page.goto('http://localhost:4173/fabrique/' + p + '?now=09:20');
-      if (p.includes('7-correction')) {
-        const mdp = motDePasse();
+      if (motDePassePour(p) !== null) {
+        const mdp = motDePassePour(p);
         if (mdp) {
           await page.fill('#staticrypt-password', mdp);
           await page.getByRole('button', { name: 'Ouvrir la correction' }).click();

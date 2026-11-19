@@ -88,7 +88,7 @@ function couper(v) {
 
 // L’état de l’équipe à plat : une clé par information, pour n’envoyer que ce
 // qui change. m. équipe et avancement, c. champs, r. choix, q. QCM, k. cases,
-// i. indices de la correction, d. dépôts.
+// s. conseils choisis, u. lectures terminées, d. dépôts.
 function aplatir() {
   const e = lire();
   const eq = equipe(e);
@@ -117,9 +117,6 @@ function aplatir() {
   Object.entries(e.cases || {}).forEach(([k, v]) => { if (Array.isArray(v) && v.length) { plat['k.' + k] = v; } });
   if ((e.conseils || []).length) { plat['s.conseils'] = e.conseils; }
   if (e.lu && Object.keys(e.lu).length) { plat['u.lu'] = Object.keys(e.lu).sort(); }
-  Object.entries(e.indices || {}).forEach(([k, r]) => {
-    if (r && (r.trouve || r.montre)) { plat['i.' + k] = [r.trouve ? 1 : 0, r.montre ? 1 : 0, r.essais || 0]; }
-  });
   Object.entries(e.depots || {}).forEach(([k, d]) => { if (d && d.le) { plat['d.' + k] = [d.le, d.via || '']; } });
   return plat;
 }

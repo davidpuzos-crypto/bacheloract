@@ -21,8 +21,6 @@ test('récapitulatif du parcours', async ({ page, context }) => {
   await page.check('#qcm-C-Q1-a');
   await ouvrir(page, 'seance-09/6-lire.html#depot');
   await saisir(page, 'l6', LONG);
-  await page.check('#u-sophia');
-  await saisir(page, 'verif', 'Nous avons vérifié la référence dans l’article.');
 
   const zone = page.locator('[data-depot="parcours"]');
   await zone.locator('summary').click();
@@ -49,9 +47,7 @@ test('récapitulatif du parcours', async ({ page, context }) => {
   expect(texte).toContain('DÉTAIL DES QUESTIONS À CHOIX MULTIPLE');
   expect(texte).toMatch(/Q1 \(C-Q1\)\. première réponse A \(fausse\), réponse finale A \(fausse\), 1 essai/);
   expect(texte).toContain('M1. pas de réponse');
-  expect(texte).toContain('DÉCLARATION D’USAGE DE L’IA');
-  expect(texte).toContain('Nous avons utilisé SophIA.');
-  expect(texte).toContain('Précision. Nous avons vérifié la référence dans l’article.');
+  expect(texte).not.toContain('DÉCLARATION D’USAGE DE L’IA');
   await expect(zone.locator('[data-recap-progres]')).toContainText('Il manque encore');
 
   // Téléchargement

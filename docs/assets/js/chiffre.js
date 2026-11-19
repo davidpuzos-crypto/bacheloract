@@ -148,6 +148,24 @@ export async function ouvrirCoffre(coffre, code) {
   };
 }
 
+// Change le code qui ouvre le coffre, sans changer les clés : les réponses
+// déjà envoyées restent lisibles. Renvoie le nouveau coffre, ou null si
+// l’ancien code est faux.
+export async function changerCodeCoffre(coffre, ancienCode, nouveau, iterations = 600000) {
+  let clair;
+  try {
+    const ancienne = await cleDuCode(ancienCode, deB64(coffre.sel), Number(coffre.iterations) || 600000, ['decrypt']);
+    clair = await S.decrypt({ name: 'AES-GCM', iv: deB64(coffre.iv) }, ancienne, deB64(coffre.donnees));
+  } catch (e) {
+    return null;
+  }
+  const sel = globalThis.crypto.getRandomValues(new Uint8Array(16));
+  const iv = globalThis.crypto.getRandomValues(new Uint8Array(12));
+  const cle = await cleDuCode(nouveau, sel, iterations, ['encrypt']);
+  const donnees = new Uint8Array(await S.encrypt({ name: 'AES-GCM', iv }, cle, new Uint8Array(clair)));
+  return { sel: enB64(sel), iv: enB64(iv), iterations, donnees: enB64(donnees) };
+}
+
 // Code aléatoire lisible, en quatre groupes de quatre caractères (environ
 // 79 bits), sans caractères faciles à confondre (0 et o, 1 et l).
 export function nouveauCode() {

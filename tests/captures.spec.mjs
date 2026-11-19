@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { test } from '@playwright/test';
-import { PAGES, RACINE, motDePasse } from './aides.mjs';
+import { PAGES, RACINE, motDePassePour } from './aides.mjs';
 
 const DOSSIER = path.join(RACINE, 'tests', 'captures');
 const TAILLES = [[390, 844], [1440, 900]];
@@ -18,10 +18,10 @@ for (const theme of ['dark', 'light']) {
       const page = await contexte.newPage();
       for (const p of PAGES) {
         await page.goto('http://localhost:4173/fabrique/' + p + '?now=09:20');
-        if (p.includes('7-correction') && motDePasse()) {
+        if (motDePassePour(p)) {
           const champ = page.locator('#staticrypt-password');
           if (await champ.isVisible().catch(() => false)) {
-            await champ.fill(motDePasse());
+            await champ.fill(motDePassePour(p));
             await page.getByRole('button', { name: 'Ouvrir la correction' }).click();
           }
         }

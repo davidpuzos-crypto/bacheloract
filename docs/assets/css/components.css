@@ -421,6 +421,13 @@ details.aide p { margin: 0.5rem 0 0; color: var(--texte-doux); max-width: 60ch; 
 .doc .note-extrait { color: var(--texte-doux); font-size: 0.86rem; margin-top: 1.2em; }
 .colonne-questions { min-width: 0; }
 .qlabel .facultatif { font-weight: 400; color: var(--texte-doux); }
+.sources-rapides { max-width: 46rem; }
+.sources-rapides h3 { margin: 0 0 0.4rem; font-size: 1rem; }
+.liens-sources { margin: 0 0 0.4rem; padding-left: 1.2em; font-family: var(--police-ui); }
+.liens-sources li { margin: 0.25em 0; }
+.citation-question { max-width: 46rem; margin: 0.6rem 0 0.9rem; padding: 10px 14px; border-left: 3px solid var(--accent); background: var(--fond-2); border-radius: 0 var(--rayon) var(--rayon) 0; font-family: var(--police-texte); }
+.citation-question p { margin: 0 0 0.4em; }
+.citation-question .source-citation { font-family: var(--police-ui); font-size: 0.86rem; color: var(--texte-doux); margin: 0; }
 .vers-passage-ligne { margin: 10px 0 0; font-family: var(--police-ui); font-size: 0.9rem; }
 .statut-lecture { font-family: var(--police-ui); font-weight: 700; color: var(--texte-doux); margin: 0 0 1rem; }
 .statut-lecture:empty { display: none; }
@@ -771,3 +778,23 @@ details.sous > p, details.sous > div { margin: 0.5rem 0 0; }
 .qcm > legend, fieldset.q > legend { float: left; width: 100%; }
 .qcm > legend + *, fieldset.q > legend + * { clear: both; }
 .quetes { font-family: var(--police-ui); }
+
+/* ---------- Repère horaire ---------- */
+.repere-barre { border-top: 1px solid var(--trait); background: var(--fond-2); }
+.repere-barre p { max-width: 1180px; margin: 0 auto; padding: 6px 24px; font-size: 0.9rem; font-weight: 600; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
+.repere-barre[data-etat="leger"] { background: var(--alerte-fond); }
+.repere-barre[data-etat="retard"] { background: var(--erreur-fond); }
+.repere-lien { font-weight: 800; white-space: nowrap; }
+.q-repere { border-left-color: var(--accent) !important; }
+.drapeau-repere {
+  display: inline-block;
+  margin: 1.2rem 0 -0.6rem;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-texte);
+  font-family: var(--police-ui);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+@media (max-width: 720px) { .repere-barre p { padding: 6px 16px; font-size: 0.85rem; } }

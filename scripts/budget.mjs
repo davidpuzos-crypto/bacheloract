@@ -16,11 +16,10 @@ const QCM_MIN = 0.5;
 // Les questions d’analyse de l’étude (l1 à l6) demandent plusieurs phrases
 // appuyées sur le document : elles sont comptées large.
 const DUREES = {
-  equipe: 0.3, icone: 0.2, nom1: 0.3, nom2: 0.3,
-  a1: 1, a3: 3, b0: 0.3, b1: 2, b2: 2, b4: 2,
-  c1: 2.5, c2: 3.5, c3: 3,
+  equipe: 0.3, icone: 0.2, nom1: 0.3, nom2: 0.3, nom3: 0.3,
+  a1: 1, a2: 2, a3: 1.5, b0: 0.3, b1: 2, b2: 2, b4: 2,
+  c1: 2, c2: 3, c3: 3,
   l1: 5, l2: 2, l3: 2, l4: 3, l5: 5, l6: 5,
-  usage: 0.3,
   n3: 2, bp: 2, s1: 2.5, g1: 3
 };
 
@@ -30,11 +29,12 @@ const MOTS_MINUTE_ETUDE = 130;
 const PHASES = [
   { id: 'cadre', titre: 'Cadre', fichier: 'docs/seance-09/1-cadre.html', minutes: 3, maxMots: 250 },
   { id: 'methode', titre: 'Méthode', fichier: 'docs/seance-09/2-methode.html', minutes: 5, maxMots: 650, notes: true },
-  { id: 'chercher', titre: 'Chercher', fichier: 'docs/seance-09/3-chercher.html', minutes: 15, maxMots: 350,
-    extras: [['Lecture des sources sur les sites externes (page de Géoconfluences, seconde source)', 6]] },
-  { id: 'citer-lecture', titre: 'Citer, lecture', fichier: 'docs/seance-09/4-citer-lecture.html', minutes: 7, maxMots: 900 },
-  { id: 'citer-pratique', titre: 'Citer, pratique', fichier: 'docs/seance-09/5-citer-pratique.html', minutes: 13, maxMots: 120,
-    extras: [['Ouverture du guide APA de l’ENS', 1]] },
+  { id: 'chercher', titre: 'Chercher', fichier: 'docs/seance-09/3-chercher.html', minutes: 16, maxMots: 350,
+    extras: [['Lecture des sources sur les sites externes (page de Géoconfluences, seconde source)', 5.5]] },
+  { id: 'citer-lecture', titre: 'Citer, lecture', fichier: 'docs/seance-09/4-citer-lecture.html', minutes: 5, maxMots: 900 },
+  { id: 'citer-pratique', titre: 'Citer, pratique', fichier: 'docs/seance-09/5-citer-pratique.html', minutes: 11, maxMots: 180,
+    extras: [['Ouverture du guide APA de l’ENS', 0.5]] },
+  { id: 'correction-definir', titre: 'Correction, définir et citer', fichier: 'private/seance-09/5b-correction-definir.html', minutes: 5, maxMots: 1000 },
   { id: 'lire', titre: 'Lire l’étude', fichier: 'docs/seance-09/6-lire.html', exclure: '#depot, #analyser', minutes: 22, maxMots: 260,
     extrait: '.citation-insee', maxExtrait: 1400, motsMinuteExtrait: MOTS_MINUTE_ETUDE,
     extras: [['Lecture du tableau de la figure 2', 3]] },
@@ -42,9 +42,8 @@ const PHASES = [
     extras: [['Retours au document pour appuyer les réponses', 2]] },
   { id: 'depot', titre: 'Dépôt', fichier: 'docs/seance-09/6-lire.html', section: '#depot', minutes: 3,
     extras: [['Envoyer le récapitulatif à l’enseignant, ou le télécharger', 1.5]] },
-  { id: 'correction', titre: 'Correction', fichier: 'private/seance-09/7-correction.html', minutes: 10, maxMots: 400,
-    retirer: '.citation-insee', aussi: '.corrige .modele',
-    extras: [['Chasse aux six indices dans le document, déjà lu', 4.5]] },
+  { id: 'correction', titre: 'Correction de l’étude', fichier: 'private/seance-09/7-correction.html', minutes: 8, maxMots: 1500,
+    retirer: '.citation-insee', extras: [['Retours à l’étude avec « Voir le passage »', 1]] },
   { id: 'notes', titre: 'Conseils de prise de notes', fichier: 'docs/seance-09/8-notes.html', minutes: 5, maxMots: 500,
     extras: [['Choix de trois conseils parmi les huit', 1]] },
   { id: 'video', titre: 'Vidéo, pendant', fichier: 'docs/seance-09/9-video.html', section: '#pendant', minutes: 25,
@@ -54,6 +53,12 @@ const PHASES = [
   { id: 'questions', titre: 'Vidéo, questions', fichier: 'docs/seance-09/9-video.html', section: '#questions', minutes: 10, maxMots: 100,
     extras: [['Dépôt express (copier ou télécharger, déposer)', 1]] }
 ];
+
+// Phases avant la pause, et minutes disponibles avant et après (d’après data/schedule.json).
+const PROGRAMME = JSON.parse(fs.readFileSync(path.join(RACINE, 'docs', 'data', 'schedule.json'), 'utf8'));
+const PAUSE = PROGRAMME.phases.find((p) => p.id === 'pause');
+const AVANT_PAUSE = PROGRAMME.phases.filter((p) => p.debut < PAUSE.debut).map((p) => p.id);
+const FIN = PROGRAMME.phases[PROGRAMME.phases.length - 1].debut;
 
 function dureeChamp(bloc) {
   const id = bloc.getAttribute('data-q');
@@ -157,10 +162,10 @@ export function ecrireMarkdown(resultats) {
     const autres = (r.ph.extras || []).map((e) => e[0] + ' (' + f(e[1]) + ' min)').concat(r.ph.cases ? [r.ph.cases + ' cases (' + f(r.minutesCases) + ' min)'] : []).join(' ; ');
     l.push('| ' + r.ph.titre + ' | ' + r.ph.minutes + ' min | ' + motsTxt + ' | ' + (r.champs.length ? r.champs.join(', ') : 'aucun') + ' | ' + r.qcm.length
       + ' | ' + (autres || '') + ' | ' + f(r.total) + ' min | ' + f(r.ph.minutes - r.total) + ' min | ' + (r.alertes.length ? 'DÉPASSÉ' : 'tient') + ' |');
-    if (['cadre', 'methode', 'chercher', 'citer-lecture', 'citer-pratique', 'lire'].includes(r.ph.id)) { avant += r.total; } else { apres += r.total; }
+    if (AVANT_PAUSE.includes(r.ph.id)) { avant += r.total; } else { apres += r.total; }
   }
   l.push('');
-  l.push('Total estimé avant la pause : ' + f(avant) + ' minutes pour 65. Après la pause : ' + f(apres) + ' minutes pour 85.');
+  l.push('Total estimé avant la pause : ' + f(avant) + ' minutes pour ' + PAUSE.debut + '. Après la pause : ' + f(apres) + ' minutes pour ' + (FIN - PAUSE.debut - PAUSE.duree) + '.');
   l.push('');
   l.push('## Détails');
   for (const r of resultats) {

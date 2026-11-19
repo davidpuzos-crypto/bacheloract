@@ -29,6 +29,7 @@ test('parcours du hub au bilan avec un état partagé', async ({ page }) => {
   const suite = [
     ['Passer à la lecture', /4-citer-lecture\.html/],
     ['Passer à la pratique', /5-citer-pratique\.html/],
+    ['Ouvrir la correction', /5b-correction-definir\.html/],
     ['Ouvrir l’étude de l’Insee', /6-lire\.html/],
     ['Voir la pause', /pause\.html/],
     ['Analyser l’étude', /6-lire\.html#analyser/],
@@ -38,11 +39,9 @@ test('parcours du hub au bilan avec un état partagé', async ({ page }) => {
     ['Voir le bilan', /10-fin\.html/]
   ];
   for (const [lien, url] of suite) {
-    if (/7-correction/.test(page.url())) {
-      // Page chiffrée : on passe par l’adresse de la page suivante.
-      await ouvrir(page, 'seance-09/8-notes.html');
-      continue;
-    }
+    // Pages chiffrées : on passe par l’adresse de la page suivante.
+    if (/5b-correction-definir/.test(page.url())) { await ouvrir(page, 'seance-09/6-lire.html'); continue; }
+    if (/7-correction/.test(page.url())) { await ouvrir(page, 'seance-09/8-notes.html'); continue; }
     await page.locator('.pager').getByRole('link', { name: lien }).click();
     await expect(page).toHaveURL(url);
     await page.waitForFunction(() => document.documentElement.classList.contains('js-pret') || !!document.getElementById('staticrypt-form'));
