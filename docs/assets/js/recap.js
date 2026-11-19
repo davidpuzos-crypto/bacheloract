@@ -18,7 +18,7 @@ const SOURCES = {
       { fichier: '6-lire.html', titre: 'LIRE' }
     ],
     qcm: ['2-methode.html', '5-citer-pratique.html', '6-lire.html'],
-    temps: [['cadre', 'cadre'], ['methode', 'méthode'], ['chercher', 'chercher'], ['citer-lecture', 'lecture'], ['citer-pratique', 'pratique'], ['lire', 'lire']],
+    temps: [['cadre', 'cadre'], ['methode', 'méthode'], ['chercher', 'chercher'], ['citer-lecture', 'lecture'], ['citer-pratique', 'pratique'], ['correction-definir', 'correction'], ['lire', 'lire']],
     suffixe: 'parcours'
   },
   video: {
@@ -199,22 +199,8 @@ export async function construire(type) {
     (await qcmDe(f)).forEach((l) => corps.push(l));
   }
 
-  if (type === 'parcours') {
-    corps.push('', 'DÉCLARATION D’USAGE DE L’IA');
-    const libelles = {
-      non: 'Nous n’avons utilisé aucun outil d’IA.',
-      sophia: 'Nous avons utilisé SophIA.',
-      autre: 'Nous avons utilisé un autre outil d’IA.'
-    };
-    const u = e.radios.usage;
-    if (!u) { manquants.push('déclaration d’usage de l’IA'); }
-    corps.push(u ? libelles[u] : '(pas de réponse)');
-    const v = (e.champs.verif || '').trim();
-    corps.push('Précision. ' + (v || '(aucune)'));
-  }
-
   const etatLigne = manquants.length
-    ? 'Réponses. ' + (total - manquants.filter((m) => m !== 'déclaration d’usage de l’IA').length) + ' sur ' + total + '. Il manque encore ' + manquants.join(', ') + '.'
+    ? 'Réponses. ' + (total - manquants.length) + ' sur ' + total + '. Il manque encore ' + manquants.join(', ') + '.'
     : 'Réponses. ' + total + ' sur ' + total + '.';
   lignes.push(etatLigne);
   return { texte: lignes.concat(corps).join('\n') + '\n', manquants, total };
@@ -260,7 +246,7 @@ export async function catalogue() {
       radios.forEach((r) => { options[r.value] = r.dataset.label || r.value; });
       sortie.push({
         type: radios.length ? 'choix' : 'texte', cle, section: section.titre,
-        id: lab && lab.querySelector('.qid') ? lab.querySelector('.qid').textContent.trim() : (cle === 'usage' ? 'IA' : cle === 'verif' ? 'IA, précision' : cle.toUpperCase()),
+        id: lab && lab.querySelector('.qid') ? lab.querySelector('.qid').textContent.trim() : cle.toUpperCase(),
         enonce: lab ? texteSans(lab, '.qid, .tag-bonus') : '',
         requis: el.hasAttribute('data-requis'), bonus: el.hasAttribute('data-bonus'), options,
         precision: radios.length && el.querySelector('[data-id]') ? el.querySelector('[data-id]').dataset.id : ''

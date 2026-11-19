@@ -22,7 +22,7 @@ const ACTIF_MS = 5 * 60000;
 const LIMITE_JOUR = 250;
 const PAGES = {
   hub: 'Accueil', cadre: 'Cadre', methode: 'Méthode', chercher: 'Chercher', 'citer-lecture': 'Bien citer',
-  'citer-pratique': 'Citer, pratique', pause: 'Pause', lire: 'Lire', correction: 'Correction', notes: 'Conseils de notes',
+  'citer-pratique': 'Citer, pratique', 'correction-definir': 'Correction, définir et citer', pause: 'Pause', lire: 'Lire', correction: 'Correction de l’étude', notes: 'Conseils de notes',
   video: 'Vidéo', fin: 'Bilan', accueil: 'Accueil du cours'
 };
 const SECTIONS = { '#lire': 'lecture', '#analyser': 'analyse', '#depot': 'Dépôt', '#pendant': 'pendant', '#comparer': 'à froid et comparer', '#questions': 'questions' };
@@ -99,7 +99,6 @@ function deplier(id, st) {
   const radios = Object.create(null);
   const qcm = Object.create(null);
   const cases = Object.create(null);
-  const indices = Object.create(null);
   const depots = Object.create(null);
   Object.keys(p).forEach((k) => {
     const [genre, cle] = [k.slice(0, 1), k.slice(2)];
@@ -111,7 +110,6 @@ function deplier(id, st) {
       qcm[cle] = { premier: texteSur(v[0], 4), dernier: texteSur(v[1], 4), essais: Number(v[2]) || 1, premierJuste: !!v[3], juste: !!v[4] };
     }
     if (genre === 'k' && Array.isArray(v)) { cases[cle] = v.map((x) => texteSur(x, 20)).slice(0, 40); }
-    if (genre === 'i' && Array.isArray(v)) { indices[cle] = { trouve: !!v[0], montre: !!v[1], essais: Number(v[2]) || 0 }; }
     if (genre === 'd' && Array.isArray(v)) { depots[cle] = { le: Number(v[0]) || 0, via: texteSur(v[1], 20) }; }
   });
   const quetes = Object.create(null);
@@ -135,7 +133,7 @@ function deplier(id, st) {
     drapeau: p['m.drapeau'] === 'aide' ? 'aide' : 'ok',
     quetes,
     reponses: {
-      champs, radios, qcm, cases, indices,
+      champs, radios, qcm, cases,
       conseils: Array.isArray(p['s.conseils']) ? p['s.conseils'].map((x) => Number(x)).filter(Number.isFinite).slice(0, 8) : [],
       lu: Array.isArray(p['u.lu']) ? p['u.lu'].map((x) => texteSur(x, 20)) : []
     },
@@ -143,10 +141,6 @@ function deplier(id, st) {
   };
 }
 function nomEquipe(e) { return e.equipe || 'Équipe sans nom'; }
-function indicesTrouves(e) {
-  const ind = (e.reponses && e.reponses.indices) || {};
-  return Object.values(ind).filter((r) => r && r.trouve && !r.montre).length;
-}
 function lieu(e) {
   const [p, ancre] = [e.page.split('#')[0], e.page.includes('#') ? '#' + e.page.split('#')[1] : ''];
   const base = PAGES[p] || p || 'inconnu';
@@ -435,7 +429,7 @@ function rendreEquipe() {
   const blocs = [
     h('div', { class: 'fiche-equipe' },
       h('p', {}, svg(e.icone, 'icone-mini'), h('b', { text: nomEquipe(e) }), e.noms ? ' (' + e.noms + ')' : ''),
-      h('p', { class: 'statut', text: lieu(e) + ', ' + ilYA(e.maj) + '. ' + e.points + ' points d’enquête. Indices retrouvés dans la correction, ' + indicesTrouves(e) + ' sur 6.' + (e.drapeau === 'aide' ? ' Demande de l’aide.' : '') }))
+      h('p', { class: 'statut', text: lieu(e) + ', ' + ilYA(e.maj) + '. ' + e.points + ' points d’enquête.' + (e.drapeau === 'aide' ? ' Demande de l’aide.' : '') }))
   ];
   let section = '';
   questions.forEach((q) => {
@@ -526,7 +520,7 @@ function texteExport() {
   const lignes = ['Réponses des équipes, séance 9, téléchargées le ' + new Date().toLocaleString('fr-FR') + '.', ''];
   [...equipes].sort((a, b) => nomEquipe(a).localeCompare(nomEquipe(b), 'fr')).forEach((e) => {
     lignes.push('==== ' + nomEquipe(e) + (e.noms ? ' (' + e.noms + ')' : ''));
-    lignes.push('Dernier envoi, ' + (e.maj ? e.maj.toLocaleString('fr-FR') : 'inconnu') + '. Points d’enquête, ' + e.points + '. Indices retrouvés dans la correction, ' + indicesTrouves(e) + ' sur 6.');
+    lignes.push('Dernier envoi, ' + (e.maj ? e.maj.toLocaleString('fr-FR') : 'inconnu') + '. Points d’enquête, ' + e.points + '.');
     lignes.push(texteDepot(e, 'parcours', 'Dépôt du parcours') + ' ' + texteDepot(e, 'video', 'Dépôt de la vidéo'));
     let section = '';
     questions.forEach((q) => {

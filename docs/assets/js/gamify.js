@@ -1,4 +1,4 @@
-// Gamification sobre : points d’enquête, quêtes, indices, badges, anneaux de
+// Gamification sobre : points d’enquête, quêtes, badges, anneaux de
 // compétences et phrase mystère. Pas de niveau ni de classement. Les points
 // ne sont pas une note.
 // Tout est recalculé à partir de l’état : rien ne se perd d’une page à l’autre.
@@ -11,30 +11,27 @@ import { annoncer, gain, confettis, sobre } from './ui.js';
 
 export const SEUIL_CHAMP = 25;
 export const SEUIL_BONUS = 40;
-export const POINTS = { champ: 10, qcmPremier: 5, qcmEnsuite: 2, bonus: 15, queteALHeure: 20, lu: 10, indice: 5 };
-
-// Les six indices à retrouver dans le document, pendant la correction.
-export const INDICES = ['L1', 'L2', 'L3', 'L4', 'L5', 'L6'];
+export const POINTS = { champ: 10, qcmPremier: 5, qcmEnsuite: 2, bonus: 15, queteALHeure: 20, lu: 10 };
 
 // Quêtes : ce qui doit être fait pour les terminer.
 export const QUETES = [
   {
     id: 'definir', numero: 1, label: 'Définir', morceau: 'Ce qui semble',
     phases: ['methode', 'chercher'], fin: 'chercher',
-    champs: ['a1', 'b1', 'b2'], radios: ['b0'],
+    champs: ['a1', 'a2', 'a3', 'b1', 'b2'], radios: ['b0'],
     conditionnels: [{ id: 'b4', si: ['b0', 'sophia'] }],
     qcm: ['M1', 'M2', 'M3']
   },
   {
     id: 'citer', numero: 2, label: 'Citer', morceau: 'le plus personnel',
-    phases: ['citer-lecture', 'citer-pratique'], fin: 'citer-pratique',
+    phases: ['citer-lecture', 'citer-pratique', 'correction-definir'], fin: 'citer-pratique',
     champs: ['c1', 'c2', 'c3'], qcm: ['C-Q1', 'C-Q2', 'C-Q4']
   },
   {
     id: 'lire', numero: 3, label: 'Lire', morceau: 'est souvent',
     phases: ['lire', 'analyser', 'depot', 'correction'], fin: 'correction',
-    champs: ['l1', 'l2', 'l3', 'l4', 'l5', 'l6'], radios: ['usage'], depot: 'parcours',
-    qcm: ['L-Q1', 'L-Q2', 'R1', 'F-Q1', 'F-Q2', 'R2', 'R3', 'F-Q3', 'R4'], indices: INDICES
+    champs: ['l1', 'l2', 'l3', 'l4', 'l5', 'l6'], depot: 'parcours',
+    qcm: ['L-Q1', 'L-Q2', 'R1', 'F-Q1', 'F-Q2', 'R2', 'R3', 'F-Q3', 'R4']
   },
   {
     id: 'noter', numero: 4, label: 'Noter', morceau: 'le plus social.',
@@ -45,15 +42,15 @@ export const QUETES = [
 
 // Les trois temps d’écriture, pour le badge « Dans les temps ».
 export const ETAPES = [
-  { id: 'chercher', label: 'Chercher', fin: 'chercher', champs: ['a1', 'b1', 'b2'], radios: ['b0'], conditionnels: [{ id: 'b4', si: ['b0', 'sophia'] }] },
+  { id: 'chercher', label: 'Chercher', fin: 'chercher', champs: ['a1', 'a2', 'a3', 'b1', 'b2'], radios: ['b0'], conditionnels: [{ id: 'b4', si: ['b0', 'sophia'] }] },
   { id: 'pratique', label: 'Citer, pratique', fin: 'citer-pratique', champs: ['c1', 'c2', 'c3'], qcm: ['C-Q1', 'C-Q2', 'C-Q4'] },
   { id: 'analyser', label: 'Analyser l’étude', fin: 'depot', champs: ['l1', 'l2', 'l3', 'l4', 'l5', 'l6'] }
 ];
 
-export const BONUS = ['a3', 'a6', 'g2', 'g3', 'g4'];
+export const BONUS = ['a6', 'g2', 'g3', 'g4'];
 
 export const BADGES = [
-  { id: 'detective', nom: 'Détective de sources', icone: 'b-detective', critere: 'Les six indices de la correction retrouvés dans le document, sans les montrer.' },
+  { id: 'detective', nom: 'Détective de sources', icone: 'b-detective', critere: 'Qui parle et depuis quelle discipline, A2 et A3 renseignées.' },
   { id: 'citation', nom: 'Citation en or', icone: 'b-citation', critere: 'Les trois QCM de la page Citer justes du premier coup.' },
   { id: 'biblio', nom: 'Bibliographe', icone: 'b-biblio', critere: 'C2 d’au moins 80 caractères.' },
   { id: 'lynx', nom: 'Œil de lynx', icone: 'b-oeil', critere: 'Les trois QCM sur les chiffres de l’écart justes du premier coup.' },
@@ -78,7 +75,6 @@ function elements(def, e) {
   (def.conditionnels || []).forEach((c) => { if (e.radios[c.si[0]] === c.si[1]) { liste.push(long(e, c.id) >= SEUIL_CHAMP); } });
   (def.radios || []).forEach((id) => liste.push(!!e.radios[id]));
   (def.qcm || []).forEach((id) => liste.push(!!(e.qcm[id] && e.qcm[id].dernier)));
-  (def.indices || []).forEach((id) => { const r = (e.indices || {})[id]; liste.push(!!(r && (r.trouve || r.montre))); });
   if (def.depot) { liste.push(!!e.depots[def.depot]); }
   if (def.conseils) { liste.push((e.conseils || []).length >= def.conseils); }
   return liste;
@@ -119,18 +115,15 @@ export function calculer(e = lire()) {
     if (ponctuelle && av.complet) { points += POINTS.queteALHeure; }
     return Object.assign({ def: q, terminee, ponctuelle }, av);
   });
-  if (e.lu && e.lu.citer) { points += POINTS.lu; }
-  if (e.lu && e.lu.correction) { points += POINTS.lu; }
-  const trouves = INDICES.filter((id) => { const r = (e.indices || {})[id]; return r && r.trouve && !r.montre; }).length;
-  points += trouves * POINTS.indice;
-  return { points, quetes, indicesTrouves: trouves };
+  ['citer', 'correction-definir', 'correction'].forEach((id) => { if (e.lu && e.lu[id]) { points += POINTS.lu; } });
+  return { points, quetes };
 }
 
 function conditionsBadges(e, quetes) {
   const premierJuste = (id) => !!(e.qcm[id] && e.qcm[id].premierJuste);
   const etapesALHeure = ETAPES.every((et) => aLHeure(e.etapes[et.id], et.fin));
   return {
-    detective: INDICES.every((id) => { const r = (e.indices || {})[id]; return r && r.trouve && !r.montre; }),
+    detective: long(e, 'a2') >= SEUIL_CHAMP && long(e, 'a3') >= SEUIL_CHAMP,
     citation: ['C-Q1', 'C-Q2', 'C-Q4'].every(premierJuste),
     biblio: long(e, 'c2') >= 80,
     lynx: ['F-Q1', 'F-Q2', 'F-Q3'].every(premierJuste),
@@ -254,7 +247,7 @@ export function htmlCarnet(options = {}) {
     + '<div class="carnet-bloc equipe-carte">' + svg(eq.icone, 'icone-equipe')
     + '<div><b>' + (eq.defini ? echapper(eq.nom) : 'Équipe sans nom') + '</b><span>' + (noms || 'Noms à indiquer sur la page Cadre') + '</span></div></div>'
     + '<div class="carnet-bloc"><h3>Points d’enquête</h3><div class="score"><span class="valeur">' + res.points + '</span>'
-    + '<span class="prochain">' + resolues + (resolues > 1 ? ' quêtes résolues sur 4' : ' quête résolue sur 4') + ', ' + res.indicesTrouves + ' indice' + (res.indicesTrouves > 1 ? 's' : '') + ' sur 6 retrouvé' + (res.indicesTrouves > 1 ? 's' : '') + ' dans l’étude</span></div>'
+    + '<span class="prochain">' + resolues + (resolues > 1 ? ' quêtes résolues sur 4' : ' quête résolue sur 4') + '</span></div>'
     + '<p class="mention-note">Les points ne sont pas une note. Ils suivent votre avancement, sans classement.</p></div>'
     + '<div class="carnet-bloc"><h3>Compétences</h3>' + htmlAnneaux(res) + '</div>'
     + '<div class="carnet-bloc"><h3>Quêtes</h3>' + htmlQuetes(res, nq) + '</div>'
