@@ -6,7 +6,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { RACINE, DOCS, PRIVE, listerHTML, lire, estChiffree, cheminRelatif } from './lib/pages.mjs';
+import { DOCS, listerHTML, lire, cheminRelatif } from './lib/pages.mjs';
 
 const sansExternes = process.argv.includes('--sans-externes');
 const erreurs = [];
@@ -17,18 +17,13 @@ function noter(url, source) {
   externes.get(url).add(source);
 }
 
-const fichiers = [...listerHTML(DOCS), ...listerHTML(PRIVE)];
+const fichiers = listerHTML(DOCS);
 const cacheAncres = new Map();
 function ancres(fichier) {
   if (cacheAncres.has(fichier)) { return cacheAncres.get(fichier); }
   let ids = new Set();
   if (fs.existsSync(fichier)) {
-    const { html, document } = lire(fichier);
-    // Page chiffrée : on lit les ancres dans la source en clair si elle est là.
-    if (estChiffree(html)) {
-      const source = path.join(PRIVE, path.relative(DOCS, fichier));
-      if (fs.existsSync(source)) { return ancres(source); }
-    }
+    const { document } = lire(fichier);
     document.querySelectorAll('[id]').forEach((el) => ids.add(el.getAttribute('id')));
   }
   cacheAncres.set(fichier, ids);
@@ -36,10 +31,7 @@ function ancres(fichier) {
 }
 
 for (const f of fichiers) {
-  const { html, document } = lire(f);
-  if (estChiffree(html)) { continue; }
-  // La source privée de la correction est publiée dans docs/seance-09/.
-  const base = f.startsWith(PRIVE) ? path.join(DOCS, path.relative(PRIVE, f)) : f;
+  const { document } = lire(f);
   const liens = [...document.querySelectorAll('a[href], link[href], script[src], img[src], use[href]')];
   for (const el of liens) {
     const valeur = el.getAttribute('href') || el.getAttribute('src');
@@ -47,7 +39,7 @@ for (const f of fichiers) {
     if (/^https?:\/\//.test(valeur)) { noter(valeur, cheminRelatif(f)); continue; }
     if (/^(mailto|tel|data|javascript):/.test(valeur)) { continue; }
     const [chemin, ancre] = valeur.split('#');
-    const cible = chemin ? path.resolve(path.dirname(base), chemin.split('?')[0]) : base;
+    const cible = chemin ? path.resolve(path.dirname(f), chemin.split('?')[0]) : f;
     if (!cible.startsWith(DOCS)) { erreurs.push(cheminRelatif(f) + ' : lien hors du site « ' + valeur + ' »'); continue; }
     if (!fs.existsSync(cible)) { erreurs.push(cheminRelatif(f) + ' : fichier introuvable « ' + valeur + ' »'); continue; }
     if (ancre && cible.endsWith('.html') && !ancres(cible).has(ancre)) {

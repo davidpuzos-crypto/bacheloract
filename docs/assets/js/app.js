@@ -15,6 +15,7 @@ import { initCollecte } from './collect.js';
 import { initPassages } from './passages.js';
 import { initRepere } from './repere.js';
 import { initRail } from './rail.js';
+import { initPorte } from './porte.js';
 
 async function demarrer() {
   const corps = document.body;
@@ -26,6 +27,7 @@ async function demarrer() {
   // pendant le chargement des données n’est jamais perdue.
   initChamps();
   initQCM();
+  initPorte();
   await initHorloge(espace === 'seance' ? page : null);
   typographier(document.body);
   initJeu();

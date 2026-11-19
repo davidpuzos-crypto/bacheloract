@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { RACINE, DOCS, PRIVE, listerHTML, lire, estChiffree, cheminRelatif } from './lib/pages.mjs';
+import { RACINE, DOCS, listerHTML, lire, cheminRelatif } from './lib/pages.mjs';
 import { calculerBudgets, ecrireMarkdown } from './budget.mjs';
 
 const IGNORER = new Set(['SCRIPT', 'STYLE', 'CODE', 'PRE', 'KBD', 'SAMP', 'SVG', 'TEMPLATE']);
@@ -134,11 +134,10 @@ export async function controler({ silencieux = false } = {}) {
   const erreur = (f, regle, t) => erreurs.push({ f, regle, t: extrait(String(t || '')) });
   const avertir = (f, regle, t) => avertissements.push({ f, regle, t: extrait(String(t || '')) });
 
-  const fichiers = [...listerHTML(DOCS), ...listerHTML(PRIVE), path.join(RACINE, 'scripts', 'staticrypt-modele.html')];
+  const fichiers = listerHTML(DOCS);
   let controles = 0;
   for (const f of fichiers) {
-    const { html, document } = lire(f);
-    if (estChiffree(html) && !f.endsWith('staticrypt-modele.html')) { continue; }
+    const { document } = lire(f);
     controlerDocument(document, cheminRelatif(f), erreur, avertir);
     controles += 1;
   }

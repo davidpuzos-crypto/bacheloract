@@ -21,6 +21,7 @@ export function initRail(espace) {
   const main = document.querySelector('main.page');
   if (espace !== 'seance' || !main || main.classList.contains('page-large')) { return; }
   if (main.querySelector('.lecture-split, .avec-aside, .feuille')) { return; }
+  if (main.querySelector(':scope > .rail')) { return; }
 
   // Sections (titres de niveau 2) et questions, dans l’ordre de la page.
   const elements = [...main.querySelectorAll('h2, .q[data-q], fieldset.qcm[data-qcm], .carte-correction')]

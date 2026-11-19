@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { test } from '@playwright/test';
-import { PAGES, RACINE, motDePassePour } from './aides.mjs';
+import { PAGES, RACINE } from './aides.mjs';
 
 const DOSSIER = path.join(RACINE, 'tests', 'captures');
 const TAILLES = [[390, 844], [1440, 900]];
@@ -18,14 +18,7 @@ for (const theme of ['dark', 'light']) {
       const page = await contexte.newPage();
       for (const p of PAGES) {
         await page.goto('http://localhost:4173/fabrique/' + p + '?now=09:20');
-        if (motDePassePour(p)) {
-          const champ = page.locator('#staticrypt-password');
-          if (await champ.isVisible().catch(() => false)) {
-            await champ.fill(motDePassePour(p));
-            await page.getByRole('button', { name: 'Ouvrir la correction' }).click();
-          }
-        }
-        await page.waitForFunction(() => document.documentElement.classList.contains('js-pret') || !!document.getElementById('staticrypt-form'));
+        await page.waitForFunction(() => document.documentElement.classList.contains('js-pret'));
         await page.waitForTimeout(400);
         const nom = p.replace(/\//g, '_').replace('.html', '') + '_' + l + 'x' + h + '_' + theme + '.png';
         await page.screenshot({ path: path.join(DOSSIER, nom), fullPage: false });

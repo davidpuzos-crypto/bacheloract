@@ -1,7 +1,7 @@
-# Sources en clair de la correction : ne jamais les publier
+# Fichiers personnels de l’enseignant : jamais publiés
 private/
 
-# Mot de passe et variables locales
+# Variables locales
 .env
 .env.*
 !.env.exemple
