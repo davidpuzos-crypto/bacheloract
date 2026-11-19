@@ -175,6 +175,24 @@ html[data-sobre="1"] .barre-niveau span { animation: none !important; transition
 
 /* Corrections : une carte par question, la réponse proposée et des conseils de méthode */
 .cartes-correction { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+/* Porte des corrections (porte.js) : la correction attend l’envoi du travail.
+   Sans JavaScript, la classe js est absente et la correction reste lisible. */
+html.js [data-porte-contenu]:not([data-ouverte]) { display: none; }
+.porte-correction {
+  margin: 1.4rem 0 2rem;
+  padding: 18px 20px;
+  border: 1px solid var(--trait);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--rayon);
+  background: var(--surface);
+}
+.porte-correction h2 { margin-top: 0; font-size: 1.15rem; }
+.porte-correction p { margin: 0 0 0.7em; }
+.porte-correction .rangee-boutons { margin: 0.9rem 0 0.4rem; }
+.porte-correction .statut:empty { display: none; }
+[data-porte-note] { margin: 0 0 1.2rem; }
+[data-porte-note]:focus { outline: none; }
+
 .carte-correction {
   padding: 16px 18px;
   border: 1px solid var(--trait);

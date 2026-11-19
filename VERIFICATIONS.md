@@ -66,7 +66,7 @@ Le cahier des charges demande de couper plutôt que d’allonger une phase. Le c
 Moins de temps pour définir, plus pour l’étude de l’Insee :
 
 - Définir et citer tiennent en 40 minutes, de 9 h 00 à 9 h 40, correction comprise (Chercher 14 minutes, Bien citer 4, Citer en pratique 9, correction 5).
-- La correction de Définir et Citer vient juste après l’exercice, de 9 h 35 à 9 h 40, avec son propre mot de passe.
+- La correction de Définir et Citer vient juste après l’exercice, de 9 h 35 à 9 h 40.
 - Lecture de l’étude avant la pause, de 9 h 40 à 10 h 02, avec neuf questions à choix multiple qui suivent l’ordre du texte et renvoient chacune au passage où chercher.
 - Analyse après la pause, de 10 h 32 à 10 h 59 (L1 à L6), puis dépôt et correction de l’étude (8 minutes).
 - Dix minutes dégagées en fin de séance, de 11 h 50 à 12 h 00, pour la lecture « Pour aller plus loin ». Elles viennent de Chercher et Citer (5 minutes), du dépôt (1), des conseils de notes (1) et des questions sur la vidéo (3). Le temps consacré à l’étude de l’Insee n’a pas bougé.
@@ -104,7 +104,7 @@ Les huit cases à cocher portent des libellés courts tirés des conseils (« Re
 
 ## 4. Autres choix faits pendant la construction
 
-- **Corrections.** Deux pages chiffrées, chacune avec son mot de passe. Celle de Définir et Citer (`5b-correction-definir.html`) vient juste après l’exercice. Celle de l’étude (`7-correction.html`) vient après le dépôt. Chaque question montre la réponse de l’équipe, une réponse proposée et des conseils de méthode, visibles d’emblée. Le libellé « La forme attendue » remplace « Réponse proposée » pour A2, et « Un exemple » est gardé pour B1, B2, C1 et C2 comme dans la v2.
+- **Corrections sans mot de passe** (demande de l’enseignant). Celle de Définir et Citer (`5b-correction-definir.html`) vient juste après l’exercice et s’ouvre d’un clic qui envoie les réponses de l’équipe. Celle de l’étude (`7-correction.html`) s’ouvre d’elle-même si le dépôt est fait, sinon le même clic fait le dépôt. Si l’envoi échoue, la correction s’affiche quand même, avec un message. Le texte des corrections est donc public (dans le dépôt et le code des pages). Le chiffrement StatiCrypt, le dossier `private/` et l’affichage du mot de passe sur l’écran de projection sont supprimés. Chaque question montre la réponse de l’équipe, une réponse proposée et des conseils de méthode, visibles d’emblée. Le libellé « La forme attendue » remplace « Réponse proposée » pour A2, et « Un exemple » est gardé pour B1, B2, C1 et C2 comme dans la v2.
 - **Repère horaire.** Sur les pages de travail, une ligne sous le chrono dit à quelle question l’équipe devrait en être, si elle est dans les temps, en léger retard ou en retard, et mène à la question. Les repères sont dans `docs/data/schedule.json` (minute depuis le début de la phase, question) et peuvent être ajustés.
 - **Bouton « J’ai tout lu »** de la page « Bien citer » : +10 points, comme « J’ai lu la correction » (le montant n’était pas fixé).
 - **Quête Lire** : terminée quand les neuf QCM de lecture, L1 à L6 et un dépôt (copie, fichier ou envoi) sont faits. La lecture « Pour aller plus loin » n’entre dans aucune quête, elle rapporte seulement quelques points.
@@ -125,6 +125,6 @@ Les huit cases à cocher portent des libellés courts tirés des conseils (« Re
 ## 5. Publication
 
 - Le site est publié par GitHub Pages depuis la branche `main` : `https://davidpuzos-crypto.github.io/bacheloract/` (la racine redirige vers `docs/`). Chaque mise à jour est préparée sur la branche `claude/elegant-planck-ir8tii`, puis fusionnée.
-- Le même mot, choisi par l’enseignant, ouvre les deux corrections et la page « Réponses des équipes ». Il n’est écrit nulle part dans le dépôt. Un mot court se devine plus facilement, et avec un même mot de passe la correction de l’étude est lisible dès 9 h 35 : à changer si besoin (README).
+- Seule la page « Réponses des équipes » demande un code, celui de l’enseignant. Il n’est écrit nulle part dans le dépôt. Un code court se devine plus facilement : à changer si besoin (README, « Voir les réponses en direct »). Les étudiant·es n’ont aucun mot de passe.
 - Testez l’envoi des réponses depuis la salle (README, section « Voir les réponses en direct »). Il n’y a rien à installer.
-- Après chaque publication, vérifiez sur l’adresse publique la page chiffrée, le téléchargement du récapitulatif et l’horloge.
+- Après chaque publication, vérifiez sur l’adresse publique que les corrections s’ouvrent avec « Envoyer et voir la correction », le téléchargement du récapitulatif et l’horloge.

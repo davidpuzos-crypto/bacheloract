@@ -29,23 +29,6 @@ export const PAGES = [
   'prof/reponses.html'
 ];
 
-function variableLocale(nom) {
-  if (process.env[nom]) { return process.env[nom]; }
-  const p = path.join(RACINE, '.env.local');
-  if (!fs.existsSync(p)) { return null; }
-  const m = new RegExp('^\\s*' + nom + '\\s*=\\s*(.*)\\s*$', 'm').exec(fs.readFileSync(p, 'utf8'));
-  return m ? m[1].replace(/^["']|["']$/g, '') : null;
-}
-
-// Mots de passe des corrections (variables d’environnement ou .env.local).
-export function motDePasse() { return variableLocale('CORRECTION_PASSWORD'); }
-export function motDePasseDefinir() { return variableLocale('CORRECTION_DEFINIR_PASSWORD'); }
-export function motDePassePour(chemin) {
-  if (chemin.includes('5b-correction-definir')) { return motDePasseDefinir(); }
-  if (chemin.includes('7-correction')) { return motDePasse(); }
-  return null;
-}
-
 // Heure « HH:MM:SS » à partir d’une minute de séance (départ 9 h 00).
 export function heure(minute, secondes = 0) {
   const total = 9 * 3600 + Math.round(minute * 60) + secondes;

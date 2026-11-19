@@ -444,23 +444,28 @@ export { fichierDe };
 
 // Les tableaux qui défilent horizontalement deviennent atteignables au clavier.
 function tableauxDefilants() {
-  const maj = () => {
-    document.querySelectorAll('.table-defile').forEach((z) => {
-      const defile = z.scrollWidth > z.clientWidth + 1;
-      if (defile) {
-        z.setAttribute('tabindex', '0');
-        z.setAttribute('role', 'region');
-        if (!z.hasAttribute('aria-label')) {
-          const cap = z.querySelector('caption');
-          z.setAttribute('aria-label', cap ? cap.textContent.replace(/\s+/g, ' ').trim() : 'Tableau, défilement horizontal');
-        }
-      } else if (z.getAttribute('tabindex') === '0') {
-        z.removeAttribute('tabindex');
-        z.removeAttribute('role');
+  const maj = (z) => {
+    const defile = z.scrollWidth > z.clientWidth + 1;
+    if (defile) {
+      z.setAttribute('tabindex', '0');
+      z.setAttribute('role', 'region');
+      if (!z.hasAttribute('aria-label')) {
+        const cap = z.querySelector('caption');
+        z.setAttribute('aria-label', cap ? cap.textContent.replace(/\s+/g, ' ').trim() : 'Tableau, défilement horizontal');
       }
-    });
+    } else if (z.getAttribute('tabindex') === '0') {
+      z.removeAttribute('tabindex');
+      z.removeAttribute('role');
+    }
   };
-  maj();
-  window.addEventListener('resize', maj);
+  const tout = () => { document.querySelectorAll('.table-defile').forEach(maj); };
+  tout();
+  window.addEventListener('resize', tout);
+  // Un tableau d’abord masqué (correction affichée après l’envoi) est mesuré
+  // au moment où il apparaît.
+  if ('ResizeObserver' in window) {
+    const obs = new ResizeObserver((entrees) => { entrees.forEach((e) => maj(e.target)); });
+    document.querySelectorAll('.table-defile').forEach((z) => obs.observe(z));
+  }
 }
 tableauxDefilants();

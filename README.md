@@ -11,14 +11,13 @@ Le site est statique (HTML, CSS, JavaScript sans framework). Il est publié par 
 | `docs/` | Le site publié. Accueil du cours (`index.html`), pages de la séance 9 (`seance-09/`), pages de l’enseignant (`prof/`), styles, scripts, polices et icônes (`assets/`). |
 | `docs/data/schedule.json` | Le déroulé chronométré : heure de départ, phases, textes des écrans STOP. |
 | `docs/data/config.json` | Les liens (Insee, vidéo, ressources…), l’envoi chiffré des réponses à l’enseignant et les options d’affichage. |
-| `private/` | **Jamais publié.** Les deux corrections en clair, avant chiffrement. Ignoré par Git. |
-| `scripts/` | Le build (chiffrement), le contrôle éditorial, le calcul des budgets de temps, le contrôle des liens, un petit serveur local. |
+| `scripts/` | Le build, le contrôle éditorial, le calcul des budgets de temps, le contrôle des liens, un petit serveur local. |
 | `scripts/code-enseignant.mjs` | Change le code enseignant de la page « Réponses des équipes » (voir « Voir les réponses en direct »). |
 | `tests/` | Les tests automatiques (Playwright). |
 | `docs-internes/budget-temps.md` | Le calcul du temps nécessaire à chaque phase, page par page. |
 | `VERIFICATIONS.md` | Tout ce qui reste à vérifier avant la séance, et les coupes faites. |
 
-Les pages élèves sont, dans l’ordre : `index.html` (accueil de la séance), `1-cadre`, `2-methode`, `3-chercher`, `4-citer-lecture`, `5-citer-pratique`, `5b-correction-definir` (chiffrée), `6-lire` (lecture avant la pause, analyse après, puis dépôt), `pause`, `7-correction` (chiffrée), `8-notes`, `9-video`, `aller-plus-loin` (lecture d’ouverture), `10-fin`. Côté enseignant : `prof/reponses.html` (les réponses des équipes en direct), `prof/projecteur.html` (à projeter) et `prof/deroule.html` (feuille de route).
+Les pages élèves sont, dans l’ordre : `index.html` (accueil de la séance), `1-cadre`, `2-methode`, `3-chercher`, `4-citer-lecture`, `5-citer-pratique`, `5b-correction-definir` (correction de Définir et Citer), `6-lire` (lecture avant la pause, analyse après, puis dépôt), `pause`, `7-correction` (correction de l’étude), `8-notes`, `9-video`, `aller-plus-loin` (lecture d’ouverture), `10-fin`. Côté enseignant : `prof/reponses.html` (les réponses des équipes en direct), `prof/projecteur.html` (à projeter) et `prof/deroule.html` (feuille de route).
 
 ## Le déroulé de la séance
 
@@ -31,12 +30,12 @@ Pour un départ à 9 h 00. Le détail, avec ce qu’il faut dire à chaque phase
 | 9 h 08 | 14 min | Chercher une définition du genre, et qui la donne |
 | 9 h 22 | 4 min | Bien citer, le cours |
 | 9 h 26 | 9 min | Citer, la pratique |
-| 9 h 35 | 5 min | Correction de Définir et Citer (premier mot de passe) |
+| 9 h 35 | 5 min | Correction de Définir et Citer |
 | 9 h 40 | 22 min | Lire l’étude de l’Insee, avec neuf questions qui obligent à lire |
 | 10 h 02 | 30 min | Pause |
 | 10 h 32 | 27 min | Analyser l’étude, question par question (L1 à L6) |
 | 10 h 59 | 2 min | Dépôt |
-| 11 h 01 | 8 min | Correction de l’étude (second mot de passe) |
+| 11 h 01 | 8 min | Correction de l’étude |
 | 11 h 09 | 4 min | Conseils de prise de notes |
 | 11 h 13 | 25 min | Vidéo |
 | 11 h 38 | 5 min | Notes à froid, comparaison en équipe |
@@ -59,7 +58,7 @@ Les textes sont directement dans les pages HTML de `docs/seance-09/`. On peut le
 3. Pour un QCM, la bonne réponse est la lettre de `data-correct="b"`, et chaque retour est dans un bloc `<div data-fb="a">…</div>`.
 4. Validez avec « Commit changes ». La page publiée se met à jour en une ou deux minutes.
 
-Les deux **corrections** sont une exception : elles sont chiffrées. Modifiez `private/seance-09/5b-correction-definir.html` ou `private/seance-09/7-correction.html` sur votre ordinateur, puis reconstruisez (voir plus bas).
+Les deux **corrections** se modifient de la même façon, dans `docs/seance-09/5b-correction-definir.html` et `docs/seance-09/7-correction.html`. Gardez le texte à l’intérieur du bloc `<div … data-porte-contenu>`, qui reste masqué tant que l’équipe n’a pas envoyé son travail.
 
 Les règles d’écriture (pas de tiret long, peu de deux-points, apostrophes typographiques, vouvoiement…) sont contrôlées par `npm run lint`. Le contrôle signale aussi une page qui dépasse son budget de temps.
 
@@ -73,29 +72,16 @@ L’horloge suit l’heure de chaque appareil. Toutes les phases se calculent à
 - **Pour une démonstration** : `?now=10:30` simule l’heure (ici 10 h 30). Pour revenir à l’heure réelle : `?now=reel`.
 - Si la séance démarre en retard, l’adresse affichée sous le code QR de l’écran de projection reprend le réglage de l’appareil de l’enseignant. Donnez-la aux équipes.
 
-## Changer les mots de passe des corrections
+## Les corrections, sans mot de passe
 
-Il y a deux corrections, chacune avec son mot de passe : celle de Définir et Citer, à annoncer vers 9 h 35, et celle de l’étude de l’Insee, à annoncer après le dépôt, vers 11 h 01. Vous pouvez prendre le même mot de passe pour les deux, mais la correction de l’étude est alors lisible dès 9 h 35.
+Les étudiant·es n’ont aucun mot de passe à saisir. Chaque correction s’affiche dès que l’équipe a envoyé son travail.
 
-Il faut un ordinateur avec [Node.js](https://nodejs.org) (version 18 ou plus) et une copie du dépôt.
+- **Correction de Définir et Citer** (vers 9 h 35). La page montre d’abord un bouton « Envoyer et voir la correction ». Le clic envoie les réponses de l’équipe à la page « Réponses des équipes », puis affiche la correction.
+- **Correction de l’étude** (vers 11 h 01). Elle s’ouvre d’elle-même si l’équipe a déjà déposé son travail sur la page Lire. Sinon, le même bouton fait le dépôt, puis affiche la correction.
 
-1. Dans le dossier du dépôt, créez un fichier texte nommé `.env.local` contenant deux lignes :
-   ```
-   CORRECTION_DEFINIR_PASSWORD=premier-mot-de-passe
-   CORRECTION_PASSWORD=second-mot-de-passe
-   ```
-   Ce fichier n’est jamais envoyé sur GitHub.
-2. Installez les outils une première fois :
-   ```bash
-   npm install
-   ```
-3. Reconstruisez :
-   ```bash
-   npm run build
-   ```
-4. Publiez les fichiers `docs/seance-09/5b-correction-definir.html` et `docs/seance-09/7-correction.html` mis à jour (voir « Publier »).
+Une fois ouverte, une correction le reste sur cet appareil. Elle s’affiche aussi directement quand il n’y a rien à envoyer (une équipe qui n’a rien écrit, ou vous qui préparez la séance) et quand l’envoi est coupé dans `docs/data/config.json`. Si l’envoi échoue (réseau, relais saturé), la correction s’affiche quand même, avec un message qui demande de télécharger le récapitulatif et de vous prévenir. Personne n’est bloqué.
 
-Les mots de passe ne sont écrits nulle part dans le dépôt. Le jour même, annoncez chacun au bon moment, par exemple avec le bouton « Afficher en grand » de l’écran de projection (le mot de passe saisi là n’est enregistré nulle part).
+Ce bouton n’est pas une protection. Le texte des corrections est public, dans le dépôt comme dans le code des pages, et une personne curieuse peut le lire en avance. Il garantit seulement que, dans le déroulé normal, le travail de l’équipe vous parvient avant qu’elle lise la correction.
 
 ## Reconstruire
 
@@ -103,7 +89,7 @@ Les mots de passe ne sont écrits nulle part dans le dépôt. Le jour même, ann
 npm run build
 ```
 
-Le build lance le contrôle éditorial et le calcul des budgets, puis chiffre les deux corrections avec StatiCrypt. Il s’arrête si une règle est violée ou si une phase dépasse son temps.
+Le build lance le contrôle éditorial et le calcul des budgets, puis vérifie que les deux corrections ont bien leur bouton d’envoi. Il s’arrête si une règle est violée ou si une phase dépasse son temps.
 
 Autres commandes utiles :
 
@@ -119,7 +105,7 @@ npm run liens
 npm run serve
 ```
 
-`npm run serve` affiche le site sur `http://localhost:8080/fabrique/`. Les tests se lancent avec `npm test` (il faut avoir les deux mots de passe dans `.env.local` pour les tests des corrections) et les captures d’écran avec `npm run captures`.
+`npm run serve` affiche le site sur `http://localhost:8080/fabrique/`. Les tests se lancent avec `npm test` et les captures d’écran avec `npm run captures`.
 
 ## Publier sur GitHub Pages
 
@@ -129,17 +115,7 @@ npm run serve
 
 Le travail a été préparé sur la branche `claude/elegant-planck-ir8tii`. Fusionnez-la dans `main` (par une pull request) avant l’étape 2, ou choisissez provisoirement cette branche dans l’étape 2 pour essayer le site.
 
-Après publication, vérifiez sur l’adresse publique : les deux pages de correction demandent leur mot de passe, le bouton « Télécharger le récapitulatif » produit bien un fichier, l’horloge affiche la bonne phase, et une équipe de test apparaît sur la page « Réponses des équipes ».
-
-## Sauvegarder le dossier `private/`
-
-`private/` contient la seule version lisible des deux corrections. Il n’est jamais publié, donc GitHub n’en garde aucune copie. Gardez-en une sauvegarde ailleurs : un dossier personnel dans le cloud de l’école, une clé USB, ou un dépôt GitHub **privé** distinct. Sans ces fichiers, il faudrait réécrire les corrections pour changer les mots de passe.
-
-## Ce que le chiffrement protège
-
-Les corrections publiées sont chiffrées (AES, côté navigateur). Sans le mot de passe, leur contenu n’apparaît pas dans le HTML servi. Le chiffrement protège contre la lecture directe, pas contre une personne déterminée qui aurait le mot de passe ou qui le devinerait : choisissez un mot de passe qui ne se devine pas. C’est suffisant ici. Si le dépôt est privé avec Pages activé (plan GitHub payant), vous pouvez ne pas chiffrer : mettez `"chiffrerCorrection": false` dans `docs/data/config.json`, puis reconstruisez.
-
-L’option « se souvenir » évite de redemander le mot de passe à chaque rechargement, sur le même ordinateur, pendant 30 jours. Elle ne garde que le dernier mot de passe saisi : en passant d’une correction à l’autre, le navigateur le redemande.
+Après publication, vérifiez sur l’adresse publique : les deux corrections s’ouvrent avec le bouton « Envoyer et voir la correction » pour une équipe qui a répondu, le bouton « Télécharger le récapitulatif » produit bien un fichier, l’horloge affiche la bonne phase, et une équipe de test apparaît sur la page « Réponses des équipes ».
 
 ## Voir les réponses en direct
 
@@ -179,7 +155,7 @@ node scripts/code-enseignant.mjs "nouveau code" --ancien-code "code actuel"
 
 - **État partagé** : toutes les pages lisent et écrivent le même objet dans le navigateur (clé `fabrique:s09:v1`). Une écriture a lieu 350 ms après chaque saisie, et tout de suite quand on quitte la page. Si le navigateur refuse d’enregistrer (navigation privée stricte), un message demande de copier régulièrement le récapitulatif.
 - **Horloge** : les phases, les comptes à rebours et les écrans STOP viennent de `schedule.json`. À chaque point d’arrêt, un bandeau prévient pendant 60 secondes, puis un écran plein cadre propose un seul bouton vers la page suivante. Les réponses sont conservées, et les pages précédentes restent accessibles ensuite.
-- **Corrections** : chaque question est affichée avec la réponse de l’équipe, une réponse proposée et des conseils de méthode. Dans la correction de l’étude, « Voir le passage » surligne le passage de l’étude qui justifie la réponse.
+- **Corrections** : sans mot de passe, chacune s’affiche quand l’équipe a envoyé son travail (voir « Les corrections, sans mot de passe »). Chaque question est affichée avec la réponse de l’équipe, une réponse proposée et des conseils de méthode. Dans la correction de l’étude, « Voir le passage » surligne le passage de l’étude qui justifie la réponse.
 - **Repère horaire** : sur les pages de travail, une ligne sous le chrono dit à quelle question l’équipe devrait en être, si elle est dans les temps, et mène à la question.
 - **Mise en page** : tous les blocs d’une page partagent la même colonne. Sur grand écran, une colonne « Sur cette page » affiche à droite le sommaire, les questions faites ou à faire et le créneau prévu. Les pages qui occupent toute la largeur (l’étude et ses questions, la feuille de notes) n’en ont pas.
 - **Dépôt** : le bouton « Envoyer à l’enseignant » envoie tout ce qui n’est pas encore parti et signale que le dépôt est fait. Le récapitulatif peut aussi être téléchargé (`s09_<equipe>_parcours.txt`, et `s09_<equipe>_video.txt` pour la vidéo) ou copié, en secours.
@@ -188,4 +164,4 @@ node scripts/code-enseignant.mjs "nouveau code" --ancien-code "code actuel"
 
 ## Licences
 
-Polices Archivo et Literata sous licence SIL Open Font License (fichiers `OFL-*.txt` dans `docs/assets/fonts/`). Bibliothèque de code QR `qrcode-generator` de Kazuhiko Arase, licence MIT (`docs/assets/js/vendor/qrcode.mjs`). StatiCrypt (licence MIT) n’est utilisé qu’au moment du build.
+Polices Archivo et Literata sous licence SIL Open Font License (fichiers `OFL-*.txt` dans `docs/assets/fonts/`). Bibliothèque de code QR `qrcode-generator` de Kazuhiko Arase, licence MIT (`docs/assets/js/vendor/qrcode.mjs`).

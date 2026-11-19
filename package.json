@@ -12,15 +12,14 @@
     "test": "playwright test --trace off",
     "captures": "CAPTURES=1 playwright test tests/captures.spec.mjs --trace off",
     "budget": "node scripts/budget.mjs",
-    "valider": "html-validate \"docs/**/*.html\" \"private/**/*.html\"",
-    "verifier": "node scripts/lint-copy.mjs && html-validate \"docs/**/*.html\" && node scripts/build.mjs --verifier-seulement"
+    "valider": "html-validate \"docs/**/*.html\"",
+    "verifier": "node scripts/lint-copy.mjs && html-validate \"docs/**/*.html\""
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",
     "@playwright/test": "1.63.0",
     "html-validate": "9.5.5",
-    "linkedom": "0.18.12",
-    "staticrypt": "3.5.4"
+    "linkedom": "0.18.12"
   },
   "engines": {
     "node": ">=18"

@@ -1,6 +1,5 @@
 // Écran de projection de l’enseignant : grande horloge, phase en cours, temps
-// restant, phase suivante, déroulé, mot de passe affiché en grand et code QR.
-// Le mot de passe saisi ici n’est enregistré nulle part (ni stockage, ni réseau).
+// restant, phase suivante, déroulé et code QR.
 
 import { statut, surTic, phases, heureMinute, formatCompte, formatHeure, heureDepartTexte } from './clock.js';
 import { lire } from './state.js';
@@ -96,20 +95,6 @@ async function demarrer() {
   majDepart();
   rendre(statut());
   surTic((s) => { rendre(s); majDepart(); });
-
-  // Mot de passe affiché en grand : jamais enregistré
-  const champ = document.getElementById('mdp-correction');
-  const ecran = document.querySelector('[data-mdp-geant]');
-  const sortie = ecran.querySelector('output');
-  document.querySelector('[data-afficher-mdp]').addEventListener('click', () => {
-    const v = champ.value.trim();
-    if (!v) { champ.focus(); return; }
-    sortie.textContent = v;
-    ecran.hidden = false;
-    ecran.querySelector('button').focus();
-  });
-  ecran.querySelector('button').addEventListener('click', () => { ecran.hidden = true; champ.focus(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !ecran.hidden) { ecran.hidden = true; champ.focus(); } });
 
   // Code QR (option codeQR de config.json)
   const zoneQR = document.querySelector('[data-qr]');

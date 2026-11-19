@@ -36,23 +36,6 @@
 .proj-qr svg { width: 100%; max-width: 220px; height: auto; display: block; background: #ffffff; padding: 10px; border-radius: var(--rayon); }
 .proj-qr .adresse { font-size: 0.95rem; word-break: break-all; margin: 10px 0 0; }
 
-.mdp-geant {
-  position: fixed;
-  inset: 0;
-  z-index: 95;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-  background: var(--fond);
-  padding: 30px;
-  text-align: center;
-}
-.mdp-geant[hidden] { display: none; }
-.mdp-geant .etiquette { font-size: 1.4rem; }
-.mdp-geant output { font-family: var(--police-titre); font-weight: 800; font-size: clamp(3rem, 12vw, 10rem); line-height: 1.05; letter-spacing: 0.02em; word-break: break-all; color: var(--texte); }
-
 @media (max-width: 1000px) {
   .projecteur { grid-template-columns: 1fr; padding: 20px 16px 40px; }
 }

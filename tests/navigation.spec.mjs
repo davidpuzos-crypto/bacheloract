@@ -40,12 +40,9 @@ test('parcours du hub au bilan avec un état partagé', async ({ page }) => {
     ['Voir le bilan', /10-fin\.html/]
   ];
   for (const [lien, url] of suite) {
-    // Pages chiffrées : on passe par l’adresse de la page suivante.
-    if (/5b-correction-definir/.test(page.url())) { await ouvrir(page, 'seance-09/6-lire.html'); continue; }
-    if (/7-correction/.test(page.url())) { await ouvrir(page, 'seance-09/8-notes.html'); continue; }
     await page.locator('.pager').getByRole('link', { name: lien }).click();
     await expect(page).toHaveURL(url);
-    await page.waitForFunction(() => document.documentElement.classList.contains('js-pret') || !!document.getElementById('staticrypt-form'));
+    await page.waitForFunction(() => document.documentElement.classList.contains('js-pret'));
   }
   await expect(page.locator('h1')).toHaveText('Le bilan de votre enquête');
   await expect(page.locator('.pastille-equipe')).toContainText('Les Curieuses');

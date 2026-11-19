@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { RACINE, DOCS, PRIVE, lire, mots, texte, texteDeLecture } from './lib/pages.mjs';
+import { RACINE, DOCS, lire, mots, texte, texteDeLecture } from './lib/pages.mjs';
 
 const MOTS_MINUTE = 200;
 const QCM_MIN = 0.5;
@@ -35,7 +35,7 @@ const PHASES = [
     extras: [['Lecture des sources sur les sites externes (page de Géoconfluences, seconde source)', 5]] },
   { id: 'citer-lecture', titre: 'Citer, lecture', fichier: 'docs/seance-09/4-citer-lecture.html', minutes: 4, maxMots: 720 },
   { id: 'citer-pratique', titre: 'Citer, pratique', fichier: 'docs/seance-09/5-citer-pratique.html', minutes: 9, maxMots: 180 },
-  { id: 'correction-definir', titre: 'Correction, définir et citer', fichier: 'private/seance-09/5b-correction-definir.html', minutes: 5, maxMots: 900 },
+  { id: 'correction-definir', titre: 'Correction, définir et citer', fichier: 'docs/seance-09/5b-correction-definir.html', minutes: 5, maxMots: 900 },
   { id: 'lire', titre: 'Lire l’étude', fichier: 'docs/seance-09/6-lire.html', exclure: '#depot, #analyser', minutes: 22, maxMots: 260,
     extrait: '.citation-insee', maxExtrait: 1400, motsMinuteExtrait: MOTS_MINUTE_ETUDE,
     extras: [['Lecture du tableau de la figure 2', 3]] },
@@ -43,7 +43,7 @@ const PHASES = [
     extras: [['Retours au document pour appuyer les réponses', 2]] },
   { id: 'depot', titre: 'Dépôt', fichier: 'docs/seance-09/6-lire.html', section: '#depot', minutes: 2,
     extras: [['Envoyer le récapitulatif à l’enseignant, ou le télécharger', 1.2]] },
-  { id: 'correction', titre: 'Correction de l’étude', fichier: 'private/seance-09/7-correction.html', minutes: 8, maxMots: 1500,
+  { id: 'correction', titre: 'Correction de l’étude', fichier: 'docs/seance-09/7-correction.html', minutes: 8, maxMots: 1500,
     retirer: '.citation-insee', extras: [['Retours à l’étude avec « Voir le passage »', 1]] },
   { id: 'notes', titre: 'Conseils de prise de notes', fichier: 'docs/seance-09/8-notes.html', minutes: 4, maxMots: 500,
     extras: [['Lecture des huit conseils et choix de trois', 1.8]] },
@@ -206,4 +206,4 @@ if (direct) {
   process.exit(ko ? 1 : 0);
 }
 
-export { PHASES, DOCS, PRIVE };
+export { PHASES, DOCS };

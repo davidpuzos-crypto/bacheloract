@@ -1,6 +1,8 @@
 // Chargé de façon synchrone dans <head> : applique le thème, le mode sobre et
 // le drapeau d’aide avant l’affichage, pour éviter un flash de couleurs.
 (function () {
+  // Signale que JavaScript fonctionne (voir la porte des corrections).
+  document.documentElement.classList.add('js');
   try {
     var s = JSON.parse(window.localStorage.getItem('fabrique:s09:v1') || '{}');
     var o = s.options || {};

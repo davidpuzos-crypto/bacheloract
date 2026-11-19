@@ -9,7 +9,6 @@ import { parseHTML } from 'linkedom';
 const ici = path.dirname(fileURLToPath(import.meta.url));
 export const RACINE = path.resolve(ici, '..', '..');
 export const DOCS = path.join(RACINE, 'docs');
-export const PRIVE = path.join(RACINE, 'private');
 
 export function cheminRelatif(p) { return path.relative(RACINE, p); }
 
@@ -28,11 +27,6 @@ export function lire(p) {
   const html = fs.readFileSync(p, 'utf8');
   const { document } = parseHTML(html);
   return { html, document };
-}
-
-// Une page chiffrée par StatiCrypt ne contient pas de texte à contrôler.
-export function estChiffree(html) {
-  return /staticrypt/i.test(html) && /staticryptConfig/.test(html);
 }
 
 export function mots(texte) {
