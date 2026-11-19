@@ -65,7 +65,7 @@ async function demarrer() {
     } else {
       nom.textContent = s.phase.label;
       reste.textContent = 'Reste ' + formatCompte(s.resteMs);
-      suivante.textContent = s.suivante ? 'Ensuite, ' + (s.suivante.id === 'fin' ? 'fin de la séance' : s.suivante.label) + ' à ' + heureMinute(s.suivante.debut) : '';
+      suivante.textContent = s.suivante ? 'Ensuite, ' + (s.suivante.id === 'fin' ? 'fin de la séance' : '« ' + s.suivante.label + ' »') + ', à ' + heureMinute(s.suivante.debut) : '';
     }
     barre.style.width = Math.round(s.progression * 100) + '%';
     const recent = s.arret && s.arret.depuisMs < 5 * 60000;
@@ -89,7 +89,7 @@ async function demarrer() {
   let texteDepart = '';
   const majDepart = () => {
     if (!depart) { return; }
-    const t = heureDepartTexte().replace(':', ' h ') + (lire().options.horloge.decalage ? ', décalage de ' + lire().options.horloge.decalage + ' min' : '');
+    const t = heureDepartTexte().replace(/^0/, '').replace(':', ' h ') + (lire().options.horloge.decalage ? ', décalage de ' + lire().options.horloge.decalage + ' min' : '');
     if (t !== texteDepart) { texteDepart = t; depart.textContent = t; typographier(depart); }
   };
   majDepart();

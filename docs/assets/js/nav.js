@@ -64,7 +64,7 @@ function construireEntete() {
   if (evitement) { document.body.prepend(evitement); }
 
   if (!stockageDisponible()) {
-    entete.after(el('<p class="avertissement-stockage" role="alert">Ce navigateur n’enregistre pas vos réponses, copiez régulièrement le récapitulatif.</p>'));
+    entete.after(el('<p class="avertissement-stockage" role="alert">Ce navigateur n’enregistre pas vos réponses. Copiez régulièrement le récapitulatif, en bas de la page Lire.</p>'));
   }
 
   const voile = el('<div class="voile" hidden></div>');
@@ -330,7 +330,7 @@ export function initNav(page, options = {}) {
   });
   surStockageIndisponible(() => {
     if (!document.querySelector('.avertissement-stockage')) {
-      refs.entete.after(el('<p class="avertissement-stockage" role="alert">Ce navigateur n’enregistre pas vos réponses, copiez régulièrement le récapitulatif.</p>'));
+      refs.entete.after(el('<p class="avertissement-stockage" role="alert">Ce navigateur n’enregistre pas vos réponses. Copiez régulièrement le récapitulatif, en bas de la page Lire.</p>'));
     }
   });
   surCollecte(({ actif, dernierEnvoi, sature }) => {

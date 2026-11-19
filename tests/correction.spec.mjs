@@ -36,7 +36,8 @@ test('correction de Définir et Citer : un clic envoie les réponses et ouvre la
   const envois = await relaisSimule(page);
   await ouvrir(page, 'seance-09/3-chercher.html', '09:10');
   await saisir(page, 'a2', 'La page attribue la définition à Blidon, géographe.');
-  await ouvrir(page, 'seance-09/5b-correction-definir.html', '09:36');
+  // Hors des deux minutes qui suivent le passage de 9 h 35 (pas d’envoi automatique).
+  await ouvrir(page, 'seance-09/5b-correction-definir.html', '09:38');
   const porte = page.locator('[data-porte]');
   await expect(porte).toBeVisible();
   await expect(porte.locator('h2')).toHaveText('D’abord, envoyez votre travail');
@@ -76,14 +77,13 @@ test('correction de Définir et Citer : un clic envoie les réponses et ouvre la
   await expect(page.locator('.carte-correction').first()).toBeVisible();
 });
 
-test('correction de l’étude : ouverte d’emblée quand le dépôt est fait', async ({ page }) => {
+test('correction de l’étude : ouverte d’emblée quand le dépôt est envoyé', async ({ page }) => {
+  await relaisSimule(page);
   await ouvrir(page, 'seance-09/6-lire.html#analyser', '09:10');
   await saisir(page, 'l1', 'Notre fiche d’identité du document, assez longue.');
-  const [fichier] = await Promise.all([
-    page.waitForEvent('download'),
-    page.locator('[data-depot="parcours"] [data-action="telecharger"]').click()
-  ]);
-  expect(fichier.suggestedFilename()).toMatch(/\.txt$/);
+  const depot = page.locator('[data-depot="parcours"]');
+  await depot.locator('[data-action="envoyer"]').click();
+  await expect(depot.locator('[data-recap-statut]')).toContainText('Récapitulatif envoyé à l’enseignant');
   await ouvrir(page, 'seance-09/7-correction.html', '11:02');
   await expect(page.locator('[data-porte]')).toBeHidden();
   await expect(page.locator('h1')).toHaveText('Correction de l’étude de l’Insee');

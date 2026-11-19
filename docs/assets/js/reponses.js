@@ -460,7 +460,7 @@ function rendreDepart() {
   const p = $('[data-depart-actuel]');
   const duJour = departDiffuse && departDiffuse.depart && new Date(departDiffuse.t).toDateString() === new Date().toDateString();
   p.textContent = duJour
-    ? 'Heure de départ diffusée à toute la classe, ' + departDiffuse.depart.replace(':', ' h ') + ' (envoyée à ' + heure(departDiffuse.t) + ').'
+    ? 'Heure de départ diffusée à toute la classe, ' + departDiffuse.depart.replace(/^0/, '').replace(':', ' h ') + ' (envoyée à ' + heure(departDiffuse.t) + ').'
     : 'Aucune heure diffusée aujourd’hui. Les appareils suivent l’horaire du fichier docs/data/schedule.json.';
   typographier(p);
 }
@@ -485,7 +485,7 @@ async function diffuserDepart(valeur) {
     rendreDepart();
     relireHorloge();
     st.textContent = recu === valeur
-      ? (valeur ? 'C’est fait. Départ à ' + valeur.replace(':', ' h ') + ' pour toute la classe.' : 'C’est fait. Retour à l’horaire du fichier.')
+      ? (valeur ? 'C’est fait. Départ à ' + valeur.replace(/^0/, '').replace(':', ' h ') + ' pour toute la classe.' : 'C’est fait. Retour à l’horaire du fichier.')
       : 'Le changement n’est pas confirmé. Recommencez dans un instant.';
   } catch (e) {
     st.textContent = e.message === 'limite'

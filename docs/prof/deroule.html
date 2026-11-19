@@ -29,7 +29,7 @@
   </div>
 
   <h2>Le déroulé</h2>
-  <p class="prose">Temps de travail effectif de 2 h 30. Définir et citer tiennent en 40 minutes, correction comprise. L’étude de l’Insee est lue avant la pause de 10 h 02, puis analysée après. La séance se termine par dix minutes de lecture pour aller plus loin. Les écrans STOP s’affichent d’abord en bandeau pendant 60 secondes, puis en plein écran, avec un seul bouton vers la page suivante.</p>
+  <p class="prose">Temps de travail effectif de 2 h 30. Définir et citer tiennent en 40 minutes, correction comprise. L’étude de l’Insee est lue avant la pause de 10 h 02, puis analysée après. La séance se termine par dix minutes de lecture pour aller plus loin. Aucune page n’est imposée aux équipes. Une ligne sous l’en-tête leur dit où elles devraient être, et l’écran de projection affiche un grand mot (« Stop », « Reprise », « Vidéo »…) à chaque passage.</p>
   <div class="table-defile">
     <table class="deroule" data-deroule>
       <caption class="visuellement-cache">Phases de la séance avec leur heure de début et leur durée</caption>
@@ -43,7 +43,7 @@
         <tr><th scope="row" class="heure">9 h 22</th><td>Lecture, bien citer</td><td class="duree">4 min</td></tr>
         <tr><th scope="row" class="heure">9 h 26</th><td>Citer, pratique <span class="tag-stop">stop à 9 h 35</span></td><td class="duree">9 min</td></tr>
         <tr><th scope="row" class="heure">9 h 35</th><td>Correction, définir et citer <span class="tag-stop">stop à 9 h 40</span></td><td class="duree">5 min</td></tr>
-        <tr class="groupe"><th colspan="2" scope="colgroup">L’étude de l’Insee</th><td class="duree">59 min</td></tr>
+        <tr class="groupe"><th colspan="2" scope="colgroup">L’étude de l’Insee</th><td class="duree">59 min, hors pause</td></tr>
         <tr><th scope="row" class="heure">9 h 40</th><td>Lire l’étude <span class="tag-stop">stop à 10 h 02</span></td><td class="duree">22 min</td></tr>
         <tr class="pause"><th scope="row" class="heure">10 h 02</th><td>Pause <span class="tag-stop">stop à 10 h 32</span></td><td class="duree">30 min</td></tr>
         <tr><th scope="row" class="heure">10 h 32</th><td>Analyser l’étude</td><td class="duree">27 min</td></tr>
@@ -63,7 +63,7 @@
 
   <h2>Régler l’horloge</h2>
   <div class="prose">
-    <p>Les pages suivent l’heure de chaque appareil. Le plus simple, si la séance ne commence pas à 9 h 00, est d’ouvrir la page « Réponses des équipes » et de diffuser l’heure de départ réelle, ou de cliquer « Démarrer maintenant » au vrai début. Les appareils la relisent toutes les six minutes au plus, diffusez-la donc de préférence avant l’arrivée des étudiant·es.</p>
+    <p>Les pages suivent l’heure de chaque appareil. Le plus simple, si la séance ne commence pas à 9 h 00, est d’ouvrir la page « Réponses des équipes » et de diffuser l’heure de départ réelle, ou de cliquer sur « Démarrer maintenant » au vrai début. Les appareils la relisent toutes les six minutes au plus, diffusez-la donc de préférence avant l’arrivée des étudiant·es.</p>
     <p>Sans l’envoi des réponses, modifiez l’heure de départ par défaut sur GitHub, dans <code>docs/data/schedule.json</code>, champ <code>departParDefaut</code>. Les pages ouvertes relisent ce fichier chaque minute.</p>
     <p>Sur un appareil, vous pouvez aussi ajouter à l’adresse <code>?depart=09:10</code> pour changer l’heure de départ, <code>?decalage=5</code> pour décaler de quelques minutes (ou <code>?decalage=-5</code>), et <code>?now=10:30</code> pour simuler une heure pendant une démonstration. Ces réglages restent mémorisés sur l’appareil. Pour les annuler, ouvrez l’adresse avec <code>?depart=defaut</code>, <code>?decalage=0</code> ou <code>?now=reel</code>.</p>
     <p>Si la séance démarre en retard, l’adresse affichée sous le code QR de l’écran de projection reprend le réglage de votre appareil. Donnez-la aux équipes pour qu’elles suivent le même horaire.</p>
@@ -71,10 +71,11 @@
 
   <h2>Envoyer pour passer</h2>
   <div class="prose">
-    <p>Pas de mot de passe. Pour voir une correction ou passer à la quête suivante, chaque équipe envoie son travail d’un clic, avec les boutons « Envoyer et… » placés en fin de quête. Une équipe qui arrive par le menu sans avoir envoyé voit un encadré avec le même bouton. Si l’envoi échoue, la page s’ouvre quand même et l’équipe est invitée à vous prévenir.</p>
+    <p>Pas de mot de passe. Pour voir une correction ou passer à la quête suivante, chaque équipe envoie son travail d’un clic, avec les boutons « Envoyer et… » placés en fin de quête. Une équipe qui arrive par le menu sans avoir envoyé voit l’encadré « D’abord, envoyez votre travail », avec un bouton d’envoi. Si l’envoi échoue, la page s’ouvre quand même et l’équipe est invitée à vous prévenir.</p>
   </div>
 
   <h2>Phase par phase, ce que vous pouvez dire</h2>
+  <p class="prose">Horaires donnés pour un départ à 9 h 00.</p>
   <div class="fiche-phase">
     <h3>Chercher, de 9 h 08 à 9 h 22</h3>
     <p>Une équipe choisit le Larousse ou une IA. Renvoyez-la au tableau « Où la chercher » de la méthode.</p>
@@ -100,13 +101,13 @@
   <div class="fiche-phase">
     <h3>Analyser l’étude, de 10 h 32 à 10 h 59</h3>
     <p>Confusion entre 13,0 % (figure 2, autre champ) et 14,0 % (figure 1).</p>
-    <p>L5 répète les chiffres. Demandez ce que le document explique, avec quels mots (« s’explique », « du fait de »), et ce qu’il ne mesure pas.</p>
+    <p>L5 répète les chiffres. Demandez ce que le document explique, avec quels mots (« s’explique », « proviennent de »), et ce qu’il ne mesure pas.</p>
     <p>L6 donne une opinion. Demandez de repartir de la définition de travail écrite en C3.</p>
   </div>
   <div class="fiche-phase">
-    <h3>Correction de l’étude, à 11 h 01</h3>
+    <h3>Correction de l’étude, de 11 h 01 à 11 h 09</h3>
     <p>Pas de mot de passe. La correction s’ouvre d’elle-même pour les équipes qui ont déposé leur travail, et d’un clic pour les autres, ce clic faisant le dépôt. La page « Réponses des équipes » compte les dépôts reçus.</p>
-    <p>Chaque question montre la réponse de l’équipe, une réponse proposée et des conseils de méthode. « Voir le passage » surligne dans l’étude le passage qui justifie la réponse.</p>
+    <p>Chaque question montre la réponse de l’équipe, une réponse proposée et des conseils de méthode. « Voir le passage dans l’étude » surligne le passage qui justifie la réponse.</p>
   </div>
   <div class="fiche-phase">
     <h3>Prise de notes et vidéo, de 11 h 09 à 11 h 50</h3>
@@ -122,7 +123,7 @@
   <h2>Plan B en cas de retard</h2>
   <div class="prose">
     <p>Avant la pause, si la lecture déborde, faites passer à la pause à l’heure. Les questions de lecture non faites ne bloquent rien.</p>
-    <p>Après la pause, sacrifiez dans cet ordre L3 (variables), L2 (thèse), puis les bonus. L6 (genre) est le cœur de l’analyse, gardez-la.</p>
+    <p>Après la pause, sacrifiez dans cet ordre L3 (variables), puis L2 (thèse). L6 (genre) est le cœur de l’analyse, gardez-la.</p>
     <p>En fin de séance, la lecture pour aller plus loin peut se faire à la maison. Gardez la vidéo et la comparaison des notes.</p>
   </div>
 
@@ -133,7 +134,7 @@
     <li><input type="checkbox" id="v3"><label for="v3">La page « Genre » de Géoconfluences s’ouvre, ainsi que le glossaire de secours.</label></li>
     <li><input type="checkbox" id="v4"><label for="v4">Les liens Moodle de la fiche méthode et du guide de révision sont renseignés dans <code>docs/data/config.json</code>, s’ils existent.</label></li>
     <li><input type="checkbox" id="v5"><label for="v5">L’accès à Cairn par le K-lab et SophIA fonctionnent depuis la salle.</label></li>
-    <li><input type="checkbox" id="v6"><label for="v6">Le site SES-ENS et le guide APA de l’ENS Paris s’ouvrent, et les modèles APA de la page Citer leur sont conformes.</label></li>
+    <li><input type="checkbox" id="v6"><label for="v6">Le site SES-ENS et le guide APA de l’ENS Paris s’ouvrent, et les modèles APA de la page « Bien citer » sont conformes au guide.</label></li>
     <li><input type="checkbox" id="v7"><label for="v7">Les trois questions du QCM de la vidéo (V4 à V6) sont revérifiées contre la vidéo, aux horodatages des chapitres.</label></li>
     <li><input type="checkbox" id="v8"><label for="v8">La vidéo se lance sur le poste de projection, avec le son.</label></li>
     <li><input type="checkbox" id="v9"><label for="v9">Les pourcentages de rétention restent masqués, sauf source fournie.</label></li>

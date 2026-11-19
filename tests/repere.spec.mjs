@@ -29,7 +29,10 @@ test('repère : en retard, la ligne dit où être ; sur une page sans repère, r
   await ouvrir(page, 'seance-09/2-methode.html', '09:16');
   const barre = page.locator('.repere-barre');
   await expect(barre).toHaveAttribute('data-etat', 'ailleurs');
-  await expect(barre.locator('.repere-texte')).toHaveText(/Il est 9\s*h\s*16\.\s*Vous devriez être sur «\s*Chercher\s*», jusqu’à 9\s*h\s*22\./);
+  await expect(barre.locator('.repere-heure')).toHaveText(/Il est 9\s*h\s*16\./);
+  await expect(barre.locator('.repere-texte')).toHaveText(/Vous devriez être sur «\s*Chercher\s*», jusqu’à 9\s*h\s*22\./);
+  // L’heure n’est pas dans la zone annoncée aux lecteurs d’écran.
+  await expect(barre.locator('[aria-live] .repere-heure')).toHaveCount(0);
   await expect(barre.locator('.repere-lien')).toHaveAttribute('href', /3-chercher\.html/);
   await expect(page.locator('.drapeau-repere')).toHaveCount(0);
   // Bonne page, mais phase sans repère : la ligne se tait.

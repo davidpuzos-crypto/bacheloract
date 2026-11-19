@@ -36,7 +36,7 @@ test('récapitulatif du parcours', async ({ page, context }) => {
   expect(texte).not.toMatch(/niveau|Stagiaire/i);
   expect(texte).toContain('Réponse. Citation A1 de test, assez longue pour compter.');
   expect(texte).toMatch(/A3\. première réponse A \(fausse\)/);
-  expect(texte).toContain('A6 (bonus). Bonus facultatif.');
+  expect(texte).toContain('A4 (bonus). Retrouvez le texte de Blidon (2011)');
   expect(texte).toContain('B0. Quelle seconde source avez-vous choisie ?');
   expect(texte).toContain('Réponse. SophIA, puis un article ouvert sur Cairn');
   // Ordre des pages : Chercher, puis Citer, puis Lire.

@@ -36,5 +36,5 @@ test('correction de B1 : la définition de Sofio et le piège de la citation de 
   await expect(b1.locator('.modele')).toContainText('Le concept de genre est fondé sur l’idée que le sexe n’est pas qu’affaire de biologie');
   await expect(b1.locator('.modele')).toContainText('(Sofio, s. d.');
   await expect(b1.locator('.conseils-methode')).toContainText('Bereni et ses coauteurs (2012, p. 10)');
-  await expect(page.locator('#c-c1 .modele')).toContainText('Sofio (s. d.)');
+  await expect(page.locator('#c-c1 .modele')).toContainText('Sofio (s. d., par. 1)');
 });

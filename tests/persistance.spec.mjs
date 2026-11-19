@@ -54,5 +54,5 @@ test('stockage indisponible : message clair', async ({ page }) => {
     Storage.prototype.setItem = function () { throw new Error('quota'); };
   });
   await ouvrir(page, 'seance-09/3-chercher.html', '09:20');
-  await expect(page.locator('.avertissement-stockage')).toHaveText('Ce navigateur n’enregistre pas vos réponses, copiez régulièrement le récapitulatif.');
+  await expect(page.locator('.avertissement-stockage')).toHaveText('Ce navigateur n’enregistre pas vos réponses. Copiez régulièrement le récapitulatif, en bas de la page Lire.');
 });

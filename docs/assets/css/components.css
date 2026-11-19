@@ -622,7 +622,7 @@ textarea.recap { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, m
 .conseil[aria-pressed="true"] .choix::before { content: "✓ "; }
 .conseils-statiques .conseil { cursor: default; }
 
-/* ---------- Feuille de notes (vidéo) ---------- */
+/* ---------- Page de la vidéo ---------- */
 .rappel-video {
   display: flex;
   flex-wrap: wrap;

@@ -42,6 +42,10 @@ async function demarrer() {
   window.dispatchEvent(new CustomEvent('fabrique:pret'));
 }
 
+// Page restituée par le cache du navigateur (bouton Retour) : l’état a pu
+// changer sur une autre page, on recharge pour repartir de l’état enregistré.
+window.addEventListener('pageshow', (e) => { if (e.persisted) { window.location.reload(); } });
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', demarrer);
 } else {

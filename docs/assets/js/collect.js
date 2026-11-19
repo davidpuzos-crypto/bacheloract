@@ -262,15 +262,23 @@ export async function initCollecte(espace, surChangement) {
   const etaler = () => Math.round(Math.random() * Math.max(0, Number(cfg.collecte.etalementSecondes) || 0) * 1000);
 
   // Point d’arrêt : un envoi par arrêt et par appareil, dans les deux minutes.
-  surArret(({ statut: s }) => {
+  // L’arrêt n’est noté qu’une fois l’envoi réussi (ou sans rien de nouveau) :
+  // si l’équipe change de page pendant l’étalement, la page suivante s’en charge.
+  let arretEnCours = null;
+  const auPointDArret = (s) => {
     const a = s && s.arret;
     if (!a || a.depuisMs > 120000) { return; }
-    const env = etatEnvoi();
-    if (env.arrets[a.phase.id]) { return; }
-    env.arrets[a.phase.id] = Date.now();
-    garderEnvoi();
-    setTimeout(() => { envoyer(); }, etaler());
-  });
+    if (etatEnvoi().arrets[a.phase.id] || arretEnCours === a.phase.id) { return; }
+    arretEnCours = a.phase.id;
+    setTimeout(async () => {
+      const res = await envoyer().catch(() => ({ ok: false }));
+      if (res.ok) { etatEnvoi().arrets[a.phase.id] = Date.now(); garderEnvoi(); }
+      arretEnCours = null;
+    }, etaler());
+  };
+  surArret(({ statut: s }) => auPointDArret(s));
+  // Page ouverte juste après un passage : l’événement de l’horloge est déjà parti.
+  auPointDArret(statut());
 
   if (surChangement) {
     surChangement((d) => {
