@@ -26,64 +26,83 @@ const types = {
   '.txt': 'text/plain; charset=utf-8'
 };
 
-// Faux script Google (même protocole que scripts/apps-script/Code.gs), pour
-// tester l’envoi des réponses et la page « Réponses des équipes » en local.
-// Clé enseignant de test : cle-test.
-const COLONNES = ['id', 'maj', 'equipe', 'noms', 'icone', 'page', 'phase', 'points', 'niveau', 'drapeau',
-  'quetes', 'reponses', 'depots', 'depot_parcours', 'depot_video'];
-const faux = { lignes: new Map(), depart: '' };
-const CLE_TEST = 'cle-test';
-function jetonConfig() {
-  try { return JSON.parse(fs.readFileSync(path.join(racine, 'data', 'config.json'), 'utf8')).collecte.jeton; } catch (e) { return ''; }
+// Faux relais (même protocole que ntfy.sh), pour tester l’envoi des réponses
+// et la page « Réponses des équipes » sans rien envoyer sur Internet.
+// Le serveur sert une version de data/config.json qui pointe vers ce faux
+// relais, avec des clés de test : en local, le code enseignant est code-test.
+const CODE_TEST = 'code-test';
+const relais = { sujets: new Map(), limite: false, compteur: 0 };
+let configTest = null;
+
+async function preparerConfigTest() {
+  const { creerCles } = await import('../docs/assets/js/chiffre.js');
+  const cles = await creerCles(CODE_TEST, 2000);
+  return (base) => {
+    const c = JSON.parse(base);
+    c.collecte = Object.assign({}, c.collecte, {
+      relais: 'http://localhost:' + port + '/faux-relais',
+      sujet: 'test-reponses',
+      sujetHorloge: 'test-horloge',
+      clePublique: cles.clePublique,
+      cleSignature: cles.cleSignature,
+      coffre: cles.coffre,
+      premierEnvoiSecondes: 1,
+      etalementSecondes: 0,
+      horlogeMinutes: 0.05,
+      lectureSecondes: 10
+    });
+    return JSON.stringify(c, null, 2);
+  };
 }
-function cellule(v) {
-  if (v === undefined || v === null) { return ''; }
-  return typeof v === 'object' ? JSON.stringify(v) : v;
+
+function repondre(res, statut, corps, type = 'application/json; charset=utf-8') {
+  res.writeHead(statut, { 'Content-Type': type, 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-store' });
+  res.end(corps);
 }
-function repondre(res, obj) {
-  res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-store' });
-  res.end(JSON.stringify(obj));
-}
-function fauxScript(req, res, u) {
-  if (req.method === 'GET') {
-    const action = u.searchParams.get('action');
-    if (action === 'horloge') { repondre(res, { ok: true, depart: faux.depart }); return; }
-    if (action === 'remise-a-zero') { faux.lignes.clear(); faux.depart = ''; repondre(res, { ok: true }); return; }
-    if (action === 'lire') {
-      if (u.searchParams.get('cle') !== CLE_TEST) { repondre(res, { ok: false, erreur: 'cle' }); return; }
-      const equipes = [...faux.lignes.values()].map((l) => Object.fromEntries(COLONNES.map((c, k) => [c, l[k]])));
-      repondre(res, { ok: true, equipes, maintenant: new Date().toISOString(), depart: faux.depart });
-      return;
-    }
-    repondre(res, { ok: false, erreur: 'action' });
+
+function fauxRelais(req, res, u) {
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204, { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, PUT', 'Access-Control-Allow-Headers': '*' });
+    res.end();
     return;
   }
-  let corps = '';
-  req.on('data', (c) => { corps += c; });
-  req.on('end', () => {
-    try {
-      const d = JSON.parse(corps);
-      if (d.action === 'horloge') {
-        if (d.cle !== CLE_TEST) { repondre(res, { ok: false, erreur: 'cle' }); return; }
-        faux.depart = /^\d{2}:\d{2}$/.test(String(d.depart || '')) ? d.depart : '';
-        repondre(res, { ok: true, depart: faux.depart });
-        return;
-      }
-      if (d.jeton !== jetonConfig() || !d.id) { repondre(res, { ok: false, erreur: 'jeton' }); return; }
-      const ligne = COLONNES.map((c) => cellule(d[c]));
-      const ancienne = faux.lignes.get(d.id);
-      if (ancienne) { ligne.forEach((v, k) => { if (v === '' && ancienne[k] !== '') { ligne[k] = ancienne[k]; } }); }
-      faux.lignes.set(d.id, ligne);
-      repondre(res, { ok: true });
-    } catch (e) {
-      repondre(res, { ok: false, erreur: String(e) });
-    }
-  });
+  const morceaux = u.pathname.split('/').filter(Boolean).slice(1);
+  if (morceaux[0] === 'remise-a-zero') { relais.sujets.clear(); relais.limite = false; repondre(res, 200, '{"ok":true}'); return; }
+  if (morceaux[0] === 'limite') { relais.limite = u.searchParams.get('etat') === '1'; repondre(res, 200, '{"ok":true}'); return; }
+  if (morceaux[0] === 'compteur') { repondre(res, 200, JSON.stringify({ messages: relais.compteur })); return; }
+  const sujet = morceaux[0];
+  if (!sujet || !/^[A-Za-z0-9_-]{1,64}$/.test(sujet)) { repondre(res, 404, '{"error":"sujet"}'); return; }
+  const liste = relais.sujets.get(sujet) || [];
+  if (req.method === 'GET' && morceaux[1] === 'json') {
+    const since = u.searchParams.get('since') || 'all';
+    let depuis = 0;
+    if (/^\d+$/.test(since)) { depuis = Number(since); }
+    const m = /^(\d+)([smh])$/.exec(since);
+    if (m) { depuis = Math.floor(Date.now() / 1000) - Number(m[1]) * { s: 1, m: 60, h: 3600 }[m[2]]; }
+    const lignes = liste.filter((x) => x.time >= depuis).map((x) => JSON.stringify(x));
+    repondre(res, 200, lignes.length ? lignes.join('\n') + '\n' : '', 'application/x-ndjson; charset=utf-8');
+    return;
+  }
+  if (req.method === 'POST' || req.method === 'PUT') {
+    let corps = '';
+    req.on('data', (c) => { corps += c; });
+    req.on('end', () => {
+      if (relais.limite) { repondre(res, 429, '{"code":42901,"http":429,"error":"limit reached"}'); return; }
+      if (Buffer.byteLength(corps) > 4096) { repondre(res, 413, '{"error":"trop long"}'); return; }
+      const msg = { id: Math.random().toString(36).slice(2, 14), time: Math.floor(Date.now() / 1000), event: 'message', topic: sujet, message: corps };
+      liste.push(msg);
+      relais.sujets.set(sujet, liste);
+      relais.compteur += 1;
+      repondre(res, 200, JSON.stringify(msg));
+    });
+    return;
+  }
+  repondre(res, 405, '{"error":"methode"}');
 }
 
 const serveur = http.createServer((req, res) => {
   const u = new URL(req.url, 'http://localhost');
-  if (u.pathname === '/faux-script') { fauxScript(req, res, u); return; }
+  if (u.pathname === '/faux-relais' || u.pathname.startsWith('/faux-relais/')) { fauxRelais(req, res, u); return; }
   let p = decodeURIComponent(u.pathname);
   if (p === '/' || p === prefixe) { res.writeHead(302, { Location: prefixe + '/' }); res.end(); return; }
   if (!p.startsWith(prefixe + '/')) { res.writeHead(404); res.end('Introuvable'); return; }
@@ -93,11 +112,14 @@ const serveur = http.createServer((req, res) => {
   if (!fichier.startsWith(racine)) { res.writeHead(403); res.end(); return; }
   fs.readFile(fichier, (err, data) => {
     if (err) { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); res.end('Introuvable'); return; }
+    if (p === '/data/config.json' && configTest) { data = Buffer.from(configTest(data.toString('utf8'))); }
     res.writeHead(200, { 'Content-Type': types[path.extname(fichier)] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
     res.end(data);
   });
 });
 
+configTest = await preparerConfigTest();
 serveur.listen(port, () => {
   console.log('Site servi sur http://localhost:' + port + prefixe + '/');
+  console.log('Réponses envoyées à un faux relais local. Code enseignant de test : ' + CODE_TEST + '.');
 });

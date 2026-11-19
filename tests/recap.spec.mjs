@@ -10,6 +10,7 @@ test('récapitulatif du parcours', async ({ page, context }) => {
   await saisir(page, 'equipe', 'Les Curieuses');
   await saisir(page, 'nom1', 'Camille Martin');
   await saisir(page, 'nom2', 'Sacha Durand');
+  await saisir(page, 'nom3', 'Lou Petit');
   await ouvrir(page, 'seance-09/3-chercher.html');
   await saisir(page, 'a1', 'Citation A1 de test, assez longue pour compter.');
   await page.check('#b0-sophia');
@@ -29,7 +30,7 @@ test('récapitulatif du parcours', async ({ page, context }) => {
   await expect(ta).toHaveValue(/Parcours « Définir, citer, lire une étude »/);
   const texte = await ta.inputValue();
   expect(texte).toContain('Équipe. Les Curieuses');
-  expect(texte).toContain('Binôme. Camille Martin et Sacha Durand');
+  expect(texte).toContain('Membres. Camille Martin, Sacha Durand et Lou Petit');
   expect(texte).toMatch(/Temps passé par page, en minutes\./);
   expect(texte).toMatch(/Points d’enquête\. \d+\. Badges\. /);
   expect(texte).not.toMatch(/niveau|Stagiaire/i);
@@ -60,13 +61,13 @@ test('récapitulatif du parcours', async ({ page, context }) => {
   ]);
   expect(telechargement.suggestedFilename()).toBe('s09_les-curieuses_parcours.txt');
   const contenu = fs.readFileSync(await telechargement.path(), 'utf8');
-  expect(contenu).toContain('Binôme. Camille Martin et Sacha Durand');
+  expect(contenu).toContain('Membres. Camille Martin, Sacha Durand et Lou Petit');
 
   // Copie
   await zone.locator('[data-action="copier"]').click();
   await expect(zone.locator('[data-recap-statut]')).toHaveText('Récapitulatif copié. Collez-le dans un document pour le garder.');
   const presse = await page.evaluate(() => navigator.clipboard.readText());
-  expect(presse).toContain('Binôme. Camille Martin et Sacha Durand');
+  expect(presse).toContain('Membres. Camille Martin, Sacha Durand et Lou Petit');
   await page.waitForTimeout(450);
   const e = await etat(page);
   expect(e.depots.parcours.via).toBe('copie');
@@ -81,12 +82,12 @@ test('récapitulatif de la vidéo et dépôt express', async ({ page }) => {
   await page.check('#vu-3');
   const zone = page.locator('#questions [data-depot="video"]');
   await zone.locator('summary').click();
-  await expect(zone.locator('[data-recap-texte]')).toHaveValue(/Conseils repérés dans les notes de l’autre\. 03/);
+  await expect(zone.locator('[data-recap-texte]')).toHaveValue(/Conseils repérés dans les notes reçues\. 03/);
   const texte = await zone.locator('[data-recap-texte]').inputValue();
   expect(texte).toContain('Partie vidéo et prise de notes');
   expect(texte).toMatch(/02\. Écouter d’abord, écrire ensuite, avec ses propres mots\./);
   expect(texte).toContain('Notes. (notes prises sur papier)');
-  expect(texte).toContain('Conseils repérés dans les notes de l’autre. 03');
+  expect(texte).toContain('Conseils repérés dans les notes reçues. 03');
   expect(texte).toContain('S1. Écrivez trois phrases sur la vidéo.');
   expect(texte).toMatch(/Il manque encore .*BP/);
   const [telechargement] = await Promise.all([

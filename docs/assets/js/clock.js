@@ -1,8 +1,9 @@
 // Horloge de séance. Les phases suivent l’heure réelle de l’appareil, pour que
 // toute la classe soit synchronisée sans serveur.
 // Heure de départ, par ordre de priorité : réglage local (?depart=), heure
-// diffusée par l’enseignant (page Réponses, si la collecte est active),
-// puis departParDefaut de data/schedule.json, relu chaque minute.
+// diffusée le jour même par l’enseignant (page Réponses, si l’envoi des
+// réponses est actif), puis departParDefaut de data/schedule.json, relu
+// chaque minute.
 // Paramètres d’URL (mémorisés dans l’état) :
 //   ?depart=HH:MM    heure de départ du planning (?depart=defaut pour revenir à data/schedule.json)
 //   ?decalage=±N     décalage fin en minutes (?decalage=0 pour l’annuler)
@@ -54,17 +55,25 @@ export function maintenant() {
   return Date.now() + (Number(h.nowOffsetMs) || 0);
 }
 
-export function heureDepartTexte() {
-  const h = lire().options.horloge || {};
-  return h.depart || h.diffuse || (P && P.departParDefaut) || '09:00';
+// Une heure diffusée ne vaut que pour le jour où elle a été diffusée.
+function diffuseeDuJour(h) {
+  if (!h.diffuse) { return ''; }
+  if (!h.diffuseLe) { return h.diffuse; }
+  return new Date(h.diffuseLe).toDateString() === new Date(maintenant()).toDateString() ? h.diffuse : '';
 }
 
-// Heure de départ diffusée par l’enseignant pour toute la classe ('' pour l’annuler).
-export function appliquerDepartDiffuse(v) {
+export function heureDepartTexte() {
+  const h = lire().options.horloge || {};
+  return h.depart || diffuseeDuJour(h) || (P && P.departParDefaut) || '09:00';
+}
+
+// Heure de départ diffusée par l’enseignant pour toute la classe ('' pour
+// l’annuler). le : moment de la diffusion, en millisecondes.
+export function appliquerDepartDiffuse(v, le = Date.now()) {
   const h = lire().options.horloge;
   const valeur = RE_HEURE.test(String(v || '')) ? String(v).padStart(5, '0') : '';
-  if ((h.diffuse || '') === valeur) { return false; }
-  if (valeur) { h.diffuse = valeur; } else { delete h.diffuse; }
+  if ((h.diffuse || '') === valeur && (!valeur || h.diffuseLe === le)) { return false; }
+  if (valeur) { h.diffuse = valeur; h.diffuseLe = le; } else { delete h.diffuse; delete h.diffuseLe; }
   modifierSansSignal(() => {});
   tic();
   return true;

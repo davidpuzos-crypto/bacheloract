@@ -56,10 +56,10 @@
 
   <h2>Régler l’horloge</h2>
   <div class="prose">
-    <p>Les pages suivent l’heure de chaque appareil. Le plus simple, si la séance ne commence pas à 9 h 00, est d’ouvrir la page « Réponses des équipes » et de diffuser l’heure de départ réelle, ou de cliquer « Démarrer maintenant » au vrai début. Tous les appareils la reçoivent en moins d’une minute.</p>
+    <p>Les pages suivent l’heure de chaque appareil. Le plus simple, si la séance ne commence pas à 9 h 00, est d’ouvrir la page « Réponses des équipes » et de diffuser l’heure de départ réelle, ou de cliquer « Démarrer maintenant » au vrai début. Les appareils la relisent toutes les six minutes au plus, diffusez-la donc de préférence avant l’arrivée des étudiant·es.</p>
     <p>Sans l’envoi des réponses, modifiez l’heure de départ par défaut sur GitHub, dans <code>docs/data/schedule.json</code>, champ <code>departParDefaut</code>. Les pages ouvertes relisent ce fichier chaque minute.</p>
     <p>Sur un appareil, vous pouvez aussi ajouter à l’adresse <code>?depart=09:10</code> pour changer l’heure de départ, <code>?decalage=5</code> pour décaler de quelques minutes (ou <code>?decalage=-5</code>), et <code>?now=10:30</code> pour simuler une heure pendant une démonstration. Ces réglages restent mémorisés sur l’appareil. Pour les annuler, ouvrez l’adresse avec <code>?depart=defaut</code>, <code>?decalage=0</code> ou <code>?now=reel</code>.</p>
-    <p>Si la séance démarre en retard, l’adresse affichée sous le code QR de l’écran de projection reprend le réglage de votre appareil. Donnez-la aux binômes pour qu’ils suivent le même horaire.</p>
+    <p>Si la séance démarre en retard, l’adresse affichée sous le code QR de l’écran de projection reprend le réglage de votre appareil. Donnez-la aux équipes pour qu’elles suivent le même horaire.</p>
   </div>
 
   <h2>Phase par phase, ce que vous pouvez dire</h2>
@@ -76,7 +76,7 @@
   </div>
   <div class="fiche-phase">
     <h3>Lire l’étude, de 9 h 43 à 10 h 05</h3>
-    <p>Demandez une vraie lecture, à deux, avant de répondre. Chaque question renvoie au passage du document où chercher.</p>
+    <p>Demandez une vraie lecture, ensemble, avant de répondre. Chaque question renvoie au passage du document où chercher.</p>
     <p>« Champ » compris comme « domaine d’études ». Renvoyez à l’encadré sur les légendes.</p>
     <p>EQTP non compris. Montrez le mini-glossaire « Mots utiles », en tête du document.</p>
   </div>
@@ -108,7 +108,7 @@
   <p class="prose">Le détail de chaque point est dans le fichier <code>VERIFICATIONS.md</code> du dépôt. Les cases ne sont pas enregistrées.</p>
   <ul class="liste-verif">
     <li><input type="checkbox" id="v1"><label for="v1">Le mot de passe de la correction est choisi et la correction reconstruite avec <code>npm run build</code>.</label></li>
-    <li><input type="checkbox" id="v2"><label for="v2">L’envoi des réponses est branché (script Google, clé enseignant) et la page « Réponses des équipes » affiche une équipe de test.</label></li>
+    <li><input type="checkbox" id="v2"><label for="v2">Depuis la salle, une équipe de test apparaît sur la page « Réponses des équipes », ouverte avec le code enseignant (le relais ntfy.sh n’est pas bloqué par le réseau de l’école).</label></li>
     <li><input type="checkbox" id="v3"><label for="v3">La page « Genre » de Géoconfluences s’ouvre, ainsi que le glossaire de secours.</label></li>
     <li><input type="checkbox" id="v4"><label for="v4">Les liens Moodle de la fiche méthode et du guide de révision sont renseignés dans <code>docs/data/config.json</code>, s’ils existent.</label></li>
     <li><input type="checkbox" id="v5"><label for="v5">L’accès à Cairn par le K-lab et SophIA fonctionnent depuis la salle.</label></li>
@@ -117,7 +117,7 @@
     <li><input type="checkbox" id="v8"><label for="v8">La vidéo se lance sur le poste de projection, avec le son.</label></li>
     <li><input type="checkbox" id="v9"><label for="v9">Les pourcentages de rétention restent masqués, sauf source fournie.</label></li>
     <li><input type="checkbox" id="v10"><label for="v10">L’intersectionnalité a sa place dans le cours (bloc « À compléter avec le cours » de la page Bilan).</label></li>
-    <li><input type="checkbox" id="v11"><label for="v11">L’information des étudiant·es sur l’envoi des réponses et la durée de conservation de la feuille Google sont décidées.</label></li>
+    <li><input type="checkbox" id="v11"><label for="v11">L’information des étudiant·es sur l’envoi des réponses et la durée de conservation du fichier téléchargé sont décidées.</label></li>
     <li><input type="checkbox" id="v12"><label for="v12">L’écran de projection affiche la bonne heure et la bonne phase.</label></li>
     <li><input type="checkbox" id="v13"><label for="v13">Les quatre nouvelles questions de lecture (Q3, Q6, Q7 et Q9 de la page Lire) et les passages acceptés pour les six indices de la correction sont relus.</label></li>
   </ul>

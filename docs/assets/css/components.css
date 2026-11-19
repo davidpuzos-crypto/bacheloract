@@ -420,6 +420,7 @@ details.aide p { margin: 0.5rem 0 0; color: var(--texte-doux); max-width: 60ch; 
 .omis { color: var(--texte-doux); text-align: center; margin: 0.8rem 0; letter-spacing: 0.1em; }
 .doc .note-extrait { color: var(--texte-doux); font-size: 0.86rem; margin-top: 1.2em; }
 .colonne-questions { min-width: 0; }
+.qlabel .facultatif { font-weight: 400; color: var(--texte-doux); }
 .vers-passage-ligne { margin: 10px 0 0; font-family: var(--police-ui); font-size: 0.9rem; }
 .statut-lecture { font-family: var(--police-ui); font-weight: 700; color: var(--texte-doux); margin: 0 0 1rem; }
 .statut-lecture:empty { display: none; }

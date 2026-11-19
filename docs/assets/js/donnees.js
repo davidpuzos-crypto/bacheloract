@@ -32,7 +32,7 @@ const PROGRAMME_SECOURS = {
     { id: 'depot', label: 'Dépôt', debut: 122, duree: 3, page: '6-lire.html#depot', stop: true, stopTexte: 'Stop. Le dépôt est terminé. Le mot de passe de la correction est annoncé en séance.', stopBouton: 'Ouvrir la correction' },
     { id: 'correction', label: 'Correction', debut: 125, duree: 10, page: '7-correction.html' },
     { id: 'notes', label: 'Conseils de prise de notes', debut: 135, duree: 5, page: '8-notes.html', stop: true, stopMot: 'Vidéo', stopTexte: 'La vidéo commence. Notez à votre façon, avec les conseils que vous avez choisis.', stopBouton: 'Ouvrir la feuille de notes' },
-    { id: 'video', label: 'Vidéo', debut: 140, duree: 25, page: '9-video.html#pendant', stop: true, stopTexte: 'La vidéo est terminée. Complétez vos notes à froid, puis comparez-les avec votre binôme.', stopBouton: 'Passer à la comparaison' },
+    { id: 'video', label: 'Vidéo', debut: 140, duree: 25, page: '9-video.html#pendant', stop: true, stopTexte: 'La vidéo est terminée. Complétez vos notes à froid, puis comparez-les en équipe.', stopBouton: 'Passer à la comparaison' },
     { id: 'froid', label: 'À froid et comparer', debut: 165, duree: 5, page: '9-video.html#comparer', stop: true, stopTexte: 'Il reste dix minutes. Passez aux questions.', stopBouton: 'Aller aux questions' },
     { id: 'questions', label: 'Questions', debut: 170, duree: 10, page: '9-video.html#questions', stop: true, stopTexte: 'Fin de la séance. Pensez au dépôt express.', stopBouton: 'Voir le bilan' },
     { id: 'fin', label: 'Fin', debut: 180, duree: 0, page: '10-fin.html' }

@@ -29,10 +29,12 @@ Contrôle fait avec `npm run liens` depuis l’environnement de construction. Un
 6. **Vidéo.** Le PDF de la transcription n’a pas été fourni. Les QCM V4 à V6 et le bonus G2 (« un écart de 25,7 % en 2012 ») sont repris de la v2 sans nouvelle vérification. La transcription automatique déforme des passages : **revérifiez ces questions contre la vidéo, aux horodatages des chapitres.** La liste de sources de la description ne semble contenir aucune référence pour Pierre Bourdieu ni pour Catherine Vidal (à confirmer). L’attribution « artisan de sa propre domination » à Bourdieu n’est affichée nulle part sur le site.
 7. **Pourcentages de rétention** (20, 40, 60, 80 %) de la diapo 33. Sans source indiquée, ils ressemblent à la « pyramide de l’apprentissage ». Ils sont **masqués** (`afficherPourcentages: false` dans `docs/data/config.json`). La phrase « Écrire, c’est faire » n’apparaît qu’avec eux.
 8. **Intersectionnalité.** Le syllabus et la diapositive d’examen l’attendent, mais le déroulé ne lui laisse aucune place. La page Bilan contient un bloc « À compléter avec le cours », sans définition ni référence.
-9. **Envoi des réponses à l’enseignant** (à la place de Moodle). Il reste à le brancher (README, « Voir les réponses en direct »). Points à vérifier après la mise en place :
-   1. Le script n’a pas pu être essayé sur un vrai compte Google depuis l’environnement de construction. Le site a été testé avec un faux script qui suit le même protocole. **Faites l’essai complet une fois le script déployé** (une équipe de test doit apparaître sur la page « Réponses des équipes », et « Diffuser cette heure » doit être confirmé).
-   2. RGPD : les noms et les réponses arrivent dans votre compte Google, et chaque envoi passe par les serveurs de Google, qui voient l’adresse IP des appareils. Décidez de l’information donnée aux étudiant·es (un avis est affiché sur la page Cadre) et de la durée de conservation de la feuille.
-   3. La clé enseignant ne doit jamais être écrite dans le dépôt, qui est public. Le jeton de `config.json`, lui, n’est pas un secret.
+9. **Envoi des réponses à l’enseignant**, sans Google ni Moodle. Les réponses passent chiffrées par le relais public ntfy.sh (sans compte), et la page « Réponses des équipes » les déchiffre avec le code enseignant. Points à vérifier :
+   1. **Depuis la salle**, avant la séance : une équipe de test doit apparaître sur la page « Réponses des équipes ». Le réseau de l’école peut bloquer ntfy.sh. Le protocole a été vérifié sur le vrai relais avec un sujet d’essai (envoi d’un morceau de 3,8 Ko, relecture identique, accès autorisé depuis une page web), et tout le parcours a été testé avec un faux relais local.
+   2. **Limites du relais** pour un usage sans compte, lues sur ntfy.sh le 19 novembre 2026 : 250 messages par jour et une requête toutes les 5 secondes en moyenne (60 d’un coup), par adresse réseau, et conservation 12 heures. Une classe partage souvent la même adresse. Le site envoie donc peu (environ 15 messages par équipe et par séance), ce qui tient pour une quinzaine d’équipes. Ces limites peuvent changer : si le relais refuse, les équipes en sont prévenues et téléchargent leur récapitulatif.
+   3. **Conservation** : le relais efface tout au bout de 12 heures. La page enseignant garde une copie dans son navigateur et propose de tout télécharger. Téléchargez les réponses le jour même.
+   4. **RGPD** : le relais ne voit que des données chiffrées, mais il voit l’adresse IP des appareils et l’heure des envois. Décidez de l’information donnée aux étudiant·es (un avis est affiché sur la page Cadre) et de la durée de conservation du fichier téléchargé.
+   5. Le **code enseignant** n’est écrit nulle part dans le dépôt. La clé publique et le coffre de `config.json` ne sont pas des secrets. Quelqu’un qui lit le code du site peut envoyer de fausses réponses, pas lire les vraies. L’heure de départ diffusée est signée, une heure fausse est ignorée.
 10. **Identité visuelle.** Le PDF des slides de la séance 1 n’a pas été fourni. Les couleurs (fond `#17181c`, texte crème, orange chaud) et les polices (Archivo pour les titres, Literata pour le texte, libres de droits) suivent la description du cahier des charges. Comparez avec les slides et ajustez `docs/assets/css/tokens.css` si besoin.
 11. **Syllabus** non fourni. Rien n’a été repris du syllabus en dehors de ce que le cahier des charges en dit.
 12. **Questions de lecture nouvelles** (page Lire, avant la pause). Quatre QCM ont été écrits d’après l’extrait, pour obliger à lire tout le document. Relisez-les :
@@ -75,7 +77,7 @@ Questions retirées ou allégées pour que chaque phase tienne :
 - Retiré dans « Ce que vous allez faire » : « Le genre est une notion que vous connaissez encore peu. »
 - Retiré dans « Les règles du jeu » : « Des questions à choix multiple corrigent tout de suite, et vous pouvez changer votre réponse. Le chrono de la séance est affiché en haut, il sert de repère. » (la page Méthode le redit, et le chrono est visible en permanence).
 - Retiré dans « Les outils » : « Ce que vous citez, c’est l’article que vous ouvrez vous-mêmes. » (repris par la porte SophIA de la page Chercher).
-- Chapeau raccourci en « Un parcours en binôme et chronométré, qui reprend les gestes que l’examen de décembre vous demandera. », pour laisser la place à l’annonce de la chasse aux indices dans les règles du jeu.
+- Chapeau raccourci en « Un parcours en équipe, chronométré, qui reprend les gestes que l’examen de décembre vous demandera. », pour laisser la place à l’annonce de la chasse aux indices dans les règles du jeu.
 - Titre « Les outils » devenu « Outils et IA (niveau 2) », pour rappeler le niveau de la charte IA demandé au point 7.1.
 
 ### Extrait de l’Insee (sélection du point 7.7, rétablie en entier)
@@ -86,7 +88,7 @@ La lecture dispose maintenant de 22 minutes avant la pause. Les coupes de la ver
 
 Le cours de la v2 a été légèrement resserré, sans changer ses règles : « Cette page donne le cours, la suivante vous fait appliquer » ; retrait de « et vous vous y référerez pour écrire votre bibliographie » ; « Quand vous comparez plusieurs définitions » ; « Vous dites sur quoi elle s’appuie ». **Une précision a été ajoutée** : « Pour deux auteur·es d’un même texte, on écrit (A et B, année) », pour éviter qu’une synthèse de deux sources s’écrive (A et B, année) au lieu de (A, année ; B, année). À valider.
 
-### Vidéo, comparaison en binôme (5 minutes)
+### Vidéo, comparaison en équipe (5 minutes)
 
 Les huit cases à cocher portent des libellés courts tirés des conseils (« Relire à froid », « Une colonne pour soi »…). Les conseils complets, mot pour mot, restent sur la page Conseils de prise de notes.
 
@@ -105,12 +107,13 @@ Les huit cases à cocher portent des libellés courts tirés des conseils (« Re
 - **Dépôt** : un seul champ facultatif sous la déclaration d’usage de l’IA, « Précision facultative. Quel outil, pour quoi faire, et qu’avez-vous vérifié vous-mêmes dans les sources ? ».
 - **Textes nouveaux** courts, écrits pour l’interface (accueil du site, hub, pause, bilan, feuille de route, messages des écrans). Ils suivent les règles éditoriales et sont contrôlés par `npm run lint`.
 - **Données du site** : `schedule.json` et `config.json` sont dans `docs/data/` (et non à la racine) pour être modifiables directement sur GitHub sans reconstruction. Les pages ouvertes relisent `schedule.json` chaque minute.
-- **Pas de Moodle** (demande de l’enseignant) : les dépôts se font avec « Envoyer à l’enseignant », et les réponses arrivent aussi en continu sur la page « Réponses des équipes ». Le téléchargement et la copie du récapitulatif restent possibles en secours. Sans envoi branché, le site propose de télécharger le récapitulatif.
+- **Pas de Moodle ni de Google** (demande de l’enseignant) : les dépôts se font avec « Envoyer à l’enseignant », et les réponses arrivent aussi aux moments clés sur la page « Réponses des équipes », ouverte avec un code. Le téléchargement et la copie du récapitulatif restent possibles en secours. Si l’envoi est désactivé ou refusé par le relais, le site propose de télécharger le récapitulatif.
+- **Équipes de trois** : un troisième nom, facultatif, sur la page Cadre. Les textes disent « en équipe » plutôt que « en binôme », et la comparaison des notes parle des « notes reçues ».
 - **Heure de départ** : la séance risque de commencer à 10 h 00 au lieu de 9 h 00. L’enseignant peut diffuser l’heure réelle depuis la page « Réponses des équipes ». Le déroulé reste de trois heures à partir de cette heure (fin à 13 h 00 pour un départ à 10 h 00). **Si la séance doit finir à 12 h 00 malgré tout, il faut raccourcir le déroulé : à décider.**
 
 ## 5. Publication
 
 - Le site est publié par GitHub Pages depuis la branche `main` : `https://davidpuzos-crypto.github.io/bacheloract/` (la racine redirige vers `docs/`). Chaque mise à jour est préparée sur la branche `claude/elegant-planck-ir8tii`, puis fusionnée.
 - La correction est chiffrée avec un **mot de passe provisoire**. Choisissez le vôtre et reconstruisez (README, section « Changer le mot de passe »).
-- Branchez l’envoi des réponses (README, section « Voir les réponses en direct »).
+- Testez l’envoi des réponses depuis la salle (README, section « Voir les réponses en direct »). Il n’y a rien à installer.
 - Après chaque publication, vérifiez sur l’adresse publique la page chiffrée, le téléchargement du récapitulatif et l’horloge.
