@@ -17,7 +17,7 @@ const SOURCES = {
       { fichier: '5-citer-pratique.html', titre: 'CITER, PRATIQUE' },
       { fichier: '6-lire.html', titre: 'LIRE' }
     ],
-    qcm: ['2-methode.html', '5-citer-pratique.html', '6-lire.html'],
+    qcm: ['2-methode.html', '3-chercher.html', '5-citer-pratique.html', '6-lire.html'],
     temps: [['cadre', 'cadre'], ['methode', 'méthode'], ['chercher', 'chercher'], ['citer-lecture', 'lecture'], ['citer-pratique', 'pratique'], ['correction-definir', 'correction'], ['lire', 'lire']],
     suffixe: 'parcours'
   },
@@ -213,7 +213,8 @@ const CATALOGUE = [
   { fichier: '3-chercher.html', titre: 'Chercher' },
   { fichier: '5-citer-pratique.html', titre: 'Citer, pratique' },
   { fichier: '6-lire.html', titre: 'Lire et dépôt' },
-  { fichier: '9-video.html', titre: 'Vidéo' }
+  { fichier: '9-video.html', titre: 'Vidéo' },
+  { fichier: 'aller-plus-loin.html', titre: 'Pour aller plus loin' }
 ];
 
 // Liste ordonnée des questions du parcours, lue dans le HTML des pages.

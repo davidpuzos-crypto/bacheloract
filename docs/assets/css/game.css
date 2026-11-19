@@ -27,7 +27,7 @@
 .anneaux { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
 .anneau { text-align: center; font-size: 0.85rem; font-weight: 700; }
 .anneau svg { width: 100%; max-width: 92px; display: block; margin: 0 auto 4px; transform: rotate(-90deg); }
-.anneau .fond-anneau { fill: none; stroke: var(--surface-2); stroke-width: 9; }
+.anneau .fond-anneau { fill: none; stroke: var(--trait); stroke-width: 9; }
 .anneau .trace { fill: none; stroke-width: 9; stroke-linecap: round; transition: stroke-dashoffset 0.9s cubic-bezier(.2,.8,.2,1); }
 .anneau .pc { display: block; font-variant-numeric: tabular-nums; color: var(--texte-doux); font-weight: 600; }
 .anneau[data-c="definir"] .trace { stroke: var(--c-definir); }
@@ -182,14 +182,13 @@ html[data-sobre="1"] .barre-niveau span { animation: none !important; transition
   border-radius: var(--rayon);
   background: var(--surface);
   font-family: var(--police-ui);
-  max-width: 50rem;
-  scroll-margin-top: calc(var(--entete-h) + 20px);
+  max-width: var(--col);
 }
 .carte-correction h3 { margin: 0 0 6px; font-size: 1.05rem; display: flex; gap: 10px; align-items: baseline; }
 .carte-correction .question-corr { margin: 0 0 8px; font-family: var(--police-texte); color: var(--texte-doux); }
 .carte-correction .modele { font-family: var(--police-texte); }
-.carte-correction .conseils { margin: 10px 0 4px; padding: 10px 14px; border-radius: var(--rayon); background: var(--accent-doux); font-size: 0.95rem; line-height: 1.5; }
-.carte-correction .conseils p { margin: 0.35em 0; }
-.carte-correction .conseils .titre-conseils { margin: 0 0 4px; font-weight: 800; }
+.carte-correction .conseils-methode { margin: 10px 0 4px; padding: 10px 14px; border-radius: var(--rayon); background: var(--accent-doux); font-size: 0.95rem; line-height: 1.5; }
+.carte-correction .conseils-methode p { margin: 0.35em 0; }
+.carte-correction .conseils-methode .titre-conseils { margin: 0 0 4px; font-weight: 800; }
 .carte-correction .rangee-boutons { margin: 10px 0 0; }
 .doc .passage-surligne { background: var(--surligneur); box-shadow: 0 0 0 3px var(--surligneur); border-radius: 2px; }

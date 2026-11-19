@@ -14,6 +14,7 @@ import { initWidgets } from './widgets.js';
 import { initCollecte } from './collect.js';
 import { initPassages } from './passages.js';
 import { initRepere } from './repere.js';
+import { initRail } from './rail.js';
 
 async function demarrer() {
   const corps = document.body;
@@ -30,6 +31,7 @@ async function demarrer() {
   initJeu();
   initNav(page, { espace });
   initRepere(espace);
+  initRail(espace);
   initWidgets();
   initPassages();
   initRecap();

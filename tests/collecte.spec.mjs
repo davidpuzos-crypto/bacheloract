@@ -156,7 +156,7 @@ test('les textes des étudiant·es s’affichent comme du texte, jamais comme du
   await ouvrir(p, 'seance-09/1-cadre.html?now=09:20');
   await p.fill('[data-id="equipe"]', '<img src=x onerror="window.piege=1">');
   await ouvrir(p, 'seance-09/3-chercher.html');
-  await p.fill('[data-id="b2"]', '<script>window.piege=2</script> Réponse piégée assez longue.');
+  await p.fill('[data-id="b1"]', '<script>window.piege=2</script> Réponse piégée assez longue.');
   await p.waitForTimeout(450);
   await p.click('.drapeau');
   await attendreMessages(request, 1);
@@ -167,7 +167,7 @@ test('les textes des étudiant·es s’affichent comme du texte, jamais comme du
   await connecterEnseignant(pp);
   await expect(pp.locator('.tableau-equipes')).toContainText('<img src=x onerror="window.piege=1">');
   await pp.click('#onglet-question');
-  await pp.selectOption('[data-choix-question]', 'b2');
+  await pp.selectOption('[data-choix-question]', 'b1');
   await expect(pp.locator('[data-contenu-question]')).toContainText('<script>window.piege=2</script>');
   expect(await pp.evaluate(() => window.piege)).toBeUndefined();
   expect(await pp.locator('[data-panneau] img').count()).toBe(0);

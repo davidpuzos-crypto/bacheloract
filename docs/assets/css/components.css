@@ -262,7 +262,7 @@ html[data-drapeau="aide"] .bandeau-aide { display: block; }
 
 /* ---------- Questions ouvertes ---------- */
 .q {
-  max-width: 46rem;
+  max-width: var(--col);
   margin: 30px 0;
   padding: 2px 0 2px 18px;
   border-left: 3px solid var(--trait-fort);
@@ -314,7 +314,22 @@ textarea[readonly] { background: var(--fond-2); }
 .opt { display: flex; gap: 0.65rem; align-items: flex-start; margin: 0.5rem 0; font-family: var(--police-ui); font-size: 1rem; line-height: 1.45; }
 .opt input { margin-top: 0.22rem; width: 1.15rem; height: 1.15rem; flex: none; accent-color: var(--accent); }
 .opt label { cursor: pointer; }
-.precision { margin: 0.4rem 0 0 1.8rem; max-width: 32rem; }
+/* Réponses à cocher : toute la ligne se clique */
+.qcm > .opt, fieldset.q > .opt { position: relative; margin: 6px 0; gap: 0; }
+.qcm > .opt input, fieldset.q > .opt input { position: absolute; left: 12px; top: 0.7rem; margin: 0; }
+.qcm > .opt label, fieldset.q > .opt label {
+  flex: 1;
+  padding: 0.5rem 0.8rem 0.5rem 2.6rem;
+  border: 1px solid var(--trait);
+  border-radius: var(--rayon);
+  background: var(--surface);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.qcm > .opt label:hover, fieldset.q > .opt label:hover { border-color: var(--trait-fort); }
+.qcm > .opt input:checked + label, fieldset.q > .opt input:checked + label { border-color: var(--accent); background: var(--accent-doux); }
+.qcm > .opt input:focus-visible + label, fieldset.q > .opt input:focus-visible + label { outline: 3px solid var(--accent); outline-offset: 2px; }
+.q, .qcm, .carte-correction, h2[id], section[id] { scroll-margin-top: calc(var(--entete-h) + 64px); }
+.precision { margin: 0.4rem 0 0; max-width: 32rem; }
 
 details.aide { margin: 0.6rem 0 0; font-family: var(--police-ui); font-size: 0.92rem; }
 details.aide summary { cursor: pointer; color: var(--accent); font-weight: 700; width: max-content; max-width: 100%; }
@@ -322,7 +337,7 @@ details.aide p { margin: 0.5rem 0 0; color: var(--texte-doux); max-width: 60ch; 
 
 /* ---------- QCM ---------- */
 .qcm {
-  max-width: 46rem;
+  max-width: var(--col);
   margin: 28px 0;
   padding: 2px 0 2px 18px;
   border: 0;
@@ -352,7 +367,7 @@ details.aide p { margin: 0.5rem 0 0; color: var(--texte-doux); max-width: 60ch; 
 
 /* ---------- Exemple annoté ---------- */
 .extrait-annote {
-  max-width: 46rem;
+  max-width: var(--col);
   font-family: var(--police-ui);
   line-height: 1.8;
   background: var(--surface);
@@ -367,7 +382,7 @@ details.aide p { margin: 0.5rem 0 0; color: var(--texte-doux); max-width: 60ch; 
 .extrait-annote mark[aria-pressed="true"] { outline: 2px solid var(--accent); outline-offset: 2px; }
 .extrait-annote .source { color: var(--texte-doux); font-size: 0.92rem; }
 .boite-note {
-  max-width: 46rem;
+  max-width: var(--col);
   margin-top: 12px;
   padding: 14px 16px;
   min-height: 4.2rem;
@@ -421,11 +436,11 @@ details.aide p { margin: 0.5rem 0 0; color: var(--texte-doux); max-width: 60ch; 
 .doc .note-extrait { color: var(--texte-doux); font-size: 0.86rem; margin-top: 1.2em; }
 .colonne-questions { min-width: 0; }
 .qlabel .facultatif { font-weight: 400; color: var(--texte-doux); }
-.sources-rapides { max-width: 46rem; }
+.sources-rapides { max-width: var(--col); }
 .sources-rapides h3 { margin: 0 0 0.4rem; font-size: 1rem; }
 .liens-sources { margin: 0 0 0.4rem; padding-left: 1.2em; font-family: var(--police-ui); }
 .liens-sources li { margin: 0.25em 0; }
-.citation-question { max-width: 46rem; margin: 0.6rem 0 0.9rem; padding: 10px 14px; border-left: 3px solid var(--accent); background: var(--fond-2); border-radius: 0 var(--rayon) var(--rayon) 0; font-family: var(--police-texte); }
+.citation-question { max-width: var(--col); margin: 0.6rem 0 0.9rem; padding: 10px 14px; border-left: 3px solid var(--accent); background: var(--fond-2); border-radius: 0 var(--rayon) var(--rayon) 0; font-family: var(--police-texte); }
 .citation-question p { margin: 0 0 0.4em; }
 .citation-question .source-citation { font-family: var(--police-ui); font-size: 0.86rem; color: var(--texte-doux); margin: 0; }
 .vers-passage-ligne { margin: 10px 0 0; font-family: var(--police-ui); font-size: 0.9rem; }
@@ -491,7 +506,7 @@ details.glossaire dd { margin: 0.1rem 0 0; color: var(--texte-doux); }
 .grille-reflexes { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); max-width: 60rem; }
 
 /* ---------- Barre de progression de lecture ---------- */
-.progres-lecture { position: sticky; top: var(--entete-h); z-index: 30; height: 4px; background: transparent; margin: 0 -24px; }
+.progres-lecture { position: sticky; top: var(--entete-h); z-index: 30; height: 4px; background: transparent; margin: 0; }
 .progres-lecture span { display: block; height: 100%; width: 0; background: var(--c-citer); }
 
 /* ---------- Pagination ---------- */
@@ -520,7 +535,7 @@ textarea.recap { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, m
 .statut { font-family: var(--police-ui); font-size: 0.93rem; color: var(--texte-doux); }
 .statut.ok { color: var(--ok); font-weight: 600; }
 .statut.alerte { color: var(--alerte); font-weight: 600; }
-.avis-collecte { font-family: var(--police-ui); font-size: 0.92rem; padding: 10px 14px; border: 1px dashed var(--trait-fort); border-radius: var(--rayon); max-width: 46rem; }
+.avis-collecte { font-family: var(--police-ui); font-size: 0.92rem; padding: 10px 14px; border: 1px dashed var(--trait-fort); border-radius: var(--rayon); max-width: var(--col); }
 .avertissement-stockage {
   margin: 0;
   padding: 10px 24px;
@@ -535,7 +550,11 @@ textarea.recap { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, m
 /* ---------- Déroulé (tableau des phases) ---------- */
 .deroule td.heure, .deroule th.heure { white-space: nowrap; font-variant-numeric: tabular-nums; width: 5.5em; }
 .deroule tr.en-cours th, .deroule tr.en-cours td { background: var(--accent-doux); }
-.deroule tr.arret td, .deroule tr.arret th { color: var(--accent); font-weight: 700; }
+.deroule td.duree, .deroule th.duree { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--texte-doux); width: 5.5em; }
+.deroule tr.groupe th, .deroule tr.groupe td { background: var(--surface-2); font-family: var(--police-ui); font-weight: 800; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--texte); }
+.deroule tr.pause th, .deroule tr.pause td { font-style: italic; color: var(--texte-doux); }
+.deroule .marqueur { margin-left: 6px; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.tag-stop { display: inline-block; margin-left: 8px; padding: 0 8px; border: 1px solid var(--trait-fort); border-radius: 999px; font-family: var(--police-ui); font-size: 0.74rem; font-weight: 700; color: var(--texte-doux); white-space: nowrap; }
 
 /* ---------- Bandeau et écran STOP ---------- */
 .stop-bandeau {
@@ -603,7 +622,7 @@ textarea.recap { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, m
 /* ---------- Conseils de prise de notes ---------- */
 .raisons { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin: 1rem 0 1.6rem; padding: 0; list-style: none; }
 .phrase-cle {
-  max-width: 46rem;
+  max-width: var(--col);
   font-family: var(--police-titre);
   font-weight: 800;
   font-size: clamp(1.3rem, 2.6vw, 1.75rem);
@@ -666,7 +685,7 @@ textarea.recap { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, m
 .mes-conseils li { padding: 10px 12px; border-left: 3px solid var(--c-noter); background: var(--surface); border-radius: 0 var(--rayon) var(--rayon) 0; font-family: var(--police-ui); font-size: 0.93rem; }
 
 .cases { display: grid; gap: 6px 18px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); max-width: 60rem; }
-.plan-video { max-width: 46rem; }
+.plan-video { max-width: var(--col); }
 .plan-video ol { list-style: none; margin: 0.6rem 0; padding: 0; font-family: var(--police-ui); }
 .plan-video li { display: grid; grid-template-columns: 4.2em 1fr; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--trait); }
 .plan-video .t { font-variant-numeric: tabular-nums; color: var(--texte-doux); font-weight: 700; }
@@ -675,7 +694,7 @@ textarea.recap { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, m
 .section-video + .section-video { margin-top: 64px; padding-top: 8px; border-top: 1px solid var(--trait); }
 
 /* ---------- Correction ---------- */
-details.corr { max-width: 50rem; border-top: 1px solid var(--trait); padding: 12px 0; }
+details.corr { max-width: var(--col); border-top: 1px solid var(--trait); padding: 12px 0; }
 details.corr:last-of-type { border-bottom: 1px solid var(--trait); }
 details.corr > summary { cursor: pointer; font-weight: 700; font-family: var(--police-ui); font-size: 1.02rem; padding: 4px 0; }
 details.corr .corps { padding: 8px 0 4px 2px; }
@@ -713,7 +732,7 @@ details.sous > p, details.sous > div { margin: 0.5rem 0 0; }
 .seance.active a { font-weight: 800; color: var(--texte); }
 
 .phase-actuelle {
-  max-width: 46rem;
+  max-width: var(--col);
   padding: 18px 20px;
   border: 1px solid var(--trait);
   border-left: 4px solid var(--accent);
@@ -725,7 +744,7 @@ details.sous > p, details.sous > div { margin: 0.5rem 0 0; }
 
 /* ---------- Divers ---------- */
 .a-completer {
-  max-width: 46rem;
+  max-width: var(--col);
   padding: 16px 18px;
   border: 2px dashed var(--trait-fort);
   border-radius: var(--rayon);
@@ -743,7 +762,6 @@ details.sous > p, details.sous > div { margin: 0.5rem 0 0; }
   .marque b { font-size: 0.9rem; }
   .bouton-entete { padding: 6px 10px; }
   .depot { padding: 20px 16px 24px; }
-  .progres-lecture { margin: 0 -16px; }
 }
 
 /* ---------- Ajouts de pages ---------- */
@@ -798,3 +816,128 @@ details.sous > p, details.sous > div { margin: 0.5rem 0 0; }
   font-weight: 800;
 }
 @media (max-width: 720px) { .repere-barre p { padding: 6px 16px; font-size: 0.85rem; } }
+
+/* ---------- Page « Pour aller plus loin » ---------- */
+.croisement table { font-family: var(--police-ui); }
+.croisement caption { caption-side: bottom; text-align: left; padding: 8px 12px; font-size: 0.84rem; color: var(--texte-doux); }
+.croisement td.num, .croisement th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.croisement tbody td { font-weight: 700; font-size: 1.05rem; }
+.citation-forte {
+  margin: 1.4rem 0;
+  padding: 4px 0 4px 20px;
+  border-left: 4px solid var(--accent);
+  font-family: var(--police-titre);
+}
+.citation-forte p { margin: 0; font-weight: 800; font-size: clamp(1.15rem, 2.4vw, 1.5rem); line-height: 1.3; text-wrap: balance; }
+.citation-forte .source-citation { margin-top: 8px; font-family: var(--police-ui); font-weight: 500; font-size: 0.86rem; color: var(--texte-doux); }
+.schema-carrefour { margin: 1.2rem 0 1.8rem; }
+.schema-carrefour svg { display: block; width: 100%; height: auto; border: 1px solid var(--trait); border-radius: var(--rayon); background: var(--surface); }
+.schema-carrefour .route { fill: var(--surface-2); stroke: var(--trait-fort); stroke-width: 1; }
+.schema-carrefour .axe { stroke: var(--trait-fort); stroke-width: 2; stroke-dasharray: 12 12; }
+.schema-carrefour .halo { fill: var(--accent); opacity: 0.22; }
+.schema-carrefour .personne { fill: var(--accent); }
+.schema-carrefour .etiq { fill: var(--texte); font-family: var(--police-ui); font-weight: 800; font-size: 22px; }
+.schema-carrefour figcaption { margin-top: 8px; font-family: var(--police-ui); font-size: 0.9rem; color: var(--texte-doux); }
+.comparaison { display: grid; gap: 14px; margin: 1rem 0 1.4rem; }
+@media (min-width: 640px) { .comparaison { grid-template-columns: 1fr 1fr; } }
+.comparaison .carte { padding: 14px 16px; border: 1px solid var(--trait); border-radius: var(--rayon); background: var(--surface); font-family: var(--police-ui); }
+.comparaison .carte h3 { margin: 0 0 6px; font-size: 1rem; }
+.comparaison .carte p { margin: 0; font-size: 0.97rem; line-height: 1.55; }
+.comparaison .refus { border-top: 4px solid var(--trait-fort); }
+.comparaison .propose { border-top: 4px solid var(--accent); }
+.definitions { display: grid; gap: 14px; margin: 1rem 0 1.6rem; }
+.definition { padding: 14px 16px 12px; border: 1px solid var(--trait); border-left: 4px solid var(--c-definir); border-radius: var(--rayon); background: var(--surface); }
+.definition .discipline { margin: 0 0 6px; font-family: var(--police-ui); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+.definition blockquote { margin: 0; }
+.definition blockquote p { margin: 0; }
+.definition .source-citation { margin: 6px 0 0; font-family: var(--police-ui); font-size: 0.86rem; color: var(--texte-doux); }
+.definition .regard { margin: 8px 0 0; padding-top: 8px; border-top: 1px dashed var(--trait); font-family: var(--police-ui); font-size: 0.93rem; font-weight: 600; }
+details.references { margin-top: 2rem; }
+details.references > summary { cursor: pointer; font-family: var(--police-ui); font-weight: 800; }
+.liste-references { margin: 0.8rem 0 0; padding-left: 1.2em; font-family: var(--police-ui); font-size: 0.92rem; }
+.liste-references li { margin: 0.45em 0; }
+
+/* ---------- Colonne « Sur cette page » (grands écrans) ---------- */
+.rail { display: none; }
+@media (min-width: 1100px) {
+  .page.avec-rail { position: relative; }
+  .page.avec-rail > .rail {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 96px;
+    right: 24px;
+    width: var(--rail);
+    max-width: none;
+    padding-top: 52px;
+    pointer-events: none;
+  }
+  .rail-interieur {
+    position: sticky;
+    top: calc(var(--entete-h) + 60px);
+    pointer-events: auto;
+    max-height: calc(100vh - var(--entete-h) - 84px);
+    overflow-y: auto;
+    padding: 16px 16px 14px;
+    border: 1px solid var(--trait);
+    border-radius: var(--rayon-grand);
+    background: var(--surface);
+    font-family: var(--police-ui);
+  }
+}
+.rail-titre { margin: 0 0 2px; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+.rail-creneau { margin: 0 0 10px; font-size: 0.86rem; color: var(--texte-doux); }
+.rail-liste, .rail-questions { list-style: none; margin: 0; padding: 0; }
+.rail-liste > li { padding: 7px 0; border-top: 1px solid var(--trait); }
+.rail-liste > li > a { display: block; font-size: 0.9rem; font-weight: 700; line-height: 1.3; color: var(--texte); text-decoration: none; }
+.rail-liste > li > a:hover { color: var(--accent); }
+.rail-liste > li > a[aria-current="true"] { color: var(--accent); }
+.rail-questions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.rail-q {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 2.6rem;
+  justify-content: center;
+  padding: 2px 8px;
+  border: 1px solid var(--trait-fort);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--texte);
+  text-decoration: none;
+  background: var(--fond);
+}
+.rail-q:hover { border-color: var(--accent); color: var(--texte); }
+.rail-q[data-etat="fait"] { background: var(--ok-fond); border-color: var(--ok); }
+.rail-q[data-etat="fait"]::before { content: "✓"; color: var(--ok); }
+.rail-q.bonus { border-style: dashed; font-weight: 600; color: var(--texte-doux); }
+.rail-q.repere { box-shadow: 0 0 0 2px var(--accent); }
+.rail-bilan { margin: 10px 0 0; padding-top: 10px; border-top: 1px solid var(--trait); font-size: 0.86rem; font-weight: 700; }
+.rail-legende { margin: 6px 0 0; font-size: 0.78rem; color: var(--texte-doux); }
+
+/* ---------- Carte d’ouverture (accueil de la séance) ---------- */
+.carte-ouverture {
+  display: grid;
+  gap: 4px;
+  margin: 14px 0 0;
+  padding: 14px 16px;
+  border: 1px solid var(--trait);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--rayon);
+  background: var(--surface);
+  font-family: var(--police-ui);
+  text-decoration: none;
+  color: var(--texte);
+}
+.carte-ouverture:hover { border-color: var(--accent); color: var(--texte); }
+.carte-ouverture b { font-size: 1.1rem; font-weight: 800; }
+.carte-ouverture .texte-carte { font-size: 0.93rem; color: var(--texte-doux); line-height: 1.5; }
+
+/* ---------- Petits écrans : en-tête et repère compacts ---------- */
+@media (max-width: 520px) {
+  .bouton-entete.drapeau span, .bouton-entete.bouton-menu span {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .repere-detail { display: none; }
+}

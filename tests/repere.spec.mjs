@@ -14,7 +14,8 @@ test('repère : question visée, retard puis « dans les temps », lien vers la 
   await expect(page.locator('.q[data-q="b1"]')).toHaveClass(/q-repere/);
   await expect(page.locator('.drapeau-repere')).toHaveCount(1);
 
-  for (const id of ['a1', 'a2', 'a3']) { await saisir(page, id, LONG); }
+  for (const id of ['a1', 'a2']) { await saisir(page, id, LONG); }
+  await page.check('#qcm-A3-b');
   await page.check('#b0-ses');
   await expect(barre).toContainText('Vous êtes dans les temps.');
   await expect(barre).toHaveAttribute('data-etat', 'ok');

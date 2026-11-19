@@ -48,7 +48,9 @@
 
   --rayon: 6px;
   --rayon-grand: 12px;
-  --mesure: 68ch;
+  --col: 44rem;
+  --rail: 18.5rem;
+  --mesure: var(--col);
   --entete-h: 64px;
   color-scheme: dark;
 }

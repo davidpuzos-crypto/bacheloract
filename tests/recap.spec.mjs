@@ -14,7 +14,7 @@ test('récapitulatif du parcours', async ({ page, context }) => {
   await ouvrir(page, 'seance-09/3-chercher.html');
   await saisir(page, 'a1', 'Citation A1 de test, assez longue pour compter.');
   await page.check('#b0-sophia');
-  await saisir(page, 'b4', 'Trace SophIA de test, assez longue pour compter.');
+  await page.check('#qcm-A3-a');
   await saisir(page, 'a6', 'Bonus A6 de test, assez long pour être compté comme bonus.');
   await ouvrir(page, 'seance-09/5-citer-pratique.html');
   await saisir(page, 'c1', 'Deux citations de test pour C1, assez longues.');
@@ -33,7 +33,7 @@ test('récapitulatif du parcours', async ({ page, context }) => {
   expect(texte).toMatch(/Points d’enquête\. \d+\. Badges\. /);
   expect(texte).not.toMatch(/niveau|Stagiaire/i);
   expect(texte).toContain('Réponse. Citation A1 de test, assez longue pour compter.');
-  expect(texte).toContain('B4. Vous avez utilisé SophIA.');
+  expect(texte).toMatch(/A3\. première réponse A \(fausse\)/);
   expect(texte).toContain('A6 (bonus). Bonus facultatif.');
   expect(texte).toContain('B0. Quelle seconde source avez-vous choisie ?');
   expect(texte).toContain('Réponse. SophIA, puis un article ouvert sur Cairn');

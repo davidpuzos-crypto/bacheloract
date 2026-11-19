@@ -62,6 +62,10 @@ a:hover { color: var(--accent-vif); text-decoration-thickness: 2px; }
 
 /* Conteneurs */
 .page { max-width: 1180px; margin: 0 auto; padding: 0 24px 96px; }
+/* Tous les blocs d’une page partagent la même colonne. Les mises en page
+   larges (document et questions côte à côte, feuille de notes) y échappent. */
+main.page > * { max-width: var(--col); }
+main.page > .lecture-split, main.page > .avec-aside, main.page > .section-video, main.page > .large, main.page.page-large > * { max-width: none; }
 .prose { max-width: var(--mesure); }
 .prose p, .prose li { margin: 0 0 1em; }
 .prose p:last-child { margin-bottom: 0; }
@@ -127,6 +131,7 @@ abbr[title] {
 hr { border: 0; border-top: 1px solid var(--trait); margin: 2.5em 0; }
 
 /* Tableaux */
+.table-defile td { overflow-wrap: anywhere; }
 .table-defile { overflow-x: auto; max-width: 100%; margin: 1.1rem 0 1.4rem; border: 1px solid var(--trait); border-radius: var(--rayon); background: var(--surface); }
 table { border-collapse: collapse; width: 100%; font-family: var(--police-ui); font-size: 0.93rem; line-height: 1.5; }
 caption { text-align: left; font-weight: 700; padding: 10px 14px 0; }

@@ -6,7 +6,7 @@
 //   node scripts/build.mjs --verifier-seulement  vérifie que docs/ ne contient aucune correction en clair
 //
 // Mots de passe : variables d’environnement, ou fichier .env.local (ignoré par Git).
-//   CORRECTION_DEFINIR_PASSWORD=...   correction de Définir et Citer (annoncé vers 9 h 40)
+//   CORRECTION_DEFINIR_PASSWORD=...   correction de Définir et Citer (annoncé vers 9 h 35)
 //   CORRECTION_PASSWORD=...           correction de l’étude de l’Insee (annoncé après le dépôt)
 
 import fs from 'node:fs';
@@ -134,7 +134,7 @@ if (direct) {
   if (chiffrer) {
     const a = process.env.CORRECTION_DEFINIR_PASSWORD;
     const b = process.env.CORRECTION_PASSWORD;
-    if (a && b && a === b) { console.warn('Attention : les deux corrections ont le même mot de passe. La correction de l’étude serait lisible dès 9 h 40.'); }
+    if (a && b && a === b) { console.warn('Attention : les deux corrections ont le même mot de passe. La correction de l’étude serait lisible dès la première correction.'); }
   }
   process.exit(verifierTout() ? 0 : 1);
 }

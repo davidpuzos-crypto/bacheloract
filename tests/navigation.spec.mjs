@@ -36,6 +36,7 @@ test('parcours du hub au bilan avec un état partagé', async ({ page }) => {
     ['Ouvrir la correction', /7-correction\.html/],
     ['Passer aux conseils de prise de notes', /8-notes\.html/],
     ['Ouvrir la feuille de notes', /9-video\.html/],
+    ['Aller plus loin', /aller-plus-loin\.html/],
     ['Voir le bilan', /10-fin\.html/]
   ];
   for (const [lien, url] of suite) {

@@ -34,18 +34,18 @@ test('correction de Définir et Citer : réponses proposées et conseils, juste 
   test.skip(!mdp, 'Mot de passe inconnu (CORRECTION_DEFINIR_PASSWORD ou .env.local).');
   await ouvrir(page, 'seance-09/3-chercher.html', '09:10');
   await saisir(page, 'a2', 'La page attribue la définition à Blidon, géographe.');
-  await page.goto('seance-09/5b-correction-definir.html?now=09:41');
+  await page.goto('seance-09/5b-correction-definir.html?now=09:36');
   await page.fill('#staticrypt-password', mdp);
   await page.getByRole('button', { name: 'Ouvrir la correction' }).click();
   await page.waitForFunction(() => document.documentElement.classList.contains('js-pret'));
   await expect(page.locator('h1')).toHaveText('Correction, définir et citer');
   await expect(page.locator('.entete .phase-nom')).toHaveText('Correction, définir et citer');
-  await expect(page.locator('.carte-correction')).toHaveCount(9);
-  // La carte SophIA ne s’affiche que pour les équipes qui l’ont choisie.
-  await expect(page.locator('#c-b4')).toBeHidden();
+  await expect(page.locator('.carte-correction')).toHaveCount(7);
   await expect(page.locator('#c-a2 [data-votre-reponse]')).toContainText('Blidon, géographe');
   await expect(page.locator('#c-a2 .modele')).toContainText('Marianne Blidon est une géographe française');
-  await expect(page.locator('#c-a3 .conseils')).toContainText('Conseils de méthode');
+  await expect(page.locator('#c-a3 .conseils-methode')).toContainText('Conseils de méthode');
+  await expect(page.locator('#c-a3 .modele')).toContainText('Une dimension spatiale');
+  await expect(page.locator('#c-c2 .tag-bonus')).toHaveText('Bonus');
   await page.getByRole('button', { name: 'J’ai lu la correction' }).click();
   await page.waitForTimeout(450);
   const e = await etat(page);
@@ -58,7 +58,7 @@ test('correction de l’étude : question, réponse proposée, conseils et passa
   test.skip(!mdp, 'Mot de passe inconnu (CORRECTION_PASSWORD ou .env.local).');
   await ouvrir(page, 'seance-09/6-lire.html#analyser', '09:10');
   await saisir(page, 'l1', 'Notre fiche d’identité du document, assez longue.');
-  await page.goto('seance-09/7-correction.html?now=11:08');
+  await page.goto('seance-09/7-correction.html?now=11:02');
   await page.fill('#staticrypt-password', mdp);
   await page.getByRole('button', { name: 'Ouvrir la correction' }).click();
   await page.waitForFunction(() => document.documentElement.classList.contains('js-pret'));
@@ -70,7 +70,7 @@ test('correction de l’étude : question, réponse proposée, conseils et passa
   await expect(l1.locator('.question-corr')).toContainText('Qui a publié ce document');
   await expect(l1.locator('[data-votre-reponse]')).toContainText('Notre fiche d’identité du document');
   await expect(l1.locator('.modele')).toBeVisible();
-  await expect(l1.locator('.conseils')).toContainText('mention Champ');
+  await expect(l1.locator('.conseils-methode')).toContainText('mention Champ');
   // « Voir le passage » surligne les deux mentions Champ.
   await l1.locator('[data-voir-passage]').click();
   await expect(page.locator('.passage-surligne')).toHaveCount(2);
