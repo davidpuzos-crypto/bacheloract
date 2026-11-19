@@ -19,7 +19,6 @@ export function icone(id) {
 // docs/data/schedule.json ne peut pas être lu. La source reste le fichier JSON.
 const PROGRAMME_SECOURS = {
   departParDefaut: '09:00',
-  gracePointArretSecondes: 60,
   phases: [
     { id: 'cadre', label: 'Cadre', debut: 0, duree: 3, page: '1-cadre.html' },
     { id: 'methode', label: 'Méthode', debut: 3, duree: 5, page: '2-methode.html', reperes: [[2, 'M1']] },

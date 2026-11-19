@@ -39,7 +39,10 @@ export function heure(minute, secondes = 0) {
 }
 
 // Ouvre une page à une heure simulée et attend que les modules soient prêts.
+// Les envois partent vers un relais simulé, propre à la page : seuls les tests
+// de collecte.spec.mjs utilisent le faux relais partagé du serveur de test.
 export async function ouvrir(page, chemin, now) {
+  if (!page.__relaisSimule) { await relaisSimule(page); }
   const sep = chemin.includes('?') ? '&' : '?';
   const ancre = chemin.includes('#') ? chemin.slice(chemin.indexOf('#')) : '';
   const base = ancre ? chemin.slice(0, chemin.indexOf('#')) : chemin;
@@ -58,3 +61,26 @@ export async function saisir(page, id, texte) {
 }
 
 export const LONG = 'Réponse de test suffisamment longue pour valider le champ requis.';
+
+// Intercepte les envois au relais. echec : 'reseau' (connexion coupée) ou un statut HTTP.
+export async function relaisSimule(page, { echec = null } = {}) {
+  page.__relaisSimule = true;
+  const envois = [];
+  await page.route('**/faux-relais/**', async (route) => {
+    if (route.request().method() !== 'POST') { await route.continue(); return; }
+    envois.push(route.request().postData() || '');
+    if (echec === 'reseau') { await route.abort('connectionfailed'); return; }
+    if (echec) { await route.fulfill({ status: echec, contentType: 'application/json', body: '{"error":"test"}' }); return; }
+    await route.fulfill({ status: 200, contentType: 'application/json', body: '{"id":"test","event":"message"}' });
+  });
+  return envois;
+}
+
+// Passe la porte d’une page (« Envoyer et ouvrir… ») si elle est affichée.
+export async function passerPorte(page) {
+  const porte = page.locator('[data-porte]');
+  if (await porte.isVisible()) {
+    await porte.locator('[data-porte-ouvrir]').click();
+    await porte.waitFor({ state: 'hidden' });
+  }
+}

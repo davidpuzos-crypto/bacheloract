@@ -3,20 +3,7 @@
 // pas dépendre des autres tests qui utilisent le faux relais du serveur.
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { PAGES, ouvrir, saisir, etat } from './aides.mjs';
-
-// Intercepte les envois au relais. echec : 'reseau' (connexion coupée) ou un statut HTTP.
-async function relaisSimule(page, { echec = null } = {}) {
-  const envois = [];
-  await page.route('**/faux-relais/**', async (route) => {
-    if (route.request().method() !== 'POST') { await route.continue(); return; }
-    envois.push(route.request().postData() || '');
-    if (echec === 'reseau') { await route.abort('connectionfailed'); return; }
-    if (echec) { await route.fulfill({ status: echec, contentType: 'application/json', body: '{"error":"test"}' }); return; }
-    await route.fulfill({ status: 200, contentType: 'application/json', body: '{"id":"test","event":"message"}' });
-  });
-  return envois;
-}
+import { PAGES, ouvrir, saisir, etat, relaisSimule } from './aides.mjs';
 
 test('aucune page étudiante ne demande de mot de passe', async ({ request }) => {
   for (const p of PAGES.filter((x) => !x.startsWith('prof/'))) {
@@ -28,10 +15,10 @@ test('aucune page étudiante ne demande de mot de passe', async ({ request }) =>
 
 test('les corrections sont publiées en clair, derrière le bouton d’envoi', async ({ request }) => {
   const definir = await (await request.get('seance-09/5b-correction-definir.html')).text();
-  expect(definir).toContain('data-porte="definir"');
+  expect(definir).toContain('data-porte="citer"');
   expect(definir).toContain('Marianne Blidon est');
   const etude = await (await request.get('seance-09/7-correction.html')).text();
-  expect(etude).toContain('data-porte="parcours"');
+  expect(etude).toContain('data-porte="lire"');
   expect(etude).toContain('data-voir-passage');
 });
 
@@ -79,7 +66,7 @@ test('correction de Définir et Citer : un clic envoie les réponses et ouvre la
   await page.getByRole('button', { name: 'J’ai lu la correction' }).click();
   await page.waitForTimeout(450);
   const e = await etat(page);
-  expect(e.lu['porte-definir']).toBeTruthy();
+  expect(e.lu['porte-citer']).toBeTruthy();
   expect(e.lu['correction-definir']).toBeTruthy();
 
   // Une fois ouverte, la correction ne redemande rien.
@@ -143,7 +130,7 @@ test('correction de l’étude : sans dépôt, le clic fait le dépôt puis ouvr
   await expect(page.locator('[data-z="leg1-champ"]')).toHaveClass(/passage-surligne/);
   // L’état est enregistré avec un léger différé.
   await expect.poll(async () => ((await etat(page)).depots || {}).parcours?.via).toBe('envoi');
-  expect((await etat(page)).lu['porte-parcours']).toBeTruthy();
+  expect((await etat(page)).lu['porte-lire']).toBeTruthy();
 });
 
 test('envoi en échec : la correction s’affiche quand même, avec un avertissement', async ({ page }) => {
@@ -158,7 +145,7 @@ test('envoi en échec : la correction s’affiche quand même, avec un avertisse
   await expect(note).toHaveClass(/alerte/);
   await expect(page.locator('#c-l1 .modele')).toBeVisible();
   // Le dépôt n’est pas compté comme fait, mais la correction reste ouverte.
-  await expect.poll(async () => !!((await etat(page)).lu || {})['porte-parcours']).toBe(true);
+  await expect.poll(async () => !!((await etat(page)).lu || {})['porte-lire']).toBe(true);
   expect((await etat(page)).depots.parcours).toBeUndefined();
 });
 

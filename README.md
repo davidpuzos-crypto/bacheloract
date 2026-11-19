@@ -9,7 +9,7 @@ Le site est statique (HTML, CSS, JavaScript sans framework). Il est publié par 
 | Emplacement | Contenu |
 |---|---|
 | `docs/` | Le site publié. Accueil du cours (`index.html`), pages de la séance 9 (`seance-09/`), pages de l’enseignant (`prof/`), styles, scripts, polices et icônes (`assets/`). |
-| `docs/data/schedule.json` | Le déroulé chronométré : heure de départ, phases, textes des écrans STOP. |
+| `docs/data/schedule.json` | Le déroulé chronométré : heure de départ, phases, repères et messages de passage d’une phase à l’autre. |
 | `docs/data/config.json` | Les liens (Insee, vidéo, ressources…), l’envoi chiffré des réponses à l’enseignant et les options d’affichage. |
 | `scripts/` | Le build, le contrôle éditorial, le calcul des budgets de temps, le contrôle des liens, un petit serveur local. |
 | `scripts/code-enseignant.mjs` | Change le code enseignant de la page « Réponses des équipes » (voir « Voir les réponses en direct »). |
@@ -72,16 +72,18 @@ L’horloge suit l’heure de chaque appareil. Toutes les phases se calculent à
 - **Pour une démonstration** : `?now=10:30` simule l’heure (ici 10 h 30). Pour revenir à l’heure réelle : `?now=reel`.
 - Si la séance démarre en retard, l’adresse affichée sous le code QR de l’écran de projection reprend le réglage de l’appareil de l’enseignant. Donnez-la aux équipes.
 
-## Les corrections, sans mot de passe
+## Envoyer pour passer, sans mot de passe
 
-Les étudiant·es n’ont aucun mot de passe à saisir. Chaque correction s’affiche dès que l’équipe a envoyé son travail.
+Les étudiant·es n’ont aucun mot de passe à saisir. La règle est simple : pour voir une correction ou passer à la quête suivante, l’équipe envoie d’abord son travail, d’un clic.
 
-- **Correction de Définir et Citer** (vers 9 h 35). La page montre d’abord un bouton « Envoyer et voir la correction ». Le clic envoie les réponses de l’équipe à la page « Réponses des équipes », puis affiche la correction.
-- **Correction de l’étude** (vers 11 h 01). Elle s’ouvre d’elle-même si l’équipe a déjà déposé son travail sur la page Lire. Sinon, le même bouton fait le dépôt, puis affiche la correction.
+- **Quête 2, Citer**. Elle s’ouvre quand le travail de la quête 1 (Chercher) est envoyé. Le bouton de fin de Chercher s’appelle « Envoyer et passer à Citer ».
+- **Correction de Définir et Citer, et quête 3, Lire**. Elles s’ouvrent quand le travail de Chercher et de Citer est envoyé. Le bouton de fin de Citer s’appelle « Envoyer et voir la correction ».
+- **Correction de l’étude, et quête 4, Noter**. Elles s’ouvrent quand le travail sur l’étude est déposé, c’est-à-dire envoyé. Si l’équipe ne l’a pas déjà fait sur la page Lire, le bouton « Envoyer et voir la correction » fait le dépôt.
+- **Fin de la vidéo**. « Envoyer et aller plus loin » envoie les réponses au QCM. La lecture « Pour aller plus loin » reste ouverte à tout moment.
 
-Une fois ouverte, une correction le reste sur cet appareil. Elle s’affiche aussi directement quand il n’y a rien à envoyer (une équipe qui n’a rien écrit, ou vous qui préparez la séance) et quand l’envoi est coupé dans `docs/data/config.json`. Si l’envoi échoue (réseau, relais saturé), la correction s’affiche quand même, avec un message qui demande de télécharger le récapitulatif et de vous prévenir. Personne n’est bloqué.
+Une équipe qui arrive sur une page par le menu, sans avoir envoyé, voit d’abord un encadré « D’abord, envoyez votre travail » avec le bouton d’envoi. Une porte s’ouvre seule quand le travail est déjà parti (les réponses partent aussi automatiquement à chaque point d’arrêt), quand l’équipe n’a rien fait dans la quête précédente, quand vous préparez la séance sans réponses, ou quand l’envoi est coupé dans `docs/data/config.json`. Une fois ouverte, elle le reste sur cet appareil. Si l’envoi échoue (réseau, relais saturé), la page s’ouvre quand même, avec un message qui demande de télécharger le récapitulatif et de vous prévenir. Personne n’est bloqué.
 
-Ce bouton n’est pas une protection. Le texte des corrections est public, dans le dépôt comme dans le code des pages, et une personne curieuse peut le lire en avance. Il garantit seulement que, dans le déroulé normal, le travail de l’équipe vous parvient avant qu’elle lise la correction.
+Ce n’est pas une protection. Le texte des corrections est public, dans le dépôt comme dans le code des pages, et une personne curieuse peut le lire en avance. La règle garantit seulement que, dans le déroulé normal, le travail de chaque quête vous parvient avant la suite.
 
 ## Reconstruire
 
@@ -154,13 +156,13 @@ node scripts/code-enseignant.mjs "nouveau code" --ancien-code "code actuel"
 ## Comment le site fonctionne
 
 - **État partagé** : toutes les pages lisent et écrivent le même objet dans le navigateur (clé `fabrique:s09:v1`). Une écriture a lieu 350 ms après chaque saisie, et tout de suite quand on quitte la page. Si le navigateur refuse d’enregistrer (navigation privée stricte), un message demande de copier régulièrement le récapitulatif.
-- **Horloge** : les phases, les comptes à rebours et les écrans STOP viennent de `schedule.json`. À chaque point d’arrêt, un bandeau prévient pendant 60 secondes, puis un écran plein cadre propose un seul bouton vers la page suivante. Les réponses sont conservées, et les pages précédentes restent accessibles ensuite.
-- **Corrections** : sans mot de passe, chacune s’affiche quand l’équipe a envoyé son travail (voir « Les corrections, sans mot de passe »). Chaque question est affichée avec la réponse de l’équipe, une réponse proposée et des conseils de méthode. Dans la correction de l’étude, « Voir le passage » surligne le passage de l’étude qui justifie la réponse.
+- **Horloge** : les phases et les comptes à rebours viennent de `schedule.json`. Aucune page n’est imposée, chaque équipe circule librement. Quand une équipe est en retard sur le déroulé, une ligne sous l’en-tête le dit explicitement (« Il est 9 h 23. Vous devriez être sur « Lecture, bien citer », jusqu’à 9 h 26 »), avec le message de passage prévu dans `schedule.json` (`stopTexte`) et un lien pour y aller. Sur la bonne page, la même ligne dit à quelle question l’équipe devrait en être. Aux moments de passage, les réponses partent aussi automatiquement à l’enseignant. L’écran de projection affiche toujours un grand « Stop » (`stopMot`) pour toute la salle.
+- **Corrections** : sans mot de passe, chacune s’affiche quand l’équipe a envoyé son travail (voir « Envoyer pour passer, sans mot de passe »). Chaque question est affichée avec la réponse de l’équipe, une réponse proposée et des conseils de méthode. Dans la correction de l’étude, « Voir le passage » surligne le passage de l’étude qui justifie la réponse.
 - **Repère horaire** : sur les pages de travail, une ligne sous le chrono dit à quelle question l’équipe devrait en être, si elle est dans les temps, et mène à la question.
 - **Mise en page** : tous les blocs d’une page partagent la même colonne. Sur grand écran, une colonne « Sur cette page » affiche à droite le sommaire, les questions faites ou à faire et le créneau prévu. Les pages qui occupent toute la largeur (l’étude et ses questions) n’en ont pas.
 - **Dépôt** : le bouton « Envoyer à l’enseignant » envoie tout ce qui n’est pas encore parti et signale que le dépôt est fait. Le récapitulatif peut aussi être téléchargé (`s09_<equipe>_parcours.txt`) ou copié, en secours.
 - **Vidéo** : chacun·e prend ses notes à sa façon, sur papier, sur son ordinateur ou autrement, pas sur le site. Après la vidéo, l’équipe compare ses notes à l’oral pendant 8 minutes, avec quatre pistes et le plan de la vidéo, puis fait ensemble un QCM de trois questions. Rien d’autre n’est à écrire ni à déposer pour cette partie, les réponses au QCM partent avec les envois automatiques.
-- **Jeu** : points d’enquête, quatre quêtes, huit badges, anneaux de compétences et phrase mystère. Les points ne sont pas une note, il n’y a ni niveau ni classement. Le mode sobre (menu) masque les animations et les badges. Les animations sont coupées si l’appareil demande moins de mouvement.
+- **Jeu** : points d’enquête, quatre quêtes qui s’ouvrent l’une après l’autre quand le travail est envoyé, huit badges et anneaux de compétences, réunis dans la « Progression » de l’équipe (bouton en haut de chaque page). Les points ne sont pas une note, il n’y a ni niveau ni classement. Le mode sobre (menu) masque les animations et les badges. Les animations sont coupées si l’appareil demande moins de mouvement.
 - **Accessibilité** : navigation au clavier, retours de QCM annoncés aux lecteurs d’écran, contrastes vérifiés en mode sombre et clair. Les tests incluent un audit axe-core sur chaque page, et Lighthouse donne 100 en accessibilité sur chaque page.
 
 ## Licences

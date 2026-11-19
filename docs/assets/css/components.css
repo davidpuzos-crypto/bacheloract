@@ -86,7 +86,6 @@
 .horloge-entete .phase-nom { font-weight: 700; font-size: 0.98rem; }
 .horloge-entete .phase-reste { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--texte-doux); font-size: 0.95rem; }
 .horloge-entete .phase-reste.urgent { color: var(--alerte); }
-.horloge-entete .aller-phase { font-size: 0.88rem; font-weight: 700; }
 
 .outils-entete { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
@@ -113,7 +112,7 @@
 .progres-seance { height: 4px; background: var(--surface-2); }
 .progres-seance span { display: block; height: 100%; width: 0; background: var(--accent); transition: width 0.6s ease; }
 
-/* ---------- Tiroirs (menu, carnet) ---------- */
+/* ---------- Tiroirs (menu, progression) ---------- */
 .tiroir {
   position: fixed;
   top: 0;
@@ -556,37 +555,7 @@ textarea.recap { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, m
 .deroule .marqueur { margin-left: 6px; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
 .tag-stop { display: inline-block; margin-left: 8px; padding: 0 8px; border: 1px solid var(--trait-fort); border-radius: 999px; font-family: var(--police-ui); font-size: 0.74rem; font-weight: 700; color: var(--texte-doux); white-space: nowrap; }
 
-/* ---------- Bandeau et écran STOP ---------- */
-.stop-bandeau {
-  position: sticky;
-  top: var(--entete-h);
-  z-index: 35;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 8px 16px;
-  padding: 12px 20px;
-  background: var(--alerte-fond);
-  border-bottom: 2px solid var(--alerte);
-  color: var(--texte);
-  font-family: var(--police-ui);
-  font-weight: 700;
-  text-align: center;
-}
-.stop-bandeau[hidden] { display: none; }
-.stop-ecran {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: var(--fond);
-}
-.stop-ecran[hidden] { display: none; }
-.stop-carte { max-width: 760px; text-align: center; font-family: var(--police-ui); }
+/* ---------- Grand mot de l’écran de projection ---------- */
 .stop-mot {
   display: block;
   font-family: var(--police-titre);
@@ -598,10 +567,6 @@ textarea.recap { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, m
   margin-bottom: 0.25em;
   text-transform: uppercase;
 }
-.stop-mot.long { font-size: clamp(3rem, 12.5vw, 8.5rem); }
-.stop-texte { font-size: clamp(1.25rem, 3vw, 1.9rem); font-weight: 700; line-height: 1.35; margin: 0 0 1.4em; color: var(--texte); }
-.stop-heure { display: block; color: var(--texte-doux); font-size: 1rem; font-weight: 600; margin-bottom: 1.6em; font-variant-numeric: tabular-nums; }
-.stop-ecran .btn { font-size: 1.2rem; padding: 1rem 1.8rem; }
 
 /* ---------- Messages éphémères ---------- */
 .annonces { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 70; display: grid; gap: 8px; width: min(520px, calc(100vw - 32px)); pointer-events: none; }
@@ -776,8 +741,6 @@ details.sous > p, details.sous > div { margin: 0.5rem 0 0; }
 
 .sous-nav { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 18px 0 0; font-family: var(--police-ui); font-weight: 700; }
 
-.phrase-finale { margin: 1.5rem 0 1rem; max-width: 60rem; }
-.phrase-finale .phrase-mystere { font-size: clamp(1.5rem, 3.6vw, 2.5rem); line-height: 1.35; }
 
 .consigne { font-family: var(--police-ui); font-weight: 700; max-width: var(--mesure); }
 .notions .num { font-size: 1.2rem; }
@@ -793,6 +756,14 @@ details.sous > p, details.sous > div { margin: 0.5rem 0 0; }
 .repere-barre p { max-width: 1180px; margin: 0 auto; padding: 6px 24px; font-size: 0.9rem; font-weight: 600; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
 .repere-barre[data-etat="leger"] { background: var(--alerte-fond); }
 .repere-barre[data-etat="retard"] { background: var(--erreur-fond); }
+/* En retard sur le déroulé : la ligne dit où être, sans rien imposer. */
+.repere-barre[data-etat="ailleurs"] { background: var(--alerte-fond); border-bottom: 2px solid var(--alerte); }
+.repere-barre[data-etat="pause"], .repere-barre[data-etat="fin"] { background: var(--accent-doux); }
+.repere-barre[data-etat="ailleurs"] .repere-lien, .repere-barre[data-etat="pause"] .repere-lien, .repere-barre[data-etat="fin"] .repere-lien { color: var(--texte); text-decoration-thickness: 2px; }
+.repere-barre.appel { animation: appel-repere 2.4s ease-out; }
+@keyframes appel-repere { 0%, 40% { box-shadow: inset 0 0 0 3px var(--alerte); } 100% { box-shadow: inset 0 0 0 0 transparent; } }
+@media (prefers-reduced-motion: reduce) { .repere-barre.appel { animation: none; } }
+html[data-sobre="1"] .repere-barre.appel { animation: none; }
 .repere-lien { font-weight: 800; white-space: nowrap; }
 .q-repere { border-left-color: var(--accent) !important; }
 .drapeau-repere {

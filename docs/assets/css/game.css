@@ -1,14 +1,14 @@
-/* Carnet d’enquête : le seul endroit où le site se permet de l’audace.
+/* Progression de l’équipe : le seul endroit où le site se permet de l’audace.
    Tout ce qui est décoratif porte la classe .deco et disparaît en mode sobre. */
 
-.carnet {
+.progression {
   font-family: var(--police-ui);
   background-color: var(--fond-2);
   background-image: radial-gradient(color-mix(in srgb, var(--texte) 9%, transparent) 1px, transparent 1.2px);
   background-size: 18px 18px;
 }
-.carnet-bloc { margin: 0 0 22px; }
-.carnet-bloc h3 { margin: 0 0 8px; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--texte-doux); }
+.progression-bloc { margin: 0 0 22px; }
+.progression-bloc h3 { margin: 0 0 8px; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--texte-doux); }
 
 .equipe-carte { display: flex; align-items: center; gap: 14px; }
 .equipe-carte .icone-equipe { width: 56px; height: 56px; flex: none; border-radius: 50%; border: 2px solid var(--accent); padding: 9px; background: var(--surface); color: var(--accent); }
@@ -108,29 +108,6 @@
 .badge.nouveau .medaille { animation: medaille 0.7s cubic-bezier(.2,1.4,.4,1) both; }
 @keyframes medaille { 0% { scale: 0.2; rotate: -40deg; } 100% { scale: 1; rotate: 0deg; } }
 
-/* Phrase mystère */
-.phrase-mystere {
-  font-family: var(--police-titre);
-  font-weight: 800;
-  font-size: 1.35rem;
-  line-height: 1.6;
-  letter-spacing: -0.005em;
-  margin: 0;
-}
-.phrase-mystere .morceau { white-space: nowrap; }
-.phrase-mystere .cache {
-  display: inline-block;
-  vertical-align: -0.12em;
-  height: 1em;
-  border-radius: 3px;
-  background: repeating-linear-gradient(-45deg, var(--texte-doux) 0 6px, var(--trait-fort) 6px 12px);
-  opacity: 0.55;
-}
-.phrase-mystere .revele { background: var(--surligneur); padding: 0 0.12em; border-radius: 2px; }
-.phrase-mystere .revele.nouveau { animation: revele 0.8s ease-out both; }
-@keyframes revele { from { background-size: 0 100%; } to { background-size: 100% 100%; } }
-.phrase-mystere.complete { font-size: clamp(1.6rem, 3.6vw, 2.6rem); line-height: 1.25; }
-
 /* Gains de points */
 .gain {
   position: fixed;
@@ -146,26 +123,25 @@
 
 canvas.confettis { position: fixed; inset: 0; z-index: 85; pointer-events: none; }
 
-/* Bloc carnet dans les pages (hub, pause, fin) */
-.carnet-page {
+/* Bloc de progression dans les pages (accueil de la séance, pause, fin) */
+.progression-page {
   max-width: 60rem;
   margin: 1.4rem 0;
   padding: 22px 22px 8px;
   border: 1px solid var(--trait);
   border-radius: var(--rayon-grand);
 }
-.carnet-page .grille-carnet { display: grid; gap: 18px 28px; }
-@media (min-width: 900px) { .carnet-page .grille-carnet { grid-template-columns: 1fr 1fr; } }
+.progression-page .grille-progression { display: grid; gap: 18px 28px; }
+@media (min-width: 900px) { .progression-page .grille-progression { grid-template-columns: 1fr 1fr; } }
 
 /* Mode sobre et mouvement réduit */
 html[data-sobre="1"] .deco { display: none !important; }
 html[data-sobre="1"] .tampon,
 html[data-sobre="1"] .badge .medaille,
-html[data-sobre="1"] .phrase-mystere .revele,
 html[data-sobre="1"] .anneau .trace,
 html[data-sobre="1"] .barre-niveau span { animation: none !important; transition: none !important; }
 @media (prefers-reduced-motion: reduce) {
-  .tampon.nouveau, .badge.nouveau .medaille, .phrase-mystere .revele.nouveau, .gain { animation: none !important; }
+  .tampon.nouveau, .badge.nouveau .medaille, .gain { animation: none !important; }
   canvas.confettis { display: none; }
 }
 @media (max-width: 420px) {

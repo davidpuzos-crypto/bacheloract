@@ -27,16 +27,16 @@ test('parcours du hub au bilan avec un état partagé', async ({ page }) => {
   await saisir(page, 'a1', LONG);
 
   const suite = [
-    ['Passer à la lecture', /4-citer-lecture\.html/],
+    ['Envoyer et passer à Citer', /4-citer-lecture\.html/],
     ['Passer à la pratique', /5-citer-pratique\.html/],
-    ['Ouvrir la correction', /5b-correction-definir\.html/],
+    ['Envoyer et voir la correction', /5b-correction-definir\.html/],
     ['Ouvrir l’étude de l’Insee', /6-lire\.html/],
     ['Voir la pause', /pause\.html/],
     ['Analyser l’étude', /6-lire\.html#analyser/],
-    ['Ouvrir la correction', /7-correction\.html/],
+    ['Envoyer et voir la correction', /7-correction\.html/],
     ['Passer aux conseils de prise de notes', /8-notes\.html/],
     ['Passer à la vidéo', /9-video\.html/],
-    ['Aller plus loin', /aller-plus-loin\.html/],
+    ['Envoyer et aller plus loin', /aller-plus-loin\.html/],
     ['Voir le bilan', /10-fin\.html/]
   ];
   for (const [lien, url] of suite) {
