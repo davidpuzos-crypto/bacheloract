@@ -25,7 +25,7 @@ const PAGES = {
   'citer-pratique': 'Citer, pratique', 'correction-definir': 'Correction, définir et citer', pause: 'Pause', lire: 'Lire', correction: 'Correction de l’étude', notes: 'Conseils de notes',
   video: 'Vidéo', ouverture: 'Pour aller plus loin', fin: 'Bilan', accueil: 'Accueil du cours'
 };
-const SECTIONS = { '#lire': 'lecture', '#analyser': 'analyse', '#depot': 'Dépôt', '#pendant': 'pendant', '#comparer': 'à froid et comparer', '#questions': 'questions' };
+const SECTIONS = { '#lire': 'lecture', '#analyser': 'analyse', '#depot': 'Dépôt', '#pendant': 'pendant', '#comparer': 'comparer les notes', '#questions': 'QCM' };
 const INTERDITES = new Set(['__proto__', 'constructor', 'prototype']);
 
 let cfg = null;
@@ -295,14 +295,12 @@ function rendreResume() {
   const actives = equipes.filter((e) => e.maj && Date.now() - e.maj.getTime() < ACTIF_MS).length;
   const aide = equipes.filter((e) => e.drapeau === 'aide').length;
   const parcours = equipes.filter((e) => e.depots.parcours).length;
-  const video = equipes.filter((e) => e.depots.video).length;
   const zone = $('[data-resume]');
   zone.replaceChildren(
     h('p', { class: 'puce' }, h('b', { text: String(equipes.length) }), equipes.length > 1 ? ' équipes' : ' équipe'),
     h('p', { class: 'puce' }, h('b', { text: String(actives) }), (actives > 1 ? ' actives' : ' active') + ' (moins de 5 min)'),
     h('p', { class: 'puce' + (aide ? ' puce-aide' : '') }, aide ? svg('coup-de-main') : null, h('b', { text: String(aide) }), aide > 1 ? ' demandent de l’aide' : ' demande de l’aide'),
-    h('p', { class: 'puce' }, h('b', { text: parcours + '/' + equipes.length }), ' dépôts du parcours'),
-    h('p', { class: 'puce' }, h('b', { text: video + '/' + equipes.length }), ' dépôts de la vidéo')
+    h('p', { class: 'puce' }, h('b', { text: parcours + '/' + equipes.length }), ' dépôts du parcours')
   );
 }
 
@@ -341,15 +339,14 @@ function rendreEnsemble() {
       h('td', { class: 'num' }, String(e.points)),
       h('td', {}, pastillesQuetes(e)),
       h('td', { class: 'num' }, req.faits + '/' + req.total),
-      depotCellule(e.depots.parcours),
-      depotCellule(e.depots.video)
+      depotCellule(e.depots.parcours)
     );
     return tr;
   });
   const table = h('table', { class: 'tableau-equipes' },
-    h('caption', { class: 'visuellement-cache', text: 'Équipes, avec leur signal, leur page, leurs points, leurs quêtes et leurs dépôts' }),
+    h('caption', { class: 'visuellement-cache', text: 'Équipes, avec leur signal, leur page, leurs points, leurs quêtes et leur dépôt' }),
     h('thead', {}, h('tr', {},
-      ['Signal', 'Équipe', 'Page et activité', 'Points', 'Quêtes', 'Champs requis', 'Dépôt parcours', 'Dépôt vidéo'].map((t, i) => h('th', { scope: 'col', class: i === 3 || i === 5 ? 'num' : null, text: t })))),
+      ['Signal', 'Équipe', 'Page et activité', 'Points', 'Quêtes', 'Champs requis', 'Dépôt parcours'].map((t, i) => h('th', { scope: 'col', class: i === 3 || i === 5 ? 'num' : null, text: t })))),
     h('tbody', {}, lignes));
   panneau.replaceChildren(h('div', { class: 'table-defile' }, table));
   typographier(panneau);
@@ -446,9 +443,8 @@ function rendreEquipe() {
       h('p', { class: 'texte-reponse' + (v ? '' : ' vide'), text: v || 'pas de réponse' })));
   });
   const conseils = (e.reponses && e.reponses.conseils) || [];
-  const vus = ((e.reponses && e.reponses.cases) || {}).tips_vus || [];
-  blocs.push(h('p', { class: 'statut', text: 'Conseils choisis pour la vidéo, ' + (conseils.length ? conseils.join(', ') : 'aucun') + '. Conseils repérés dans les notes reçues, ' + (vus.length ? vus.join(', ') : 'aucun') + '.' }));
-  blocs.push(h('p', { class: 'statut', text: texteDepot(e, 'parcours', 'Dépôt du parcours') + ' ' + texteDepot(e, 'video', 'Dépôt de la vidéo') }));
+  blocs.push(h('p', { class: 'statut', text: 'Conseils choisis pour la vidéo, ' + (conseils.length ? conseils.join(', ') : 'aucun') + '.' }));
+  blocs.push(h('p', { class: 'statut', text: texteDepot(e, 'parcours', 'Dépôt du parcours') }));
   zone.replaceChildren(...blocs);
   typographier(zone);
 }
@@ -521,7 +517,7 @@ function texteExport() {
   [...equipes].sort((a, b) => nomEquipe(a).localeCompare(nomEquipe(b), 'fr')).forEach((e) => {
     lignes.push('==== ' + nomEquipe(e) + (e.noms ? ' (' + e.noms + ')' : ''));
     lignes.push('Dernier envoi, ' + (e.maj ? e.maj.toLocaleString('fr-FR') : 'inconnu') + '. Points d’enquête, ' + e.points + '.');
-    lignes.push(texteDepot(e, 'parcours', 'Dépôt du parcours') + ' ' + texteDepot(e, 'video', 'Dépôt de la vidéo'));
+    lignes.push(texteDepot(e, 'parcours', 'Dépôt du parcours'));
     let section = '';
     questions.forEach((q) => {
       if (q.section !== section) { section = q.section; lignes.push('', '-- ' + section); }

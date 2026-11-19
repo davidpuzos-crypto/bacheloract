@@ -16,13 +16,13 @@ Hypothèses de calcul : lecture à 200 mots par minute, 130 pour l’extrait de 
 | Analyser l’étude | 27 min | 31 | l1 (4 min), l2 (2 min), l3 (2 min), l4 (3 min), l5 (4 min), l6 (4 min) | 0 | Retours au document pour appuyer les réponses (2 min) | 21,2 min | 5,8 min | tient |
 | Dépôt | 2 min | 21 | aucun | 0 | Envoyer le récapitulatif à l’enseignant, ou le télécharger (1,2 min) | 1,3 min | 0,7 min | tient |
 | Correction de l’étude | 8 min | 1052 | aucun | 0 | Retours à l’étude avec « Voir le passage » (1 min) | 6,3 min | 1,7 min | tient |
-| Conseils de prise de notes | 4 min | 119 | aucun | 0 | Lecture des huit conseils et choix de trois (1,8 min) | 2,4 min | 1,6 min | tient |
-| Vidéo, pendant | 25 min | 43 | aucun | 0 | Projection de la vidéo, prise de notes en même temps (25 min) | 25 min | 0 min | tient |
-| Vidéo, à froid et comparer | 5 min | 63 | bp (1.5 min), n3 (2 min) | 0 | 8 cases (0,7 min) | 4,5 min | 0,5 min | tient |
-| Vidéo, questions | 7 min | 17 | s1 (2.5 min) | 3 | Dépôt express (envoyer ou télécharger) (1 min) | 5,1 min | 1,9 min | tient |
+| Conseils de prise de notes | 4 min | 147 | aucun | 0 | Lecture des huit conseils et choix de trois (1,8 min) | 2,5 min | 1,5 min | tient |
+| Vidéo, pendant | 25 min | 62 | aucun | 0 | Projection de la vidéo, prise de notes en même temps (25 min) | 25 min | 0 min | tient |
+| Comparer les notes en équipe | 8 min | 149 | aucun | 0 | Relecture seul·e, puis comparaison des notes à l’oral (6 min) | 6,7 min | 1,3 min | tient |
+| QCM sur la vidéo, en équipe | 4 min | 23 | aucun | 3 | Discussion en équipe avant chaque réponse (1,5 min) | 3,1 min | 0,9 min | tient |
 | Pour aller plus loin | 10 min | 970 | aucun | 3 | Lecture du tableau et du schéma (0,8 min) | 8,8 min | 1,2 min | tient |
 
-Total estimé avant la pause : 53,1 minutes pour 62. Après la pause : 74,4 minutes pour 88.
+Total estimé avant la pause : 53,1 minutes pour 62. Après la pause : 74,9 minutes pour 88.
 
 ## Détails
 
@@ -84,25 +84,23 @@ Budget de lecture : 1052 mots pour 1500 au plus.
 
 ### Conseils de prise de notes
 
-Lecture 0,6 min, champs 0 min, QCM 0 min, autres 1,8 min.
-Budget de lecture : 119 mots pour 500 au plus.
+Lecture 0,7 min, champs 0 min, QCM 0 min, autres 1,8 min.
+Budget de lecture : 147 mots pour 500 au plus.
 
 ### Vidéo, pendant
 
 Lecture 0 min, champs 0 min, QCM 0 min, autres 25 min.
-Champs facultatifs, non comptés : n1, n2.
 
-### Vidéo, à froid et comparer
+### Comparer les notes en équipe
 
-Lecture 0,3 min, champs 3,5 min, QCM 0 min, autres 0,7 min.
-Budget de lecture : 63 mots pour 150 au plus.
+Lecture 0,7 min, champs 0 min, QCM 0 min, autres 6 min.
+Budget de lecture : 149 mots pour 200 au plus.
 
-### Vidéo, questions
+### QCM sur la vidéo, en équipe
 
-Lecture 0,1 min, champs 2,5 min, QCM 1,5 min, autres 1 min.
-Budget de lecture : 17 mots pour 100 au plus.
+Lecture 0,1 min, champs 0 min, QCM 1,5 min, autres 1,5 min.
+Budget de lecture : 23 mots pour 60 au plus.
 QCM : V4, V5, V6.
-Bonus facultatifs, non comptés : g1, g2, g3, g4.
 
 ### Pour aller plus loin
 

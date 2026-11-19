@@ -19,8 +19,7 @@ const DUREES = {
   equipe: 0.3, icone: 0.2, nom1: 0.3, nom2: 0.3, nom3: 0.3,
   a1: 1, a2: 2, b0: 0.3, b1: 2,
   c1: 2, c3: 3,
-  l1: 4, l2: 2, l3: 2, l4: 3, l5: 4, l6: 4,
-  n3: 2, bp: 1.5, s1: 2.5
+  l1: 4, l2: 2, l3: 2, l4: 3, l5: 4, l6: 4
 };
 
 // L’étude de l’Insee se lit lentement : texte dense, chiffres, tableau.
@@ -49,10 +48,10 @@ const PHASES = [
     extras: [['Lecture des huit conseils et choix de trois', 1.8]] },
   { id: 'video', titre: 'Vidéo, pendant', fichier: 'docs/seance-09/9-video.html', section: '#pendant', minutes: 25,
     extras: [['Projection de la vidéo, prise de notes en même temps', 25]], horsBudgetLecture: true },
-  { id: 'froid', titre: 'Vidéo, à froid et comparer', fichier: 'docs/seance-09/9-video.html', section: '#comparer', minutes: 5, maxMots: 150,
-    cases: 8 },
-  { id: 'questions', titre: 'Vidéo, questions', fichier: 'docs/seance-09/9-video.html', section: '#questions', minutes: 7, maxMots: 100,
-    extras: [['Dépôt express (envoyer ou télécharger)', 1]] },
+  { id: 'froid', titre: 'Comparer les notes en équipe', fichier: 'docs/seance-09/9-video.html', section: '#comparer', minutes: 8, maxMots: 200,
+    extras: [['Relecture seul·e, puis comparaison des notes à l’oral', 6]] },
+  { id: 'questions', titre: 'QCM sur la vidéo, en équipe', fichier: 'docs/seance-09/9-video.html', section: '#questions', minutes: 4, maxMots: 60,
+    extras: [['Discussion en équipe avant chaque réponse', 1.5]] },
   { id: 'ouverture', titre: 'Pour aller plus loin', fichier: 'docs/seance-09/aller-plus-loin.html', minutes: 10, maxMots: 1100,
     motsMinute: MOTS_MINUTE_OUVERTURE, extras: [['Lecture du tableau et du schéma', 0.8]] }
 ];
@@ -117,7 +116,7 @@ export function calculerBudgets() {
       .filter((b) => ph.id !== 'cadre');
     const qcm = [...clone.querySelectorAll('fieldset.qcm')];
 
-    const champsListe = (ph.id === 'cadre' ? identite : requis).concat(ph.id === 'froid' ? facultatifs.filter((b) => b.getAttribute('data-q') === 'n3') : []);
+    const champsListe = ph.id === 'cadre' ? identite : requis;
     const minutesChamps = champsListe.reduce((s, b) => s + dureeChamp(b), 0);
     const minutesLecture = ph.horsBudgetLecture ? 0
       : (motsLecture + motsNotes + motsAussi) / (ph.motsMinute || MOTS_MINUTE) + motsExtrait / (ph.motsMinuteExtrait || MOTS_MINUTE);
@@ -137,7 +136,7 @@ export function calculerBudgets() {
       champs: champsListe.map((b) => b.getAttribute('data-q') + ' (' + dureeChamp(b) + ' min)'),
       conditionnels: conditionnels.map((b) => b.getAttribute('data-q')),
       bonus: bonus.map((b) => b.getAttribute('data-q')),
-      facultatifs: facultatifs.map((b) => b.getAttribute('data-q')).filter((id) => ph.id !== 'froid' || id !== 'n3'),
+      facultatifs: facultatifs.map((b) => b.getAttribute('data-q')),
       qcm: qcm.map((f) => f.getAttribute('data-qcm')),
       minutesLecture, minutesChamps, minutesQCM, minutesCases, minutesExtras, total, pireCas, alertes
     });

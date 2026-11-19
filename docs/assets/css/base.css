@@ -63,9 +63,9 @@ a:hover { color: var(--accent-vif); text-decoration-thickness: 2px; }
 /* Conteneurs */
 .page { max-width: 1180px; margin: 0 auto; padding: 0 24px 96px; }
 /* Tous les blocs d’une page partagent la même colonne. Les mises en page
-   larges (document et questions côte à côte, feuille de notes) y échappent. */
+   larges (document et questions côte à côte) y échappent. */
 main.page > * { max-width: var(--col); }
-main.page > .lecture-split, main.page > .avec-aside, main.page > .section-video, main.page > .large, main.page.page-large > * { max-width: none; }
+main.page > .lecture-split, main.page > .avec-aside, main.page > .large, main.page.page-large > * { max-width: none; }
 .prose { max-width: var(--mesure); }
 .prose p, .prose li { margin: 0 0 1em; }
 .prose p:last-child { margin-bottom: 0; }

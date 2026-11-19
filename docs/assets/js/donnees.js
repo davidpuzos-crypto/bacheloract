@@ -32,10 +32,10 @@ const PROGRAMME_SECOURS = {
     { id: 'analyser', label: 'Analyser l’étude', debut: 92, duree: 27, page: '6-lire.html#analyser', reperes: [[0, 'l1'], [5, 'l2'], [8, 'l3'], [11, 'l4'], [14, 'l5'], [20, 'l6']] },
     { id: 'depot', label: 'Dépôt', debut: 119, duree: 2, page: '6-lire.html#depot', stop: true, stopTexte: 'Stop. Le dépôt est terminé. Place à la correction de l’étude.', stopBouton: 'Ouvrir la correction' },
     { id: 'correction', label: 'Correction de l’étude', debut: 121, duree: 8, page: '7-correction.html' },
-    { id: 'notes', label: 'Conseils de prise de notes', debut: 129, duree: 4, page: '8-notes.html', stop: true, stopMot: 'Vidéo', stopTexte: 'La vidéo commence. Notez à votre façon, avec les conseils que vous avez choisis.', stopBouton: 'Ouvrir la feuille de notes' },
-    { id: 'video', label: 'Vidéo', debut: 133, duree: 25, page: '9-video.html#pendant', stop: true, stopTexte: 'La vidéo est terminée. Complétez vos notes à froid, puis comparez-les en équipe.', stopBouton: 'Passer à la comparaison' },
-    { id: 'froid', label: 'À froid et comparer', debut: 158, duree: 5, page: '9-video.html#comparer', stop: true, stopTexte: 'Stop. Passez aux questions sur la vidéo.', stopBouton: 'Aller aux questions', reperes: [[0, 'n3'], [2, 'bp']] },
-    { id: 'questions', label: 'Questions sur la vidéo', debut: 163, duree: 7, page: '9-video.html#questions', stop: true, stopMot: 'Ouverture', stopTexte: 'Dernière étape, dix minutes de lecture pour aller plus loin que le genre.', stopBouton: 'Ouvrir la page', reperes: [[0, 's1'], [3, 'V4']] },
+    { id: 'notes', label: 'Conseils de prise de notes', debut: 129, duree: 4, page: '8-notes.html', stop: true, stopMot: 'Vidéo', stopTexte: 'La vidéo commence. Chacun·e prend ses notes à sa façon, sur une feuille ou sur son ordinateur, avec les conseils choisis.', stopBouton: 'Passer à la vidéo' },
+    { id: 'video', label: 'Vidéo', debut: 133, duree: 25, page: '9-video.html#pendant', stop: true, stopTexte: 'La vidéo est terminée. Relisez vos notes, puis comparez-les en équipe.', stopBouton: 'Passer à la comparaison' },
+    { id: 'froid', label: 'Comparer vos notes', debut: 158, duree: 8, page: '9-video.html#comparer', stop: true, stopTexte: 'Stop. Place au QCM, à faire en équipe.', stopBouton: 'Aller au QCM' },
+    { id: 'questions', label: 'QCM sur la vidéo', debut: 166, duree: 4, page: '9-video.html#questions', stop: true, stopMot: 'Ouverture', stopTexte: 'Dernière étape, dix minutes de lecture pour aller plus loin que le genre.', stopBouton: 'Ouvrir la page', reperes: [[0, 'V4']] },
     { id: 'ouverture', label: 'Pour aller plus loin', debut: 170, duree: 10, page: 'aller-plus-loin.html', stop: true, stopMot: 'Fin', stopTexte: 'La séance est terminée. Merci pour votre travail.', stopBouton: 'Voir le bilan' },
     { id: 'fin', label: 'Fin', debut: 180, duree: 0, page: '10-fin.html' }
   ]

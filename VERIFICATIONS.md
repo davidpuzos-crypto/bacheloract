@@ -15,7 +15,7 @@ Contrôle fait avec `npm run liens` depuis l’environnement de construction. Un
 | Cairn et SophIA, `https://www.cairn.info` | Chercher, troisième porte | 403, à vérifier. Tester l’accès par le K-lab depuis la salle. |
 | Guide APA simplifié de l’ENS Paris (PDF) | Citer | répond (200) |
 | Insee Focus n° 377, `https://www.insee.fr/fr/statistiques/8743657` | Lire | répond (200), adresse fournie par l’enseignant |
-| Vidéo YouTube `aed8Q40M8r8` | Vidéo (G3) | répond (200) |
+| Vidéo YouTube `aed8Q40M8r8` | Projection en classe (lien dans `docs/data/config.json`) | répond (200) |
 | `https://tutos.bu.univ-rennes2.fr` | Conseils de notes | répond (200) |
 | Liens Moodle de la fiche méthode et du guide de révision | Conseils de notes, bilan | **vides** dans `docs/data/config.json`, boutons masqués. Les dépôts ne passent plus par Moodle (voir la section 2, point 9). |
 
@@ -26,7 +26,7 @@ Contrôle fait avec `npm run liens` depuis l’environnement de construction. Un
 3. **Auteure de la définition de Géoconfluences.** La page l’attribue à « Blidon, 2011 », et cite aussi Blidon (2015) pour la géographie du genre. La question A2 demande aux étudiant·es de chercher qui elle est et dans quelle discipline elle travaille (voir le point 14).
 4. **Deux vérifications laissées ouvertes aux étudiant·es** (bloc « Deux vérifications pour aller plus loin » de la correction) : la formule de Beauvoir, citée différemment par Géoconfluences (« on ne naît pas femme, mais on le devient ») et par Socius (« On ne naît pas femme, on le devient »), à retrouver dans *Le Deuxième Sexe*, et les deux dates (1986 entre crochets, 1988) que Sofio donne pour l’article de Scott paru dans *Les Cahiers du GRIF*. Aucune réponse n’est fournie.
 5. **Date de parution de l’Insee Focus n° 377.** Le site reprend « 26 février 2026 » de la v2 (page Lire, correction L1). Le PDF fourni indique seulement « Février 2026 ». Vérifiez la mention « Paru le » sur la page de l’Insee.
-6. **Vidéo.** Le PDF de la transcription n’a pas été fourni. Les QCM V4 à V6 et le bonus G2 (« un écart de 25,7 % en 2012 ») sont repris de la v2 sans nouvelle vérification. La transcription automatique déforme des passages : **revérifiez ces questions contre la vidéo, aux horodatages des chapitres.** La liste de sources de la description ne semble contenir aucune référence pour Pierre Bourdieu ni pour Catherine Vidal (à confirmer). L’attribution « artisan de sa propre domination » à Bourdieu n’est affichée nulle part sur le site.
+6. **Vidéo.** Le PDF de la transcription n’a pas été fourni. Les trois questions du QCM (V4 à V6) sont reprises de la v2 sans nouvelle vérification. La transcription automatique déforme des passages : **revérifiez ces questions contre la vidéo, aux horodatages des chapitres.** Les questions ouvertes et les bonus sur la vidéo (dont G2, l’écart de 25,7 % en 2012, et G3, les sources de la description) sont retirés. L’attribution « artisan de sa propre domination » à Bourdieu n’est affichée nulle part sur le site.
 7. **Pourcentages de rétention** (20, 40, 60, 80 %) de la diapo 33. Sans source indiquée, ils ressemblent à la « pyramide de l’apprentissage ». Ils sont **masqués** (`afficherPourcentages: false` dans `docs/data/config.json`). La phrase « Écrire, c’est faire » n’apparaît qu’avec eux.
 8. **Intersectionnalité.** Abordée seulement en ouverture, par dix minutes de lecture en fin de séance (page « Pour aller plus loin », voir le point 15). Le titre de la séance reste « Genre et pouvoir d’agir ».
 9. **Envoi des réponses à l’enseignant**, sans Google ni Moodle. Les réponses passent chiffrées par le relais public ntfy.sh (sans compte), et la page « Réponses des équipes » les déchiffre avec le code enseignant. Points à vérifier :
@@ -77,7 +77,7 @@ Questions retirées ou allégées pour que chaque phase tienne :
 - Méthode : le tableau « Ce qu’on vérifie » est retiré, la page dure 5 minutes.
 - Citer : le QCM C-Q5 est retiré, et la synthèse C3 demande deux ou trois phrases au lieu de trois ou quatre. La bibliographie C2 devient un bonus, limité à la référence de la page de Géoconfluences. Le tableau des modèles APA du cours est replié.
 - Analyse de l’étude : L1, L5 et L6 demandent trois ou quatre phrases au lieu de quatre à six.
-- Vidéo : les QCM V7 et V8 sont retirés, G1 devient un bonus, et BP demande trois bonnes pratiques au lieu de quatre ou cinq.
+- Vidéo (demande de l’enseignant) : la feuille de notes du site (avec ses symboles et son chronomètre), N3, BP, les cases des conseils repérés, S1, les bonus G1 à G4 et les deux dépôts express sont retirés. Chacun·e prend ses notes à sa façon, hors du site, qui est partagé par l’équipe. La comparaison des notes en équipe passe de 5 à 8 minutes, à l’oral, et le QCM (V4 à V6) se fait ensemble en 4 minutes.
 - Correction : les QCM K1 et K2 sont retirés.
 - Dépôt : la déclaration d’usage de l’IA est retirée du site (demande de l’enseignant).
 - Le mot « entrée » (au sens d’article de dictionnaire) est remplacé par « page » ou « article » partout.
@@ -98,14 +98,15 @@ La lecture dispose maintenant de 22 minutes avant la pause. Les coupes de la ver
 
 Le cours de la v2 a été légèrement resserré, sans changer ses règles : « Cette page donne le cours, la suivante vous fait appliquer » ; retrait de « et vous vous y référerez pour écrire votre bibliographie » ; « Quand vous comparez plusieurs définitions » ; « Vous dites sur quoi elle s’appuie ». **Une précision a été ajoutée** : « Pour deux auteur·es d’un même texte, on écrit (A et B, année) », pour éviter qu’une synthèse de deux sources s’écrive (A et B, année) au lieu de (A, année ; B, année). À valider.
 
-### Vidéo, comparaison en équipe (5 minutes)
+### Vidéo, comparaison en équipe (8 minutes)
 
-Les huit cases à cocher portent des libellés courts tirés des conseils (« Relire à froid », « Une colonne pour soi »…). Les conseils complets, mot pour mot, restent sur la page Conseils de prise de notes.
+Rien n’est à écrire sur le site. La page propose quatre pistes de comparaison (relire seul·e une minute, ce que tout le monde a noté, l’organisation de la page, les conseils choisis) et affiche d’emblée le plan de la vidéo d’après ses chapitres. Les conseils complets, mot pour mot, restent sur la page Conseils de prise de notes.
 
 ## 4. Autres choix faits pendant la construction
 
 - **Corrections sans mot de passe** (demande de l’enseignant). Celle de Définir et Citer (`5b-correction-definir.html`) vient juste après l’exercice et s’ouvre d’un clic qui envoie les réponses de l’équipe. Celle de l’étude (`7-correction.html`) s’ouvre d’elle-même si le dépôt est fait, sinon le même clic fait le dépôt. Si l’envoi échoue, la correction s’affiche quand même, avec un message. Le texte des corrections est donc public (dans le dépôt et le code des pages). Le chiffrement StatiCrypt, le dossier `private/` et l’affichage du mot de passe sur l’écran de projection sont supprimés. Chaque question montre la réponse de l’équipe, une réponse proposée et des conseils de méthode, visibles d’emblée. Le libellé « La forme attendue » remplace « Réponse proposée » pour A2, et « Un exemple » est gardé pour B1, B2, C1 et C2 comme dans la v2.
 - **Seconde source de Chercher** (demande de l’enseignant). Le Dictionnaire de sociologie clinique, dont la définition du genre était trop complexe, est remplacé par l’article « Genre (gender) » de Séverine Sofio sur le lexique Socius, plus clair. La correction de B1, C1 et C3 prend cet article pour exemple, à la place de l’introduction de l’INJEP (Chartrain, 2013). Elle signale que la phrase « un système de bicatégorisation hiérarchisé entre les sexes » est de Bereni et ses coauteurs (2012, p. 10), citée par Sofio, et que l’article n’a pas de date (« s. d. »). Les citations ont été vérifiées mot pour mot sur la page en ligne.
+- **Quête Noter et badge Stratège.** La quête Noter demande désormais trois conseils choisis et les trois réponses du QCM de la vidéo. Le badge Stratège récompense trois conseils choisis et un QCM de la vidéo juste. La page « Réponses des équipes » n’a plus de colonne « Dépôt vidéo ».
 - **Repère horaire.** Sur les pages de travail, une ligne sous le chrono dit à quelle question l’équipe devrait en être, si elle est dans les temps, en léger retard ou en retard, et mène à la question. Les repères sont dans `docs/data/schedule.json` (minute depuis le début de la phase, question) et peuvent être ajustés.
 - **Bouton « J’ai tout lu »** de la page « Bien citer » : +10 points, comme « J’ai lu la correction » (le montant n’était pas fixé).
 - **Quête Lire** : terminée quand les neuf QCM de lecture, L1 à L6 et un dépôt (copie, fichier ou envoi) sont faits. La lecture « Pour aller plus loin » n’entre dans aucune quête, elle rapporte seulement quelques points.

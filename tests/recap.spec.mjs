@@ -68,27 +68,3 @@ test('récapitulatif du parcours', async ({ page, context }) => {
   const e = await etat(page);
   expect(e.depots.parcours.via).toBe('copie');
 });
-
-test('récapitulatif de la vidéo et dépôt express', async ({ page }) => {
-  await ouvrir(page, 'seance-09/8-notes.html', '11:12');
-  await page.click('[data-conseil="2"]');
-  await page.click('[data-conseil="5"]');
-  await ouvrir(page, 'seance-09/9-video.html#questions');
-  await saisir(page, 's1', 'Trois phrases de test sur la vidéo, assez longues.');
-  await page.check('#vu-3');
-  const zone = page.locator('#questions [data-depot="video"]');
-  await zone.locator('summary').click();
-  await expect(zone.locator('[data-recap-texte]')).toHaveValue(/Conseils repérés dans les notes reçues\. 03/);
-  const texte = await zone.locator('[data-recap-texte]').inputValue();
-  expect(texte).toContain('Partie vidéo et prise de notes');
-  expect(texte).toMatch(/02\. Écouter d’abord, écrire ensuite, avec ses propres mots\./);
-  expect(texte).toContain('Notes. (notes prises sur papier)');
-  expect(texte).toContain('Conseils repérés dans les notes reçues. 03');
-  expect(texte).toContain('S1. Écrivez trois phrases sur la vidéo.');
-  expect(texte).toMatch(/Il manque encore .*BP/);
-  const [telechargement] = await Promise.all([
-    page.waitForEvent('download'),
-    zone.locator('[data-action="telecharger"]').click()
-  ]);
-  expect(telechargement.suggestedFilename()).toBe('s09_equipe_video.txt');
-});

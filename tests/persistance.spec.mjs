@@ -8,9 +8,7 @@ const CHAMPS = [
   ['seance-09/3-chercher.html', 'b1'],
   ['seance-09/5-citer-pratique.html', 'c2'],
   ['seance-09/6-lire.html', 'l3'],
-  ['seance-09/6-lire.html', 'l5'],
-  ['seance-09/9-video.html', 'n1'],
-  ['seance-09/9-video.html', 'bp']
+  ['seance-09/6-lire.html', 'l5']
 ];
 
 for (const [p, id] of CHAMPS) {

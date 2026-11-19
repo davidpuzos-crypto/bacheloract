@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vidéo et prise de notes · Séance 9 · La fabrique du social</title>
-<meta name="description" content="Feuille de notes pendant la vidéo, relecture à froid, comparaison en équipe et questions.">
+<meta name="description" content="Prise de notes libre pendant la vidéo, comparaison des notes en équipe, puis un QCM à faire ensemble.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../assets/css/tokens.css">
@@ -27,79 +27,36 @@
     </div>
     <nav class="sous-nav" aria-label="Sections de la page">
       <a href="#pendant">Pendant la vidéo</a>
-      <a href="#comparer">À froid et comparer</a>
-      <a href="#questions">Questions</a>
+      <a href="#comparer">Comparer vos notes</a>
+      <a href="#questions">Le QCM</a>
     </nav>
   </div>
 
   <section id="pendant" class="section-video" aria-labelledby="titre-pendant">
     <p class="etiquette"><span data-heure-phase="video:debut">11 h 13</span> · 25 minutes</p>
     <h2 id="titre-pendant">Pendant la vidéo</h2>
-    <p class="prose">La vidéo est projetée pour toute la classe. Chacun·e note pour soi, sur papier ou dans les zones ci-dessous. Gardez vos trois conseils en tête.</p>
+    <div class="prose">
+      <p>La vidéo est projetée pour toute la classe. Chacun·e prend ses propres notes, à sa façon, sur une feuille, sur son ordinateur ou autrement.</p>
+      <p>Ce site ne sert pas à prendre les notes, puisqu’il est partagé par toute l’équipe. Gardez seulement vos trois conseils en tête.</p>
+    </div>
     <p class="amorce">Vos trois conseils</p>
     <ul class="mes-conseils" data-mes-conseils>
       <li>Vos conseils choisis s’affichent ici.</li>
     </ul>
-
-    <div class="outils-notes">
-      <div class="symboles" role="group" aria-label="Insérer un symbole dans vos notes">
-        <button type="button" class="btn discret petit" data-symbole="=" aria-label="Insérer le symbole égal">=</button>
-        <button type="button" class="btn discret petit" data-symbole="≠" aria-label="Insérer le symbole différent">≠</button>
-        <button type="button" class="btn discret petit" data-symbole="→" aria-label="Insérer une flèche, conséquence">→</button>
-        <button type="button" class="btn discret petit" data-symbole="cf." aria-label="Insérer cf.">cf.</button>
-        <button type="button" class="btn discret petit" data-symbole="?" aria-label="Insérer un point d’interrogation">?</button>
-        <button type="button" class="btn discret petit" data-symbole="!" aria-label="Insérer un point d’exclamation">!</button>
-      </div>
-      <div class="chrono" role="group" aria-label="Chronomètre facultatif">
-        <span class="chrono-affiche" data-chrono-affiche aria-hidden="true">00:00</span>
-        <button type="button" class="btn discret petit" data-chrono="demarrer" aria-pressed="false">Démarrer</button>
-        <button type="button" class="btn discret petit" data-chrono="arreter">Arrêter</button>
-        <button type="button" class="btn secondaire petit" data-chrono="inserer">Insérer la minute</button>
-      </div>
-    </div>
-
-    <div class="feuille">
-      <div class="q" data-q="n1">
-        <label class="qlabel" for="f-n1">Notes</label>
-        <textarea id="f-n1" data-id="n1" rows="18" data-cible-symboles></textarea>
-      </div>
-      <div class="q" data-q="n2">
-        <label class="qlabel" for="f-n2">Pour moi (questions, désaccords, mots à vérifier)</label>
-        <textarea id="f-n2" data-id="n2" rows="18" data-cible-symboles></textarea>
-      </div>
-    </div>
   </section>
 
   <section id="comparer" class="section-video" aria-labelledby="titre-comparer">
-    <p class="etiquette"><span data-heure-phase="froid:debut">11 h 38</span> · 5 minutes</p>
-    <h2 id="titre-comparer">À froid, puis en équipe</h2>
-    <h3>À froid, seul·e, 2 minutes</h3>
-    <div class="q" data-q="n3">
-      <label class="qlabel" for="f-n3"><span class="qid">N3</span>Complétez vos notes de mémoire et notez vos propres remarques.</label>
-      <textarea id="f-n3" data-id="n3" rows="4" data-cible-symboles></textarea>
-    </div>
+    <p class="etiquette"><span data-heure-phase="froid:debut">11 h 38</span> · 8 minutes</p>
+    <h2 id="titre-comparer">Comparez vos notes, en équipe</h2>
+    <p class="prose">Rien à écrire sur le site. Posez vos notes côte à côte, sur papier ou à l’écran, et prenez le temps de les comparer.</p>
+    <ol class="reflexes">
+      <li>D’abord seul·e, une minute. Relisez vos notes et complétez de mémoire ce qui manque.</li>
+      <li>Ce que tout le monde a noté, et ce qu’une seule personne a vu.</li>
+      <li>La façon dont chacun·e a organisé sa page, avec des titres, des colonnes, des abréviations ou des symboles.</li>
+      <li>Les conseils choisis avant la vidéo. Lesquels ont marché, lesquels garderiez-vous ?</li>
+    </ol>
 
-    <h3>En équipe, 3 minutes</h3>
-    <p class="prose">Échangez vos feuilles. Cochez les conseils que vous repérez dans les notes reçues.</p>
-    <fieldset class="cases">
-      <legend class="visuellement-cache">Conseils repérés dans les notes reçues</legend>
-      <div class="opt"><input type="checkbox" id="vu-1" value="1" data-case="tips_vus"><label for="vu-1"><span class="ltr">01</span>Sélectionner l’essentiel, pas une dictée</label></div>
-      <div class="opt"><input type="checkbox" id="vu-2" value="2" data-case="tips_vus"><label for="vu-2"><span class="ltr">02</span>Écouter d’abord, écrire avec ses mots</label></div>
-      <div class="opt"><input type="checkbox" id="vu-3" value="3" data-case="tips_vus"><label for="vu-3"><span class="ltr">03</span>Hiérarchiser les idées</label></div>
-      <div class="opt"><input type="checkbox" id="vu-4" value="4" data-case="tips_vus"><label for="vu-4"><span class="ltr">04</span>Abréviations et symboles</label></div>
-      <div class="opt"><input type="checkbox" id="vu-5" value="5" data-case="tips_vus"><label for="vu-5"><span class="ltr">05</span>Une colonne pour soi</label></div>
-      <div class="opt"><input type="checkbox" id="vu-6" value="6" data-case="tips_vus"><label for="vu-6"><span class="ltr">06</span>Une page aérée</label></div>
-      <div class="opt"><input type="checkbox" id="vu-7" value="7" data-case="tips_vus"><label for="vu-7"><span class="ltr">07</span>Relire à froid</label></div>
-      <div class="opt"><input type="checkbox" id="vu-8" value="8" data-case="tips_vus"><label for="vu-8"><span class="ltr">08</span>Distinguer décrire et analyser</label></div>
-    </fieldset>
-
-    <div class="q" data-q="bp" data-requis>
-      <label class="qlabel" for="f-bp"><span class="qid">BP</span>Notez ensemble trois bonnes pratiques repérées dans les notes de chacun·e.</label>
-      <textarea id="f-bp" data-id="bp" rows="4"></textarea>
-      <p class="etat-champ" aria-live="polite"></p>
-    </div>
-
-    <div class="plan-video encadre" data-plan-video data-seuil="40" hidden>
+    <div class="plan-video encadre">
       <h3>Le plan de la vidéo, d’après ses chapitres</h3>
       <p>Comparez ce plan avec la structure de vos notes.</p>
       <ol class="chapitres">
@@ -117,15 +74,9 @@
   </section>
 
   <section id="questions" class="section-video" aria-labelledby="titre-questions">
-    <p class="etiquette"><span data-heure-phase="questions:debut">11 h 43</span> · 7 minutes, dépôt express compris</p>
-    <h2 id="titre-questions">Questions sur la vidéo</h2>
-
-    <div class="q" data-q="s1" data-requis>
-      <label class="qlabel" for="f-s1"><span class="qid">S1</span>Écrivez trois phrases sur la vidéo. La première dit ce qu’elle constate, la deuxième comment elle l’explique, la troisième ce qu’elle juge ou ce qu’elle conclut.</label>
-      <p class="indice" id="i-s1">Une phrase pour chacun, avec vos mots.</p>
-      <textarea id="f-s1" data-id="s1" rows="5" aria-describedby="i-s1"></textarea>
-      <p class="etat-champ" aria-live="polite"></p>
-    </div>
+    <p class="etiquette"><span data-heure-phase="questions:debut">11 h 46</span> · 4 minutes</p>
+    <h2 id="titre-questions">Le QCM, en équipe</h2>
+    <p class="prose">Trois questions, à faire ensemble sur un seul appareil. Mettez-vous d’accord avant de répondre. <span data-si-collecte hidden>Vos réponses partent toutes seules à l’enseignant.</span></p>
 
     <fieldset class="qcm" data-qcm="V4" data-correct="a">
       <legend><span class="qid">V4</span>Que désignent les ségrégations horizontale et verticale ?</legend>
@@ -171,51 +122,6 @@
         <div data-fb="d">C’est la position que la vidéo discute et rejette.</div>
       </div>
     </fieldset>
-
-    <h3>Si vous avez le temps</h3>
-    <div class="q" data-q="g1" data-bonus>
-      <label class="qlabel" for="f-g1"><span class="qid">G1</span><span class="tag-bonus">Bonus</span>Retrouvez votre définition de travail du genre dans votre récapitulatif. Relevez deux éléments de la vidéo qui l’illustrent, par exemple des normes, des stéréotypes ou des institutions.</label>
-      <p class="indice" id="i-g1">Deux ou trois phrases.</p>
-      <textarea id="f-g1" data-id="g1" rows="4" aria-describedby="i-g1"></textarea>
-      <p class="etat-champ" aria-live="polite"></p>
-    </div>
-    <div class="q" data-q="g2" data-bonus>
-      <label class="qlabel" for="f-g2"><span class="qid">G2</span><span class="tag-bonus">Bonus</span>La vidéo part d’un écart de 25,7 % en 2012, le document de l’Insee d’un écart de 21,8 % en 2024. Donnez deux raisons possibles de cette différence, en vous appuyant sur ce que vous savez des deux documents.</label>
-      <p class="indice" id="i-g2">Trois ou quatre phrases.</p>
-      <textarea id="f-g2" data-id="g2" rows="4" aria-describedby="i-g2"></textarea>
-      <p class="etat-champ" aria-live="polite"></p>
-      <details class="aide"><summary>Besoin d’un coup de pouce ?</summary><p>Regardez la date, les personnes comptées dans chaque source et ce que mesure chaque chiffre.</p></details>
-    </div>
-    <div class="q" data-q="g3" data-bonus>
-      <label class="qlabel" for="f-g3"><span class="qid">G3</span><span class="tag-bonus">Bonus</span>Ouvrez la description de la vidéo sur YouTube et lisez la liste de ses sources. Y trouvez-vous une référence pour ce que la vidéo dit de Pierre Bourdieu ou de Catherine Vidal ? Qu’est-ce que cela change à la façon dont vous pouvez citer ces passages ?</label>
-      <p class="indice" id="i-g3">Trois ou quatre phrases. <a data-lien="video" href="https://www.youtube.com/watch?v=aed8Q40M8r8" target="_blank" rel="noopener">Page de la vidéo sur YouTube</a></p>
-      <textarea id="f-g3" data-id="g3" rows="4" aria-describedby="i-g3"></textarea>
-      <p class="etat-champ" aria-live="polite"></p>
-    </div>
-    <div class="q" data-q="g4" data-bonus>
-      <label class="qlabel" for="f-g4"><span class="qid">G4</span><span class="tag-bonus">Bonus</span>Rédigez la référence de la vidéo selon la norme APA.</label>
-      <p class="indice" id="i-g4">Vous trouverez l’auteur ou la chaîne, la date et le titre sur la page de la vidéo.</p>
-      <textarea id="f-g4" data-id="g4" rows="3" aria-describedby="i-g4"></textarea>
-      <p class="etat-champ" aria-live="polite"></p>
-    </div>
-
-    <section class="depot" data-depot="video" aria-labelledby="titre-express">
-      <h3 id="titre-express">Dépôt express</h3>
-      <p class="prose" data-si-collecte hidden>Envoyez le récapitulatif de la partie vidéo à l’enseignant.</p>
-      <p class="prose" data-sans-collecte>Téléchargez le récapitulatif de la partie vidéo et gardez le fichier.</p>
-      <p class="statut" data-recap-progres aria-live="polite"></p>
-      <div class="rangee-boutons">
-        <button type="button" class="btn" data-action="envoyer" hidden>Envoyer à l’enseignant</button>
-        <button type="button" class="btn secondaire" data-action="telecharger">Télécharger le récapitulatif</button>
-        <button type="button" class="btn discret" data-action="copier">Copier le récapitulatif</button>
-      </div>
-      <p class="avis-collecte" data-avis-collecte hidden>Vos réponses et vos noms sont envoyés chiffrés à l’enseignant, et lui seul peut les lire.</p>
-      <p class="statut" data-recap-statut role="status" aria-live="polite"></p>
-      <details>
-        <summary>Voir le texte du récapitulatif</summary>
-        <textarea class="recap" readonly data-recap-texte aria-label="Texte du récapitulatif de la partie vidéo"></textarea>
-      </details>
-    </section>
   </section>
 
   <nav class="pager" aria-label="Pages voisines">

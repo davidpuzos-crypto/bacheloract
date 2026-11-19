@@ -672,15 +672,6 @@ textarea.recap { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, m
   max-width: 60rem;
 }
 .rappel-video strong { font-size: 1.02rem; }
-.feuille { display: grid; gap: 16px; margin-top: 1rem; }
-@media (min-width: 900px) { .feuille { grid-template-columns: minmax(0, 2.6fr) minmax(0, 1.2fr); } }
-.feuille .q { margin: 0; max-width: none; }
-.feuille textarea { min-height: 26rem; font-family: var(--police-ui); font-size: 0.98rem; }
-.outils-notes { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: center; margin: 1rem 0 0.4rem; font-family: var(--police-ui); }
-.symboles { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.symboles .btn { min-width: 44px; font-size: 1.05rem; padding: 0.35rem 0.6rem; }
-.chrono { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.chrono-affiche { font-variant-numeric: tabular-nums; font-weight: 800; font-size: 1.4rem; min-width: 4.2ch; }
 .mes-conseils { margin: 0.8rem 0; padding: 0; list-style: none; display: grid; gap: 8px; max-width: 60rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 .mes-conseils li { padding: 10px 12px; border-left: 3px solid var(--c-noter); background: var(--surface); border-radius: 0 var(--rayon) var(--rayon) 0; font-family: var(--police-ui); font-size: 0.93rem; }
 
