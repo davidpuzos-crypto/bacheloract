@@ -53,10 +53,10 @@ export const BADGES = [
   { id: 'detective', nom: 'Détective de sources', icone: 'b-detective', critere: 'Qui parle et depuis quelle discipline, A2 renseignée et A3 trouvée.' },
   { id: 'citation', nom: 'Citation en or', icone: 'b-citation', critere: 'Les trois QCM de la page Citer justes du premier coup.' },
   { id: 'biblio', nom: 'Bibliographe', icone: 'b-biblio', critere: 'La référence bonus C2 rédigée, 60 caractères au moins.' },
-  { id: 'lynx', nom: 'Œil de lynx', icone: 'b-oeil', critere: 'Les trois QCM sur les chiffres de l’écart justes du premier coup.' },
-  { id: 'temps', nom: 'Dans les temps', icone: 'b-temps', critere: 'Chercher, Citer et Analyser terminées avant la fin de leur phase.' },
-  { id: 'critique', nom: 'Esprit critique', icone: 'b-critique', critere: 'Au moins une question bonus répondue.' },
-  { id: 'stratege', nom: 'Stratège', icone: 'b-stratege', critere: 'Trois conseils choisis avant la vidéo et les trois questions du QCM de la vidéo justes.' },
+  { id: 'lynx', nom: 'Œil de lynx', icone: 'b-oeil', critere: 'Les questions Q4, Q5 et Q8 de la page Lire justes du premier coup.' },
+  { id: 'temps', nom: 'Dans les temps', icone: 'b-temps', critere: 'Les étapes Chercher, Citer et Analyser terminées à temps (Analyser au plus tard à la fin du dépôt).' },
+  { id: 'critique', nom: 'Esprit critique', icone: 'b-critique', critere: 'Au moins une question bonus traitée.' },
+  { id: 'stratege', nom: 'Stratège', icone: 'b-stratege', critere: 'Trois conseils choisis et les trois questions du QCM de la vidéo justes.' },
   { id: 'fil', nom: 'Fil rouge', icone: 'b-fil', critere: 'Les quatre quêtes résolues.' }
 ];
 

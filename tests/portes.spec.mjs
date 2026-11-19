@@ -7,11 +7,12 @@ test('quête 2 : la porte demande d’envoyer le travail de la quête 1', async 
   const envois = await relaisSimule(page);
   await ouvrir(page, 'seance-09/3-chercher.html', '09:12');
   await saisir(page, 'a2', LONG);
-  // Arrivée par le menu, sans passer par le bouton d’envoi.
-  await ouvrir(page, 'seance-09/4-citer-lecture.html', '09:23');
+  // Arrivée par le menu, sans passer par le bouton d’envoi, hors des deux
+  // minutes qui suivent le passage de 9 h 22 (pas d’envoi automatique).
+  await ouvrir(page, 'seance-09/4-citer-lecture.html', '09:25');
   const porte = page.locator('[data-porte="definir"]');
   await expect(porte).toBeVisible();
-  await expect(porte).toContainText('La quête 2, Citer, s’ouvre quand votre travail de la quête 1 est envoyé');
+  await expect(porte).toContainText('La quête 2, Citer, s’ouvre quand votre travail de la quête 1, Définir, est envoyé');
   await expect(page.locator('main [data-porte-masque]').first()).toBeHidden();
   await expect(page.locator('.pager')).toBeVisible();
   await porte.getByRole('button', { name: 'Envoyer et ouvrir la quête 2' }).click();
@@ -72,4 +73,31 @@ test('une équipe sans travail dans la quête précédente passe librement', asy
     await expect(page.locator('[data-porte]')).toBeHidden();
     await expect(page.locator('main [data-porte-masque]')).toHaveCount(0);
   }
+});
+
+test('la porte s’ouvre seule quand l’envoi automatique du passage aboutit', async ({ page }) => {
+  const envois = await relaisSimule(page);
+  await ouvrir(page, 'seance-09/3-chercher.html', '09:12');
+  await saisir(page, 'a2', LONG);
+  // Juste après le passage de 9 h 22 : les réponses partent toutes seules.
+  await ouvrir(page, 'seance-09/4-citer-lecture.html', '09:22:30');
+  await expect(page.locator('[data-porte="definir"]')).toBeHidden();
+  await expect(page.locator('main [data-porte-masque]')).toHaveCount(0);
+  expect(envois.length).toBeGreaterThan(0);
+  await expect.poll(async () => !!((await etat(page)).lu || {})['porte-definir']).toBe(true);
+});
+
+test('un téléchargement ne suffit pas pour ouvrir la correction de l’étude', async ({ page }) => {
+  await relaisSimule(page);
+  await ouvrir(page, 'seance-09/6-lire.html#analyser', '10:40');
+  await saisir(page, 'l1', LONG);
+  await Promise.all([
+    page.waitForEvent('download'),
+    page.locator('[data-depot="parcours"] [data-action="telecharger"]').click()
+  ]);
+  await ouvrir(page, 'seance-09/7-correction.html', '11:05');
+  await expect(page.locator('[data-porte="lire"]')).toBeVisible();
+  await page.getByRole('button', { name: 'Envoyer et voir la correction' }).click();
+  await expect(page.locator('#c-l1 .modele')).toBeVisible();
+  await expect.poll(async () => (((await etat(page)).depots || {}).parcours || {}).via).toBe('envoi');
 });

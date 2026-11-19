@@ -17,7 +17,7 @@ test('parcours du hub au bilan avec un état partagé', async ({ page }) => {
   await saisir(page, 'nom2', 'Sacha Durand');
   await expect(page.locator('.pastille-equipe')).toContainText('Les Curieuses');
 
-  await page.locator('.pager').getByRole('link', { name: 'Lancer l’enquête' }).click();
+  await page.locator('.pager').getByRole('link', { name: 'Commencer par la méthode' }).click();
   await expect(page).toHaveURL(/2-methode\.html/);
   await expect(page.locator('.pastille-equipe')).toContainText('Les Curieuses');
   await page.check('#qcm-M1-b');

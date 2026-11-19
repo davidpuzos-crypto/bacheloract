@@ -61,7 +61,7 @@ test('colonne « Sur cette page » : sommaire, avancement et repère, sur grand 
   const rail = page.getByRole('navigation', { name: 'Sur cette page' });
   await expect(rail).toBeVisible();
   await expect(rail).toContainText('Prévue de 9 h 08 à 9 h 22');
-  await expect(rail.locator('.rail-q')).toHaveText([/A1/, /A2/, /A3/, /B0/, /B1/, /A6/]);
+  await expect(rail.locator('.rail-q')).toHaveText([/A1/, /A2/, /A3/, /B0/, /B1/, /A4/]);
   await expect(rail.locator('[data-rail-bilan]')).toHaveText('0 réponse sur 5');
   await expect(rail.locator('.rail-q.repere')).toHaveText(/B1/);
   await saisir(page, 'a1', LONG);
@@ -70,7 +70,7 @@ test('colonne « Sur cette page » : sommaire, avancement et repère, sur grand 
   await expect(rail.locator('.rail-q[data-bloc="bloc-a3"]')).toHaveAttribute('data-etat', 'fait');
   await expect(rail.locator('[data-rail-bilan]')).toHaveText('2 réponses sur 5');
   // Le bonus ne compte pas dans le bilan.
-  await expect(rail.locator('.rail-q.bonus')).toHaveText(/A6/);
+  await expect(rail.locator('.rail-q.bonus')).toHaveText(/A4/);
   await rail.locator('.rail-q[data-bloc="bloc-b1"]').click();
   await expect(page.locator('.q[data-q="b1"]')).toBeInViewport();
 });

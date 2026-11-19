@@ -60,7 +60,7 @@ function majCompteurs(racine) {
   const blocs = [...racine.querySelectorAll('.q[data-requis]')].filter((b) => !b.hidden && !b.closest('[hidden]') && !b.hasAttribute('data-hors-compteur'));
   const faits = blocs.filter(blocRempli).length;
   compteurs.forEach((c) => {
-    c.textContent = faits + ' sur ' + blocs.length + ' champs requis remplis';
+    c.textContent = faits + (faits > 1 ? ' champs requis remplis' : ' champ requis rempli') + ' sur ' + blocs.length;
   });
 }
 

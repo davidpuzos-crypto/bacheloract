@@ -42,7 +42,7 @@ Pour un départ à 9 h 00. Le détail, avec ce qu’il faut dire à chaque phase
 | 11 h 46 | 4 min | QCM sur la vidéo, en équipe |
 | 11 h 50 | 10 min | Pour aller plus loin, lecture sur les approches intersectionnelles |
 
-Définir et citer tiennent en 40 minutes, correction comprise. Les dix dernières minutes sont une lecture d’ouverture, « Pour aller plus loin », accessible aussi à tout moment depuis le menu. Sur les pages de travail, une ligne sous le chrono indique la question où l’équipe devrait en être à cette heure (repères réglables dans `docs/data/schedule.json`). Le temps nécessaire à chaque phase est calculé page par page dans `docs-internes/budget-temps.md`.
+Du cadre à la correction de Définir et Citer, il faut 40 minutes, de 9 h 00 à 9 h 40. Les dix dernières minutes sont une lecture d’ouverture, « Pour aller plus loin », accessible aussi à tout moment depuis le menu. Sur les pages de travail, une ligne sous le chrono indique la question où l’équipe devrait en être à cette heure (repères réglables dans `docs/data/schedule.json`). Le temps nécessaire à chaque phase est calculé page par page dans `docs-internes/budget-temps.md`.
 
 ## Modifier une question ou un texte
 
@@ -51,8 +51,8 @@ Les textes sont directement dans les pages HTML de `docs/seance-09/`. On peut le
 1. Ouvrez le fichier de la page sur GitHub (par exemple `docs/seance-09/3-chercher.html`), puis cliquez sur le crayon « Edit this file ».
 2. Cherchez le texte avec Ctrl+F (Cmd+F sur Mac). Une question ouverte ressemble à ceci :
    ```html
-   <label class="qlabel" for="f-b2"><span class="qid">B2</span>De quel type de source s’agit-il…</label>
-   <p class="indice" id="i-b2">Trois réponses courtes.</p>
+   <label class="qlabel" for="f-b1"><span class="qid">B1</span>Recopiez exactement la phrase qui définit le genre…</label>
+   <p class="indice" id="i-b1">Une citation, ou un constat.</p>
    ```
    Changez le texte entre les balises, sans toucher à ce qui est entre `<` et `>`.
 3. Pour un QCM, la bonne réponse est la lettre de `data-correct="b"`, et chaque retour est dans un bloc `<div data-fb="a">…</div>`.
@@ -66,7 +66,7 @@ Les règles d’écriture (pas de tiret long, peu de deux-points, apostrophes ty
 
 L’horloge suit l’heure de chaque appareil. Toutes les phases se calculent à partir de l’heure de départ.
 
-- **Pour toute la classe, pendant la séance** : sur la page « Réponses des équipes », ouvrez « Heure de départ pour toute la classe ». Diffusez une heure (par exemple 10 h 00), ou cliquez « Démarrer maintenant » au vrai début. Les appareils des équipes et l’écran de projection relisent l’heure toutes les six minutes au plus, diffusez-la donc de préférence avant l’arrivée des étudiant·es. L’heure est signée avec votre code : une heure envoyée par quelqu’un d’autre est ignorée. « Revenir à l’horaire du fichier » annule ce réglage.
+- **Pour toute la classe, pendant la séance** : sur la page « Réponses des équipes », ouvrez « Heure de départ pour toute la classe ». Diffusez une heure (par exemple 10 h 00), ou cliquez sur « Démarrer maintenant » au vrai début. Les appareils des équipes et l’écran de projection relisent l’heure toutes les six minutes au plus, diffusez-la donc de préférence avant l’arrivée des étudiant·es. L’heure est signée avec votre code : une heure envoyée par quelqu’un d’autre est ignorée. « Revenir à l’horaire du fichier » annule ce réglage.
 - **Pour toute la classe, par le fichier** : sur GitHub, ouvrez `docs/data/schedule.json` et changez `"departParDefaut": "09:00"` (par exemple `"10:00"`). Validez. Les pages ouvertes relisent ce fichier chaque minute.
 - **Sur un seul appareil** : ajoutez à l’adresse de n’importe quelle page `?depart=09:15`, ou `?decalage=5` pour décaler de 5 minutes (ou `?decalage=-5`). Le réglage reste mémorisé sur cet appareil. Pour l’annuler : `?depart=defaut` ou `?decalage=0`.
 - **Pour une démonstration** : `?now=10:30` simule l’heure (ici 10 h 30). Pour revenir à l’heure réelle : `?now=reel`.
@@ -76,12 +76,12 @@ L’horloge suit l’heure de chaque appareil. Toutes les phases se calculent à
 
 Les étudiant·es n’ont aucun mot de passe à saisir. La règle est simple : pour voir une correction ou passer à la quête suivante, l’équipe envoie d’abord son travail, d’un clic.
 
-- **Quête 2, Citer**. Elle s’ouvre quand le travail de la quête 1 (Chercher) est envoyé. Le bouton de fin de Chercher s’appelle « Envoyer et passer à Citer ».
+- **Quête 2, Citer**. Elle s’ouvre quand le travail de la quête 1, Définir (Méthode et Chercher), est envoyé. Le bouton de fin de Chercher s’appelle « Envoyer et passer à Citer ».
 - **Correction de Définir et Citer, et quête 3, Lire**. Elles s’ouvrent quand le travail de Chercher et de Citer est envoyé. Le bouton de fin de Citer s’appelle « Envoyer et voir la correction ».
 - **Correction de l’étude, et quête 4, Noter**. Elles s’ouvrent quand le travail sur l’étude est déposé, c’est-à-dire envoyé. Si l’équipe ne l’a pas déjà fait sur la page Lire, le bouton « Envoyer et voir la correction » fait le dépôt.
 - **Fin de la vidéo**. « Envoyer et aller plus loin » envoie les réponses au QCM. La lecture « Pour aller plus loin » reste ouverte à tout moment.
 
-Une équipe qui arrive sur une page par le menu, sans avoir envoyé, voit d’abord un encadré « D’abord, envoyez votre travail » avec le bouton d’envoi. Une porte s’ouvre seule quand le travail est déjà parti (les réponses partent aussi automatiquement à chaque point d’arrêt), quand l’équipe n’a rien fait dans la quête précédente, quand vous préparez la séance sans réponses, ou quand l’envoi est coupé dans `docs/data/config.json`. Une fois ouverte, elle le reste sur cet appareil. Si l’envoi échoue (réseau, relais saturé), la page s’ouvre quand même, avec un message qui demande de télécharger le récapitulatif et de vous prévenir. Personne n’est bloqué.
+Une équipe qui arrive sur une page par le menu, sans avoir envoyé, voit d’abord un encadré « D’abord, envoyez votre travail » avec le bouton d’envoi. Une porte s’ouvre seule quand le travail est déjà parti (les réponses partent aussi automatiquement à chaque point d’arrêt), quand l’équipe n’a rien fait dans la quête précédente, quand vous préparez la séance sans réponses, ou quand l’envoi est coupé dans `docs/data/config.json`. Une fois ouverte, elle le reste sur cet appareil. Si l’envoi échoue (réseau, relais saturé), la page s’ouvre quand même, avec un message qui demande de vous prévenir (et, pour l’étude, de télécharger le récapitulatif). Quand les réponses partent automatiquement pendant que l’encadré est affiché, la page s’ouvre d’elle-même. Pour l’étude, une copie ou un téléchargement du récapitulatif ne suffit pas quand l’envoi fonctionne, il faut l’envoyer. Personne n’est bloqué.
 
 Ce n’est pas une protection. Le texte des corrections est public, dans le dépôt comme dans le code des pages, et une personne curieuse peut le lire en avance. La règle garantit seulement que, dans le déroulé normal, le travail de chaque quête vous parvient avant la suite.
 
@@ -129,7 +129,7 @@ Rien à installer. Pendant la séance, chaque navigateur envoie les réponses de
 node scripts/code-enseignant.mjs
 ```
 
-Le nouveau code s’affiche une seule fois. Publiez ensuite `docs/data/config.json` (voir « Publier »). Changez de code entre deux séances, pas pendant : les réponses envoyées avant le changement ne seraient plus lisibles. Pour changer seulement le code en gardant les réponses déjà reçues lisibles, ajoutez l’ancien :
+Le nouveau code s’affiche une seule fois. Publiez ensuite `docs/data/config.json` (voir « Publier sur GitHub Pages »). Changez de code entre deux séances, pas pendant : les réponses envoyées avant le changement ne seraient plus lisibles. Pour changer seulement le code en gardant les réponses déjà reçues lisibles, ajoutez l’ancien :
 
 ```bash
 node scripts/code-enseignant.mjs "nouveau code" --ancien-code "code actuel"
@@ -157,8 +157,8 @@ node scripts/code-enseignant.mjs "nouveau code" --ancien-code "code actuel"
 
 - **État partagé** : toutes les pages lisent et écrivent le même objet dans le navigateur (clé `fabrique:s09:v1`). Une écriture a lieu 350 ms après chaque saisie, et tout de suite quand on quitte la page. Si le navigateur refuse d’enregistrer (navigation privée stricte), un message demande de copier régulièrement le récapitulatif.
 - **Horloge** : les phases et les comptes à rebours viennent de `schedule.json`. Aucune page n’est imposée, chaque équipe circule librement. Quand une équipe est en retard sur le déroulé, une ligne sous l’en-tête le dit explicitement (« Il est 9 h 23. Vous devriez être sur « Lecture, bien citer », jusqu’à 9 h 26 »), avec le message de passage prévu dans `schedule.json` (`stopTexte`) et un lien pour y aller. Sur la bonne page, la même ligne dit à quelle question l’équipe devrait en être. Aux moments de passage, les réponses partent aussi automatiquement à l’enseignant. L’écran de projection affiche toujours un grand « Stop » (`stopMot`) pour toute la salle.
-- **Corrections** : sans mot de passe, chacune s’affiche quand l’équipe a envoyé son travail (voir « Envoyer pour passer, sans mot de passe »). Chaque question est affichée avec la réponse de l’équipe, une réponse proposée et des conseils de méthode. Dans la correction de l’étude, « Voir le passage » surligne le passage de l’étude qui justifie la réponse.
-- **Repère horaire** : sur les pages de travail, une ligne sous le chrono dit à quelle question l’équipe devrait en être, si elle est dans les temps, et mène à la question.
+- **Corrections** : sans mot de passe, chacune s’affiche quand l’équipe a envoyé son travail (voir « Envoyer pour passer, sans mot de passe »). Chaque question est affichée avec la réponse de l’équipe, une réponse proposée et des conseils de méthode. Dans la correction de l’étude, « Voir le passage dans l’étude » surligne le passage de l’étude qui justifie la réponse.
+- **Repère horaire** : sur les pages de travail, une ligne sous l’en-tête dit à quelle question l’équipe devrait en être, si elle est dans les temps, et mène à la question.
 - **Mise en page** : tous les blocs d’une page partagent la même colonne. Sur grand écran, une colonne « Sur cette page » affiche à droite le sommaire, les questions faites ou à faire et le créneau prévu. Les pages qui occupent toute la largeur (l’étude et ses questions) n’en ont pas.
 - **Dépôt** : le bouton « Envoyer à l’enseignant » envoie tout ce qui n’est pas encore parti et signale que le dépôt est fait. Le récapitulatif peut aussi être téléchargé (`s09_<equipe>_parcours.txt`) ou copié, en secours.
 - **Vidéo** : chacun·e prend ses notes à sa façon, sur papier, sur son ordinateur ou autrement, pas sur le site. Après la vidéo, l’équipe compare ses notes à l’oral pendant 8 minutes, avec quatre pistes et le plan de la vidéo, puis fait ensemble un QCM de trois questions. Rien d’autre n’est à écrire ni à déposer pour cette partie, les réponses au QCM partent avec les envois automatiques.

@@ -17,6 +17,7 @@ import { typographier } from './typo.js';
 
 let barre = null;
 let heureEl = null;
+let annonce = null;
 let texte = null;
 let detail = null;
 let lien = null;
@@ -25,6 +26,7 @@ let cible = null;
 let drapeau = null;
 let mode = '';
 let appel = null;
+let cleAppel = '';
 
 function questionDe(id) {
   return document.querySelector('.q[data-q="' + id + '"], fieldset.qcm[data-qcm="' + id + '"]');
@@ -66,8 +68,19 @@ function demarquer() {
 function masquer() {
   if (barre) { barre.hidden = true; delete barre.dataset.etat; heureEl.textContent = ''; }
   demarquer();
-  dernier = '';
-  mode = '';
+}
+
+// Texte affiché, annoncé aux lecteurs d’écran seulement quand il change. La
+// zone annoncée est toujours présente (une zone qu’on vient d’afficher n’est
+// pas toujours lue).
+function ecrire(phrase, suite) {
+  if (phrase + suite === dernier) { return; }
+  dernier = phrase + suite;
+  texte.textContent = phrase;
+  detail.textContent = suite ? ' ' + suite : '';
+  typographier(texte);
+  typographier(detail);
+  annonce.textContent = (phrase + (suite ? ' ' + suite : '')).replace(/\s+/g, ' ');
 }
 
 // Le drapeau se place juste avant la question (une légende de QCM doit
@@ -101,7 +114,10 @@ function surPlace(phase) {
   const ancre = ancreDe(phase.page);
   if (!ancre || window.location.hash === ancre) { return true; }
   const el = document.querySelector(ancre);
-  return !!el && el.getBoundingClientRect().top <= window.innerHeight * 0.4;
+  if (!el || !el.getClientRects().length) { return false; }
+  const haut = el.getBoundingClientRect().top;
+  const enBas = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4;
+  return haut <= window.innerHeight * 0.4 || (enBas && haut < window.innerHeight);
 }
 
 // Message prévu pour ce passage dans data/schedule.json, sans le « Stop. ».
@@ -138,8 +154,10 @@ function afficherAilleurs(s) {
   const page = s.apres ? phases()[phases().length - 1].page : ph.page;
   lien.href = fichierDe(page) === fichierCourant() && ancreDe(page) ? ancreDe(page) : urlSeance(page);
   lien.textContent = texteLien;
-  if (mode !== etat) {
-    // Le repère vient d’apparaître : il s’éclaire un instant.
+  const cle = etat + ':' + ph.id;
+  if (cleAppel !== cle) {
+    // Nouvelle étape à rejoindre : le repère s’éclaire un instant.
+    cleAppel = cle;
     barre.classList.add('appel');
     clearTimeout(appel);
     appel = setTimeout(() => barre.classList.remove('appel'), 2400);
@@ -147,18 +165,14 @@ function afficherAilleurs(s) {
   mode = etat;
   barre.hidden = false;
   barre.dataset.etat = etat;
-  if (phrase + suite !== dernier) {
-    dernier = phrase + suite;
-    texte.textContent = phrase;
-    detail.textContent = suite ? ' ' + suite : '';
-    typographier(texte);
-    typographier(detail);
-  }
+  ecrire(phrase, suite);
 }
 
 function mettreAJour() {
   const s = statut();
   if (!barre || s.avant || !s.phase) { masquer(); return; }
+  // Une porte fermée sur cette page dit déjà quoi faire.
+  if (document.querySelector('[data-porte]:not([hidden])')) { masquer(); return; }
   const iLieu = indexLieu();
   if (iLieu >= 0 && iLieu < s.index && !surPlace(s.apres ? phases()[phases().length - 1] : s.phase)) { afficherAilleurs(s); return; }
   if (s.apres || !Array.isArray(s.phase.reperes)) { masquer(); return; }
@@ -166,7 +180,7 @@ function mettreAJour() {
   const atteints = s.phase.reperes.filter((r) => Array.isArray(r) && r[0] <= ecoule);
   if (!atteints.length) { masquer(); return; }
   const el = questionDe(atteints[atteints.length - 1][1]);
-  if (!el || el.hidden) { masquer(); return; }
+  if (!el || el.hidden || el.closest('[hidden]')) { masquer(); return; }
   const liste = questionsAutour(el);
   const iCible = liste.indexOf(el);
   const iPremier = liste.findIndex((q) => !faite(q));
@@ -183,7 +197,7 @@ function mettreAJour() {
     etat = 'Vous êtes dans les temps.';
   } else if (iCible - iPremier === 1) {
     etat = 'Léger retard.';
-    suite = 'Ne restez pas bloqués sur ' + nomDe(liste[iPremier]) + '.';
+    suite = 'Ne vous attardez pas sur ' + nomDe(liste[iPremier]) + '.';
     classe = 'leger';
   } else {
     etat = 'Vous avez du retard.';
@@ -198,13 +212,7 @@ function mettreAJour() {
   lien.href = '#';
   barre.hidden = false;
   barre.dataset.etat = classe;
-  if (phrase + suite !== dernier) {
-    dernier = phrase + suite;
-    texte.textContent = phrase;
-    detail.textContent = suite ? ' ' + suite : '';
-    typographier(texte);
-    typographier(detail);
-  }
+  ecrire(phrase, suite);
 }
 
 export function initRepere(espace) {
@@ -213,9 +221,15 @@ export function initRepere(espace) {
   barre = document.createElement('div');
   barre.className = 'repere-barre';
   barre.hidden = true;
-  barre.innerHTML = '<p><span><span class="repere-heure"></span><span role="status" aria-live="polite"><span class="repere-texte"></span><span class="repere-detail"></span></span></span> <a class="repere-lien" href="#">Aller à la question</a></p>';
+  barre.innerHTML = '<p><span><span class="repere-heure"></span><span class="repere-texte"></span><span class="repere-detail"></span></span> <a class="repere-lien" href="#">Aller à la question</a></p>';
   entete.append(barre);
   heureEl = barre.querySelector('.repere-heure');
+  annonce = document.createElement('p');
+  annonce.className = 'visuellement-cache';
+  annonce.setAttribute('role', 'status');
+  annonce.setAttribute('aria-live', 'polite');
+  annonce.setAttribute('data-annonce-repere', '');
+  document.body.append(annonce);
   texte = barre.querySelector('.repere-texte');
   detail = barre.querySelector('.repere-detail');
   lien = barre.querySelector('.repere-lien');

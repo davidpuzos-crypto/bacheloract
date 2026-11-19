@@ -105,7 +105,7 @@ function choixConseils() {
     if (statutEl) {
       statutEl.textContent = choisis.length === 3
         ? 'Vos trois conseils sont choisis. Ils seront rappelés sur la page de la vidéo.'
-        : choisis.length + ' sur 3 conseils choisis.';
+        : choisis.length + (choisis.length > 1 ? ' conseils choisis' : ' conseil choisi') + ' sur 3.';
     }
   };
   cartes.forEach((c) => c.addEventListener('click', () => {
@@ -191,6 +191,9 @@ const BLOCS_DEROULE = [
 function deroules() {
   const tables = document.querySelectorAll('[data-deroule]');
   if (!tables.length) { return; }
+  // Les étiquettes « stop » ne servent qu’à l’enseignant : côté étudiant·es,
+  // aucune page n’est imposée.
+  const avecStop = (document.body.dataset.espace || 'seance') !== 'seance';
   const rendre = () => {
     const s = statut();
     const ligne = (p) => {
@@ -199,7 +202,7 @@ function deroules() {
       return '<tr' + (classes ? ' class="' + classes + '"' : '') + '><th scope="row" class="heure">' + heureMinute(p.debut) + '</th>'
         + '<td><a href="' + urlSeance(p.page) + '">' + echapper(p.id === 'fin' ? 'Fin et bilan' : p.label) + '</a>'
         + (enCours ? ' <span class="marqueur">en cours</span>' : '')
-        + (p.stop ? ' <span class="tag-stop">stop à ' + heureMinute(p.debut + p.duree) + '</span>' : '') + '</td>'
+        + (p.stop && avecStop ? ' <span class="tag-stop">stop à ' + heureMinute(p.debut + p.duree) + '</span>' : '') + '</td>'
         + '<td class="duree">' + (p.duree ? p.duree + '\u00a0min' : '') + '</td></tr>';
     };
     const html = [];
@@ -208,7 +211,8 @@ function deroules() {
       const ph = phases().filter((p) => ids.includes(p.id));
       if (!ph.length) { return; }
       const duree = ph.filter((p) => p.id !== 'pause').reduce((n, p) => n + p.duree, 0);
-      html.push('<tr class="groupe"><th colspan="2" scope="colgroup">' + echapper(titre) + '</th><td class="duree">' + (duree ? duree + '\u00a0min' : '') + '</td></tr>');
+      const horsPause = ph.some((p) => p.id === 'pause') ? ', hors pause' : '';
+      html.push('<tr class="groupe"><th colspan="2" scope="colgroup">' + echapper(titre) + '</th><td class="duree">' + (duree ? duree + '\u00a0min' + horsPause : '') + '</td></tr>');
       ph.forEach((p) => { vues.add(p.id); html.push(ligne(p)); });
     });
     phases().filter((p) => !vues.has(p.id)).forEach((p) => html.push(ligne(p)));
@@ -245,7 +249,7 @@ function phaseActuelle() {
         html = '<span class="etiquette">Séance terminée</span><span class="grand">Merci pour cette matinée</span>'
           + '<a href="' + urlSeance('10-fin.html') + '">Voir le bilan</a>';
       } else {
-        const suite = s.suivante && s.suivante.id !== 'fin' ? ' Ensuite, ' + echapper(s.suivante.label) + ' à ' + heureMinute(s.suivante.debut) + '.' : '';
+        const suite = s.suivante && s.suivante.id !== 'fin' ? ' Ensuite, « ' + echapper(s.suivante.label) + ' », à ' + heureMinute(s.suivante.debut) + '.' : '';
         html = '<span class="etiquette">Phase en cours</span><span class="grand">' + echapper(s.phase.label) + '</span>'
           + 'Il reste <span data-compte>' + formatCompte(s.resteMs) + '</span>.' + suite
           + ' <a href="' + urlSeance(s.phase.page) + '">Aller à la phase en cours</a>';

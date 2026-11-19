@@ -1,4 +1,4 @@
-// Récapitulatif des réponses, en texte brut, à déposer sur Moodle.
+// Récapitulatif des réponses, en texte brut, à envoyer à l’enseignant ou à garder.
 // Les énoncés sont lus dans le HTML des pages (source unique des textes) :
 // la page courante directement, les autres pages par une requête vers le site.
 
@@ -7,6 +7,7 @@ import { urlSeance, fichierCourant } from './donnees.js';
 import { ligneQCM } from './qcm.js';
 import { calculer, equipe, listeNoms, BADGES, ICONES_EQUIPE } from './gamify.js';
 import { collecteActive, envoyerDepot } from './collect.js';
+import { annulerDepot } from './porte.js';
 import { formatHeure } from './clock.js';
 
 const SOURCES = {
@@ -321,14 +322,16 @@ async function brancherDepot(zone) {
     bEnvoyer.addEventListener('click', async () => {
       bEnvoyer.disabled = true;
       const r = await actualiser();
+      const avant = (lire().depots || {})[type] || null;
+      const t0 = Date.now();
       noterDepot(type, 'envoi');
-      const res = await envoyerDepot(type, r.texte);
+      const res = await envoyerDepot(type, r.texte).catch(() => ({ ok: false, raison: 'erreur' }));
       bEnvoyer.disabled = false;
       if (res.ok) {
         statut.textContent = 'Récapitulatif envoyé à l’enseignant à ' + formatHeure(Date.now()) + '. Vous pouvez aussi télécharger une copie.';
         statut.className = 'statut ok';
       } else {
-        modifier((e) => { delete e.depots[type]; }, { source: 'depot', id: type });
+        if (type === 'parcours') { annulerDepot(avant, t0); } else { modifier((e) => { delete e.depots[type]; }, { source: 'depot', id: type }); }
         statut.textContent = res.raison === 'limite'
           ? 'Le relais refuse les envois pour l’instant (trop d’envois depuis ce réseau). Téléchargez le récapitulatif et gardez le fichier, puis prévenez l’enseignant.'
           : 'L’envoi n’a pas abouti. Téléchargez le récapitulatif et gardez le fichier, puis prévenez l’enseignant.';
