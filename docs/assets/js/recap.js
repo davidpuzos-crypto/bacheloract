@@ -20,15 +20,6 @@ const SOURCES = {
     qcm: ['2-methode.html', '3-chercher.html', '5-citer-pratique.html', '6-lire.html'],
     temps: [['cadre', 'cadre'], ['methode', 'méthode'], ['chercher', 'chercher'], ['citer-lecture', 'lecture'], ['citer-pratique', 'pratique'], ['correction-definir', 'correction'], ['lire', 'lire']],
     suffixe: 'parcours'
-  },
-  video: {
-    titre: 'Séance 9, La fabrique du social. Partie vidéo et prise de notes',
-    sections: [
-      { fichier: '9-video.html', titre: 'VIDÉO' }
-    ],
-    qcm: ['9-video.html'],
-    temps: [['notes', 'conseils de notes'], ['video', 'vidéo']],
-    suffixe: 'video'
   }
 };
 
@@ -136,17 +127,6 @@ async function qcmDe(fichier) {
   });
 }
 
-async function conseilsTextes() {
-  const doc = await documentDe('8-notes.html');
-  const map = {};
-  if (doc) {
-    doc.querySelectorAll('[data-conseil]').forEach((b) => {
-      const t = b.querySelector('.texte');
-      map[b.dataset.conseil] = t ? t.textContent.replace(/\s+/g, ' ').trim() : '';
-    });
-  }
-  return map;
-}
 
 // Construit le récapitulatif. Renvoie { texte, manquants, total }.
 export async function construire(type) {
@@ -157,22 +137,6 @@ export async function construire(type) {
   let total = 0;
   const corps = [];
 
-  if (type === 'video') {
-    const textes = await conseilsTextes();
-    corps.push('', 'CONSEILS CHOISIS POUR LA VIDÉO');
-    if (e.conseils.length) {
-      e.conseils.forEach((n) => corps.push(String(n).padStart(2, '0') + '. ' + (textes[n] || '')));
-    } else {
-      corps.push('(aucun conseil choisi)');
-    }
-    corps.push('', 'NOTES PRISES SUR LA PAGE');
-    corps.push('Notes. ' + ((e.champs.n1 || '').trim() || '(notes prises sur papier)'));
-    corps.push('Pour moi. ' + ((e.champs.n2 || '').trim() || '(rien)'));
-    const vus = (e.cases.tips_vus || []).map((n) => String(n).padStart(2, '0'));
-    corps.push('', 'COMPARAISON EN BINÔME');
-    corps.push('Conseils repérés dans les notes reçues. ' + (vus.length ? vus.join(', ') : '(aucun coché)'));
-  }
-
   for (const section of src.sections) {
     const qs = await questionsDe(section.fichier);
     corps.push('', section.titre, '');
@@ -182,7 +146,6 @@ export async function construire(type) {
     }
     for (const q of qs) {
       if (q.si && !conditionVraie(q.si)) { continue; }
-      if (q.cle === 'n1' || q.cle === 'n2') { continue; }
       if (q.bonus && !q.reponse) { continue; }
       if (q.requis) {
         total += 1;

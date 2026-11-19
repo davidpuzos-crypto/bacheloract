@@ -35,7 +35,7 @@ test('parcours du hub au bilan avec un état partagé', async ({ page }) => {
     ['Analyser l’étude', /6-lire\.html#analyser/],
     ['Ouvrir la correction', /7-correction\.html/],
     ['Passer aux conseils de prise de notes', /8-notes\.html/],
-    ['Ouvrir la feuille de notes', /9-video\.html/],
+    ['Passer à la vidéo', /9-video\.html/],
     ['Aller plus loin', /aller-plus-loin\.html/],
     ['Voir le bilan', /10-fin\.html/]
   ];

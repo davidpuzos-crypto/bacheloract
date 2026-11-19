@@ -35,7 +35,7 @@ export const QUETES = [
   {
     id: 'noter', numero: 4, label: 'Noter', morceau: 'le plus social.',
     phases: ['notes', 'video', 'froid', 'questions'], fin: 'questions',
-    champs: ['bp', 's1'], conseils: 3, qcm: ['V4', 'V5', 'V6']
+    conseils: 3, qcm: ['V4', 'V5', 'V6']
   }
 ];
 
@@ -46,7 +46,7 @@ export const ETAPES = [
   { id: 'analyser', label: 'Analyser l’étude', fin: 'depot', champs: ['l1', 'l2', 'l3', 'l4', 'l5', 'l6'] }
 ];
 
-export const BONUS = ['a6', 'c2', 'g1', 'g2', 'g3', 'g4'];
+export const BONUS = ['a6', 'c2'];
 
 export const BADGES = [
   { id: 'detective', nom: 'Détective de sources', icone: 'b-detective', critere: 'Qui parle et depuis quelle discipline, A2 renseignée et A3 trouvée.' },
@@ -55,7 +55,7 @@ export const BADGES = [
   { id: 'lynx', nom: 'Œil de lynx', icone: 'b-oeil', critere: 'Les trois QCM sur les chiffres de l’écart justes du premier coup.' },
   { id: 'temps', nom: 'Dans les temps', icone: 'b-temps', critere: 'Chercher, Citer et Analyser terminées avant la fin de leur phase.' },
   { id: 'critique', nom: 'Esprit critique', icone: 'b-critique', critere: 'Au moins une question bonus répondue.' },
-  { id: 'stratege', nom: 'Stratège', icone: 'b-stratege', critere: 'Trois conseils choisis et trois bonnes pratiques repérées.' },
+  { id: 'stratege', nom: 'Stratège', icone: 'b-stratege', critere: 'Trois conseils choisis avant la vidéo et les trois questions du QCM de la vidéo justes.' },
   { id: 'fil', nom: 'Fil rouge', icone: 'b-fil', critere: 'La phrase mystère complète.' }
 ];
 
@@ -128,7 +128,7 @@ function conditionsBadges(e, quetes) {
     lynx: ['F-Q1', 'F-Q2', 'F-Q3'].every(premierJuste),
     temps: etapesALHeure,
     critique: BONUS.some((id) => long(e, id) >= SEUIL_BONUS),
-    stratege: (e.conseils || []).length >= 3 && ((e.cases && e.cases.tips_vus) || []).length >= 3,
+    stratege: (e.conseils || []).length >= 3 && ['V4', 'V5', 'V6'].every((id) => !!(e.qcm[id] && e.qcm[id].juste)),
     fil: quetes.every((q) => q.terminee)
   };
 }

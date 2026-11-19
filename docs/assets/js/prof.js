@@ -61,7 +61,7 @@ async function demarrer() {
     } else if (s.apres) {
       nom.textContent = 'Séance terminée';
       reste.textContent = '';
-      suivante.textContent = 'Pensez au dépôt express.';
+      suivante.textContent = 'Merci pour votre travail.';
     } else {
       nom.textContent = s.phase.label;
       reste.textContent = 'Reste ' + formatCompte(s.resteMs);

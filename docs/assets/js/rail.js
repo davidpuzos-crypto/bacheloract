@@ -1,7 +1,7 @@
 // Colonne « Sur cette page », affichée à droite sur les grands écrans :
 // sommaire de la page, avancement des questions et créneau prévu.
 // Les pages dont la mise en page occupe déjà toute la largeur (document et
-// questions côte à côte, feuille de notes) n’en ont pas.
+// questions côte à côte) n’en ont pas.
 
 import { surChangement } from './state.js';
 import { phases, heureMinute, fichierDe, surTic } from './clock.js';
@@ -20,7 +20,7 @@ function titreCourt(h) {
 export function initRail(espace) {
   const main = document.querySelector('main.page');
   if (espace !== 'seance' || !main || main.classList.contains('page-large')) { return; }
-  if (main.querySelector('.lecture-split, .avec-aside, .feuille')) { return; }
+  if (main.querySelector('.lecture-split, .avec-aside')) { return; }
   if (main.querySelector(':scope > .rail')) { return; }
 
   // Sections (titres de niveau 2) et questions, dans l’ordre de la page.

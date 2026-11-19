@@ -85,7 +85,7 @@ test('colonne « Sur cette page » : absente sur téléphone et sur les pages la
   await mobile.close();
   const bureau = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const p = await bureau.newPage();
-  for (const chemin of ['seance-09/6-lire.html', 'seance-09/5-citer-pratique.html', 'seance-09/9-video.html']) {
+  for (const chemin of ['seance-09/6-lire.html', 'seance-09/5-citer-pratique.html']) {
     await p.goto('http://localhost:4173/fabrique/' + chemin + '?now=09:16');
     await p.waitForFunction(() => document.documentElement.classList.contains('js-pret'));
     await expect(p.locator('.rail')).toHaveCount(0);

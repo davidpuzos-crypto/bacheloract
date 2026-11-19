@@ -1,6 +1,5 @@
 // Outils propres à certaines pages : exemple annoté, progression de lecture,
-// choix des conseils, boîte à symboles, chronomètre, plan de la vidéo,
-// modèle de fiche, carnet intégré, déroulé, liens de configuration.
+// choix des conseils, modèle de fiche, carnet intégré, déroulé, liens de configuration.
 
 import { lire, modifier, surChangement } from './state.js';
 import { config, urlSeance } from './donnees.js';
@@ -8,7 +7,6 @@ import { statut, surTic, phases, heureMinute, formatCompte, fichierDe } from './
 import { htmlCarnet, htmlCarteQuetes, htmlPhraseSeule, surMiseAJourJeu, echapper } from './gamify.js';
 import { typographier } from './typo.js';
 import { copier } from './recap.js';
-import { annoncer } from './ui.js';
 
 // ---------------------------------------------------------------- liens de config.json
 async function liensConfig() {
@@ -106,7 +104,7 @@ function choixConseils() {
     });
     if (statutEl) {
       statutEl.textContent = choisis.length === 3
-        ? 'Vos trois conseils sont choisis. Ils seront rappelés sur la feuille de notes.'
+        ? 'Vos trois conseils sont choisis. Ils seront rappelés sur la page de la vidéo.'
         : choisis.length + ' sur 3 conseils choisis.';
     }
   };
@@ -149,78 +147,6 @@ async function rappelConseils() {
         : '<li>Aucun conseil choisi. <a href="' + urlSeance('8-notes.html') + '">Choisissez-en trois sur la page des conseils</a>.</li>';
       typographier(ul);
     });
-  };
-  surChangement(afficher);
-  afficher();
-}
-
-// ---------------------------------------------------------------- boîte à symboles et chronomètre (vidéo)
-function outilsNotes() {
-  const zones = [...document.querySelectorAll('textarea[data-cible-symboles]')];
-  if (!zones.length) { return; }
-  let derniere = zones[0];
-  zones.forEach((z) => z.addEventListener('focus', () => { derniere = z; }));
-  function inserer(texte) {
-    const ta = derniere;
-    const debut = typeof ta.selectionStart === 'number' ? ta.selectionStart : ta.value.length;
-    const fin = typeof ta.selectionEnd === 'number' ? ta.selectionEnd : debut;
-    const avant = ta.value.slice(0, debut);
-    const espace = avant && !/\s$/.test(avant) ? ' ' : '';
-    const ajout = espace + texte + ' ';
-    ta.value = avant + ajout + ta.value.slice(fin);
-    const pos = debut + ajout.length;
-    ta.focus();
-    try { ta.setSelectionRange(pos, pos); } catch (e) { /* champ non sélectionnable */ }
-    ta.dispatchEvent(new Event('input', { bubbles: true }));
-  }
-  document.querySelectorAll('[data-symbole]').forEach((b) => {
-    b.addEventListener('mousedown', (e) => e.preventDefault());
-    b.addEventListener('click', () => inserer(b.dataset.symbole));
-  });
-
-  const affiche = document.querySelector('[data-chrono-affiche]');
-  if (!affiche) { return; }
-  let depart = null;
-  let cumul = 0;
-  let iv = null;
-  const ecoule = () => cumul + (depart ? Date.now() - depart : 0);
-  const rendre = () => { affiche.textContent = formatCompte(ecoule()); };
-  const bDemarrer = document.querySelector('[data-chrono="demarrer"]');
-  const bArreter = document.querySelector('[data-chrono="arreter"]');
-  const bInserer = document.querySelector('[data-chrono="inserer"]');
-  bDemarrer.addEventListener('click', () => {
-    if (depart) { return; }
-    depart = Date.now();
-    iv = setInterval(rendre, 500);
-    rendre();
-    bDemarrer.setAttribute('aria-pressed', 'true');
-  });
-  bArreter.addEventListener('click', () => {
-    if (!depart) { return; }
-    cumul += Date.now() - depart;
-    depart = null;
-    clearInterval(iv);
-    rendre();
-    bDemarrer.setAttribute('aria-pressed', 'false');
-  });
-  bInserer.addEventListener('mousedown', (e) => e.preventDefault());
-  bInserer.addEventListener('click', () => {
-    derniere = document.querySelector('textarea[data-id="n1"]') || derniere;
-    inserer('[' + Math.floor(ecoule() / 60000) + ' min]');
-  });
-  rendre();
-}
-
-// ---------------------------------------------------------------- plan de la vidéo révélé
-function planVideo() {
-  const plan = document.querySelector('[data-plan-video]');
-  if (!plan) { return; }
-  const seuil = Number(plan.dataset.seuil || 40);
-  const afficher = () => {
-    const v = (lire().champs.bp || '').trim().length;
-    const montrer = v >= seuil;
-    if (montrer && plan.hidden) { plan.hidden = false; annoncer('Le plan de la vidéo est affiché sous votre réponse.'); }
-    if (!montrer) { plan.hidden = true; }
   };
   surChangement(afficher);
   afficher();
@@ -428,8 +354,6 @@ export function initWidgets() {
   progressionLecture();
   choixConseils();
   rappelConseils();
-  outilsNotes();
-  planVideo();
   modeleFiche();
   carnetsDansLaPage();
   deroules();

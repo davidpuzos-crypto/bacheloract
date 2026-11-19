@@ -38,8 +38,8 @@ Pour un départ à 9 h 00. Le détail, avec ce qu’il faut dire à chaque phase
 | 11 h 01 | 8 min | Correction de l’étude |
 | 11 h 09 | 4 min | Conseils de prise de notes |
 | 11 h 13 | 25 min | Vidéo |
-| 11 h 38 | 5 min | Notes à froid, comparaison en équipe |
-| 11 h 43 | 7 min | Questions sur la vidéo, dépôt express |
+| 11 h 38 | 8 min | Comparaison des notes en équipe, à l’oral |
+| 11 h 46 | 4 min | QCM sur la vidéo, en équipe |
 | 11 h 50 | 10 min | Pour aller plus loin, lecture sur les approches intersectionnelles |
 
 Définir et citer tiennent en 40 minutes, correction comprise. Les dix dernières minutes sont une lecture d’ouverture, « Pour aller plus loin », accessible aussi à tout moment depuis le menu. Sur les pages de travail, une ligne sous le chrono indique la question où l’équipe devrait en être à cette heure (repères réglables dans `docs/data/schedule.json`). Le temps nécessaire à chaque phase est calculé page par page dans `docs-internes/budget-temps.md`.
@@ -157,8 +157,9 @@ node scripts/code-enseignant.mjs "nouveau code" --ancien-code "code actuel"
 - **Horloge** : les phases, les comptes à rebours et les écrans STOP viennent de `schedule.json`. À chaque point d’arrêt, un bandeau prévient pendant 60 secondes, puis un écran plein cadre propose un seul bouton vers la page suivante. Les réponses sont conservées, et les pages précédentes restent accessibles ensuite.
 - **Corrections** : sans mot de passe, chacune s’affiche quand l’équipe a envoyé son travail (voir « Les corrections, sans mot de passe »). Chaque question est affichée avec la réponse de l’équipe, une réponse proposée et des conseils de méthode. Dans la correction de l’étude, « Voir le passage » surligne le passage de l’étude qui justifie la réponse.
 - **Repère horaire** : sur les pages de travail, une ligne sous le chrono dit à quelle question l’équipe devrait en être, si elle est dans les temps, et mène à la question.
-- **Mise en page** : tous les blocs d’une page partagent la même colonne. Sur grand écran, une colonne « Sur cette page » affiche à droite le sommaire, les questions faites ou à faire et le créneau prévu. Les pages qui occupent toute la largeur (l’étude et ses questions, la feuille de notes) n’en ont pas.
-- **Dépôt** : le bouton « Envoyer à l’enseignant » envoie tout ce qui n’est pas encore parti et signale que le dépôt est fait. Le récapitulatif peut aussi être téléchargé (`s09_<equipe>_parcours.txt`, et `s09_<equipe>_video.txt` pour la vidéo) ou copié, en secours.
+- **Mise en page** : tous les blocs d’une page partagent la même colonne. Sur grand écran, une colonne « Sur cette page » affiche à droite le sommaire, les questions faites ou à faire et le créneau prévu. Les pages qui occupent toute la largeur (l’étude et ses questions) n’en ont pas.
+- **Dépôt** : le bouton « Envoyer à l’enseignant » envoie tout ce qui n’est pas encore parti et signale que le dépôt est fait. Le récapitulatif peut aussi être téléchargé (`s09_<equipe>_parcours.txt`) ou copié, en secours.
+- **Vidéo** : chacun·e prend ses notes à sa façon, sur papier, sur son ordinateur ou autrement, pas sur le site. Après la vidéo, l’équipe compare ses notes à l’oral pendant 8 minutes, avec quatre pistes et le plan de la vidéo, puis fait ensemble un QCM de trois questions. Rien d’autre n’est à écrire ni à déposer pour cette partie, les réponses au QCM partent avec les envois automatiques.
 - **Jeu** : points d’enquête, quatre quêtes, huit badges, anneaux de compétences et phrase mystère. Les points ne sont pas une note, il n’y a ni niveau ni classement. Le mode sobre (menu) masque les animations et les badges. Les animations sont coupées si l’appareil demande moins de mouvement.
 - **Accessibilité** : navigation au clavier, retours de QCM annoncés aux lecteurs d’écran, contrastes vérifiés en mode sombre et clair. Les tests incluent un audit axe-core sur chaque page, et Lighthouse donne 100 en accessibilité sur chaque page.
 
