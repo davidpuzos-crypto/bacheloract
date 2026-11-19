@@ -11,14 +11,14 @@ Le site est statique (HTML, CSS, JavaScript sans framework). Il est publié par 
 | `docs/` | Le site publié. Accueil du cours (`index.html`), pages de la séance 9 (`seance-09/`), pages de l’enseignant (`prof/`), styles, scripts, polices et icônes (`assets/`). |
 | `docs/data/schedule.json` | Le déroulé chronométré : heure de départ, phases, textes des écrans STOP. |
 | `docs/data/config.json` | Les liens (Insee, vidéo, ressources…), l’envoi chiffré des réponses à l’enseignant et les options d’affichage. |
-| `private/` | **Jamais publié.** La correction en clair, avant chiffrement. Ignoré par Git. |
+| `private/` | **Jamais publié.** Les deux corrections en clair, avant chiffrement. Ignoré par Git. |
 | `scripts/` | Le build (chiffrement), le contrôle éditorial, le calcul des budgets de temps, le contrôle des liens, un petit serveur local. |
 | `scripts/code-enseignant.mjs` | Change le code enseignant de la page « Réponses des équipes » (voir « Voir les réponses en direct »). |
 | `tests/` | Les tests automatiques (Playwright). |
 | `docs-internes/budget-temps.md` | Le calcul du temps nécessaire à chaque phase, page par page. |
 | `VERIFICATIONS.md` | Tout ce qui reste à vérifier avant la séance, et les coupes faites. |
 
-Les pages élèves sont, dans l’ordre : `index.html` (accueil de la séance), `1-cadre`, `2-methode`, `3-chercher`, `4-citer-lecture`, `5-citer-pratique`, `6-lire` (lecture avant la pause, analyse après, puis dépôt), `pause`, `7-correction` (chiffrée), `8-notes`, `9-video`, `10-fin`. Côté enseignant : `prof/reponses.html` (les réponses des équipes en direct), `prof/projecteur.html` (à projeter) et `prof/deroule.html` (feuille de route).
+Les pages élèves sont, dans l’ordre : `index.html` (accueil de la séance), `1-cadre`, `2-methode`, `3-chercher`, `4-citer-lecture`, `5-citer-pratique`, `5b-correction-definir` (chiffrée), `6-lire` (lecture avant la pause, analyse après, puis dépôt), `pause`, `7-correction` (chiffrée), `8-notes`, `9-video`, `10-fin`. Côté enseignant : `prof/reponses.html` (les réponses des équipes en direct), `prof/projecteur.html` (à projeter) et `prof/deroule.html` (feuille de route).
 
 ## Le déroulé de la séance
 
@@ -28,20 +28,21 @@ Pour un départ à 9 h 00. Le détail, avec ce qu’il faut dire à chaque phase
 |---|---|---|
 | 9 h 00 | 3 min | Cadre |
 | 9 h 03 | 5 min | Méthode |
-| 9 h 08 | 15 min | Chercher une définition du genre |
-| 9 h 23 | 7 min | Bien citer, le cours |
-| 9 h 30 | 13 min | Citer, la pratique |
-| 9 h 43 | 22 min | Lire l’étude de l’Insee, avec neuf questions qui obligent à lire |
-| 10 h 05 | 30 min | Pause |
-| 10 h 35 | 27 min | Analyser l’étude, question par question (L1 à L6) |
-| 11 h 02 | 3 min | Dépôt |
-| 11 h 05 | 10 min | Correction, en chasse aux indices dans l’étude |
+| 9 h 08 | 16 min | Chercher une définition du genre, et qui la donne |
+| 9 h 24 | 5 min | Bien citer, le cours |
+| 9 h 29 | 11 min | Citer, la pratique |
+| 9 h 40 | 5 min | Correction de Définir et Citer (premier mot de passe) |
+| 9 h 45 | 22 min | Lire l’étude de l’Insee, avec neuf questions qui obligent à lire |
+| 10 h 07 | 30 min | Pause |
+| 10 h 37 | 27 min | Analyser l’étude, question par question (L1 à L6) |
+| 11 h 04 | 3 min | Dépôt |
+| 11 h 07 | 8 min | Correction de l’étude (second mot de passe) |
 | 11 h 15 | 5 min | Conseils de prise de notes |
 | 11 h 20 | 25 min | Vidéo |
 | 11 h 45 | 5 min | Notes à froid, comparaison en équipe |
 | 11 h 50 | 10 min | Questions sur la vidéo, dépôt express |
 
-Définir et citer tiennent en 43 minutes. Le temps nécessaire à chaque phase est calculé page par page dans `docs-internes/budget-temps.md`.
+Définir et citer tiennent en 45 minutes, correction comprise. Sur les pages de travail, une ligne sous le chrono indique la question où l’équipe devrait en être à cette heure (repères réglables dans `docs/data/schedule.json`). Le temps nécessaire à chaque phase est calculé page par page dans `docs-internes/budget-temps.md`.
 
 ## Modifier une question ou un texte
 
@@ -57,7 +58,7 @@ Les textes sont directement dans les pages HTML de `docs/seance-09/`. On peut le
 3. Pour un QCM, la bonne réponse est la lettre de `data-correct="b"`, et chaque retour est dans un bloc `<div data-fb="a">…</div>`.
 4. Validez avec « Commit changes ». La page publiée se met à jour en une ou deux minutes.
 
-La **correction** est une exception : elle est chiffrée. Modifiez `private/seance-09/7-correction.html` sur votre ordinateur, puis reconstruisez (voir plus bas).
+Les deux **corrections** sont une exception : elles sont chiffrées. Modifiez `private/seance-09/5b-correction-definir.html` ou `private/seance-09/7-correction.html` sur votre ordinateur, puis reconstruisez (voir plus bas).
 
 Les règles d’écriture (pas de tiret long, peu de deux-points, apostrophes typographiques, vouvoiement…) sont contrôlées par `npm run lint`. Le contrôle signale aussi une page qui dépasse son budget de temps.
 
@@ -71,13 +72,16 @@ L’horloge suit l’heure de chaque appareil. Toutes les phases se calculent à
 - **Pour une démonstration** : `?now=10:30` simule l’heure (ici 10 h 30). Pour revenir à l’heure réelle : `?now=reel`.
 - Si la séance démarre en retard, l’adresse affichée sous le code QR de l’écran de projection reprend le réglage de l’appareil de l’enseignant. Donnez-la aux équipes.
 
-## Changer le mot de passe de la correction
+## Changer les mots de passe des corrections
+
+Il y a deux corrections, chacune avec son mot de passe : celle de Définir et Citer, à annoncer vers 9 h 40, et celle de l’étude de l’Insee, à annoncer après le dépôt, vers 11 h 07. Deux mots de passe différents, sinon la correction de l’étude serait lisible dès 9 h 40.
 
 Il faut un ordinateur avec [Node.js](https://nodejs.org) (version 18 ou plus) et une copie du dépôt.
 
-1. Dans le dossier du dépôt, créez un fichier texte nommé `.env.local` contenant une seule ligne :
+1. Dans le dossier du dépôt, créez un fichier texte nommé `.env.local` contenant deux lignes :
    ```
-   CORRECTION_PASSWORD=votre-mot-de-passe
+   CORRECTION_DEFINIR_PASSWORD=premier-mot-de-passe
+   CORRECTION_PASSWORD=second-mot-de-passe
    ```
    Ce fichier n’est jamais envoyé sur GitHub.
 2. Installez les outils une première fois :
@@ -88,9 +92,9 @@ Il faut un ordinateur avec [Node.js](https://nodejs.org) (version 18 ou plus) et
    ```bash
    npm run build
    ```
-4. Publiez le fichier `docs/seance-09/7-correction.html` mis à jour (voir « Publier »).
+4. Publiez les fichiers `docs/seance-09/5b-correction-definir.html` et `docs/seance-09/7-correction.html` mis à jour (voir « Publier »).
 
-Un mot de passe provisoire a été utilisé pour le premier chiffrement. Choisissez le vôtre avant la séance. Le jour même, annoncez-le à 11 h 05, à la fin du dépôt, par exemple avec le bouton « Afficher en grand » de l’écran de projection (le mot de passe saisi là n’est enregistré nulle part).
+Des mots de passe provisoires ont été utilisés pour le premier chiffrement. Choisissez les vôtres avant la séance. Le jour même, annoncez chacun au bon moment, par exemple avec le bouton « Afficher en grand » de l’écran de projection (le mot de passe saisi là n’est enregistré nulle part).
 
 ## Reconstruire
 
@@ -98,7 +102,7 @@ Un mot de passe provisoire a été utilisé pour le premier chiffrement. Choisis
 npm run build
 ```
 
-Le build lance le contrôle éditorial et le calcul des budgets, puis chiffre la correction avec StatiCrypt. Il s’arrête si une règle est violée ou si une phase dépasse son temps.
+Le build lance le contrôle éditorial et le calcul des budgets, puis chiffre les deux corrections avec StatiCrypt. Il s’arrête si une règle est violée ou si une phase dépasse son temps.
 
 Autres commandes utiles :
 
@@ -114,7 +118,7 @@ npm run liens
 npm run serve
 ```
 
-`npm run serve` affiche le site sur `http://localhost:8080/fabrique/`. Les tests se lancent avec `npm test` (il faut avoir le mot de passe dans `.env.local` pour le test de la correction) et les captures d’écran avec `npm run captures`.
+`npm run serve` affiche le site sur `http://localhost:8080/fabrique/`. Les tests se lancent avec `npm test` (il faut avoir les deux mots de passe dans `.env.local` pour les tests des corrections) et les captures d’écran avec `npm run captures`.
 
 ## Publier sur GitHub Pages
 
@@ -124,17 +128,17 @@ npm run serve
 
 Le travail a été préparé sur la branche `claude/elegant-planck-ir8tii`. Fusionnez-la dans `main` (par une pull request) avant l’étape 2, ou choisissez provisoirement cette branche dans l’étape 2 pour essayer le site.
 
-Après publication, vérifiez sur l’adresse publique : la page de la correction demande le mot de passe, le bouton « Télécharger le récapitulatif » produit bien un fichier, l’horloge affiche la bonne phase, et une équipe de test apparaît sur la page « Réponses des équipes ».
+Après publication, vérifiez sur l’adresse publique : les deux pages de correction demandent leur mot de passe, le bouton « Télécharger le récapitulatif » produit bien un fichier, l’horloge affiche la bonne phase, et une équipe de test apparaît sur la page « Réponses des équipes ».
 
 ## Sauvegarder le dossier `private/`
 
-`private/` contient la seule version lisible de la correction. Il n’est jamais publié, donc GitHub n’en garde aucune copie. Gardez-en une sauvegarde ailleurs : un dossier personnel dans le cloud de l’école, une clé USB, ou un dépôt GitHub **privé** distinct. Sans ce fichier, il faudrait réécrire la correction pour changer le mot de passe.
+`private/` contient la seule version lisible des deux corrections. Il n’est jamais publié, donc GitHub n’en garde aucune copie. Gardez-en une sauvegarde ailleurs : un dossier personnel dans le cloud de l’école, une clé USB, ou un dépôt GitHub **privé** distinct. Sans ces fichiers, il faudrait réécrire les corrections pour changer les mots de passe.
 
 ## Ce que le chiffrement protège
 
-La correction publiée est chiffrée (AES, côté navigateur). Sans le mot de passe, son contenu n’apparaît pas dans le HTML servi. Le chiffrement protège contre la lecture directe, pas contre une personne déterminée qui aurait le mot de passe ou qui le devinerait : choisissez un mot de passe qui ne se devine pas. C’est suffisant ici. Si le dépôt est privé avec Pages activé (plan GitHub payant), vous pouvez ne pas chiffrer : mettez `"chiffrerCorrection": false` dans `docs/data/config.json`, puis reconstruisez.
+Les corrections publiées sont chiffrées (AES, côté navigateur). Sans le mot de passe, leur contenu n’apparaît pas dans le HTML servi. Le chiffrement protège contre la lecture directe, pas contre une personne déterminée qui aurait le mot de passe ou qui le devinerait : choisissez un mot de passe qui ne se devine pas. C’est suffisant ici. Si le dépôt est privé avec Pages activé (plan GitHub payant), vous pouvez ne pas chiffrer : mettez `"chiffrerCorrection": false` dans `docs/data/config.json`, puis reconstruisez.
 
-L’option « se souvenir » évite de redemander le mot de passe à chaque rechargement, sur le même ordinateur, pendant 30 jours.
+L’option « se souvenir » évite de redemander le mot de passe à chaque rechargement, sur le même ordinateur, pendant 30 jours. Elle ne garde que le dernier mot de passe saisi : en passant d’une correction à l’autre, le navigateur le redemande.
 
 ## Voir les réponses en direct
 
@@ -170,8 +174,10 @@ Le nouveau code s’affiche une seule fois. Publiez ensuite `docs/data/config.js
 
 - **État partagé** : toutes les pages lisent et écrivent le même objet dans le navigateur (clé `fabrique:s09:v1`). Une écriture a lieu 350 ms après chaque saisie, et tout de suite quand on quitte la page. Si le navigateur refuse d’enregistrer (navigation privée stricte), un message demande de copier régulièrement le récapitulatif.
 - **Horloge** : les phases, les comptes à rebours et les écrans STOP viennent de `schedule.json`. À chaque point d’arrêt, un bandeau prévient pendant 60 secondes, puis un écran plein cadre propose un seul bouton vers la page suivante. Les réponses sont conservées, et les pages précédentes restent accessibles ensuite.
+- **Corrections** : chaque question est affichée avec la réponse de l’équipe, une réponse proposée et des conseils de méthode. Dans la correction de l’étude, « Voir le passage » surligne le passage de l’étude qui justifie la réponse.
+- **Repère horaire** : sur les pages de travail, une ligne sous le chrono dit à quelle question l’équipe devrait en être, si elle est dans les temps, et mène à la question.
 - **Dépôt** : le bouton « Envoyer à l’enseignant » envoie tout ce qui n’est pas encore parti et signale que le dépôt est fait. Le récapitulatif peut aussi être téléchargé (`s09_<equipe>_parcours.txt`, et `s09_<equipe>_video.txt` pour la vidéo) ou copié, en secours.
-- **Jeu** : points d’enquête, quatre quêtes, huit badges, anneaux de compétences et phrase mystère. Pendant la correction, l’étude de l’Insee devient une chasse aux indices : pour chaque question d’analyse, l’équipe clique dans le document sur le passage qui justifie la réponse, puis découvre la réponse proposée à côté de la sienne. Les points ne sont pas une note, il n’y a ni niveau ni classement. Le mode sobre (menu) masque les animations et les badges. Les animations sont coupées si l’appareil demande moins de mouvement.
+- **Jeu** : points d’enquête, quatre quêtes, huit badges, anneaux de compétences et phrase mystère. Les points ne sont pas une note, il n’y a ni niveau ni classement. Le mode sobre (menu) masque les animations et les badges. Les animations sont coupées si l’appareil demande moins de mouvement.
 - **Accessibilité** : navigation au clavier, retours de QCM annoncés aux lecteurs d’écran, contrastes vérifiés en mode sombre et clair. Les tests incluent un audit axe-core sur chaque page, et Lighthouse donne 100 en accessibilité sur chaque page.
 
 ## Licences

@@ -3,6 +3,7 @@
 // un faux relais local et sert des clés de test (code enseignant : code-test).
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { PROGRAMME, heure } from './aides.mjs';
 
 const BASE = 'http://localhost:4173/fabrique/';
 const RELAIS = 'http://localhost:4173/faux-relais';
@@ -71,7 +72,6 @@ test('envoi chiffré aux moments clés, puis lecture avec le code', async ({ bro
   await ouvrir(p, 'seance-09/6-lire.html#depot');
   const depot = p.locator('[data-depot="parcours"]');
   await expect(depot.locator('[data-action="envoyer"]')).toBeVisible();
-  await p.check('#u-non');
   await depot.locator('[data-action="envoyer"]').click();
   await expect(depot.locator('[data-recap-statut]')).toContainText('Récapitulatif envoyé à l’enseignant');
   // Peu d’envois : noms, drapeau (découpé), dépôt.
@@ -118,7 +118,8 @@ test('envoi chiffré aux moments clés, puis lecture avec le code', async ({ bro
 test('point d’arrêt : un envoi, puis rien de plus sans nouveauté', async ({ browser, request }) => {
   const eleves = await contexte(browser);
   const p = await eleves.newPage();
-  await ouvrir(p, 'seance-09/3-chercher.html?now=09:22:52');
+  const chercher = PROGRAMME.phases.find((x) => x.id === 'chercher');
+  await ouvrir(p, 'seance-09/3-chercher.html?now=' + heure(chercher.debut + chercher.duree, -8));
   await p.fill('[data-id="a1"]', 'Réponse écrite juste avant la fin de la phase Chercher.');
   await expect(p.locator('.stop-bandeau')).toBeVisible({ timeout: 15000 });
   await attendreMessages(request, 1);
@@ -229,7 +230,6 @@ test('relais saturé : message clair et téléchargement conseillé', async ({ b
   const eleves = await contexte(browser);
   const p = await eleves.newPage();
   await ouvrir(p, 'seance-09/6-lire.html?now=09:20#depot');
-  await p.check('#u-non');
   const depot = p.locator('[data-depot="parcours"]');
   await depot.locator('[data-action="envoyer"]').click();
   await expect(depot.locator('[data-recap-statut]')).toContainText('Le relais refuse les envois pour l’instant');
